@@ -1,0 +1,101 @@
+body {
+  font-family: 'Arial', sans-serif; /* O la fuente que uses en tu otro CSS */
+}
+
+.carrusel-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  gap: 0;
+}
+
+.carrusel-scroll {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  width: 95vw;
+  max-width: 1050px;
+  padding: 10px 0;
+  scrollbar-width: none; /* Firefox */
+}
+.carrusel-scroll::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.carrusel-item {
+  min-width: 320px;
+  max-width: 1fr;
+  min-height: 320px;
+  max-height: 380px;
+  aspect-ratio: 1/1;
+  flex: 0 0 32%;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  background: #fafafa;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: min-width 0.3s, max-width 0.3s;
+}
+
+/* Botones */
+.carrusel-container button {
+  font-size: 2rem;
+  background: #eee;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.carrusel-container button:hover {
+  background: #ddd;
+}
+
+/* RESPONSIVE: Tablet */
+@media (max-width: 1050px) {
+  .carrusel-scroll {
+    max-width: 98vw;
+  }
+  .carrusel-item {
+    min-width: 45vw;
+    max-width: 90vw;
+    min-height: 220px;
+    max-height: 260px;
+    aspect-ratio: unset;
+    flex: 0 0 45%;
+  }
+}
+
+/* RESPONSIVE: Móvil */
+@media (max-width: 600px) {
+  .carrusel-scroll {
+    max-width: 100vw;
+    gap: 10px;
+  }
+  .carrusel-item {
+    min-width: 95vw;
+    max-width: 98vw;
+    min-height: 220px;
+    max-height: 400px;
+    padding: 10px;
+    aspect-ratio: unset;
+    flex: 0 0 98vw;
+  }
+  .carrusel-container button {
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Las 2 Reinas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="Restaurante1.css">
+    <link rel="stylesheet" href="../Menu Web/Menu.css">
+</head>
+
+<body>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  intent="WELCOME"
+  chat-title="proyecto_bot"
+  agent-id="1854a80a-4d31-4460-a6a2-d127e0254365"
+  language-code="es">
+</df-messenger>
+    <header>
+        <div id="principio" class="menu continer">
+            <img class="logo-1" src="../img/logod2r-removebg-preview.png" alt="">
+            <label for="menu ">
+                <img src="../img/menu.png" class="menu-icon" alt="">
+            </label>
+            <nav class="navbar">
+                <div class="menu-1">
+                    <ul>
+                        <li><a href="#mas informacion" onclick="scrollToSection(event, 'mas informacion', 2000)">Informacion</a></li>
+                        <li><a href="#productos" onclick="scrollToSection(event, 'productos', 2000)">Productos</a></li>
+                        <li><a href="#horario" onclick="scrollToSection(event, 'horario', 2000)">Horario</a></li>
+                    </ul>
+                </div>
+                <img class="logo-2" src="../img/logod2r-removebg-preview.png" alt="">
+                <div class="menu-2">
+                    <ul>
+                        <li><a href="#ubicacion" onclick="scrollToSection(event, 'ubicacion', 2000)">Ubicacion</a></li>
+                    </ul>
+                    <div class="socials">
+                        <a href="https://www.facebook.com/las2reinascolonia/?locale=es_LA" target="_blank">
+                            <div class="social">
+                                <img src="../img/s1.svg" alt="">
+                            </div>
+                        </a>
+                        <a href="#">
+                            <div class="social">
+                                <img src="../img/s2.svg" alt="">
+                            </div>
+                        </a>
+                        <a href="https://www.instagram.com/las2reinascolonia/" target="_blank">
+                            <div class="social">
+                                <img src="../img/s3.svg" alt="">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="headre-content container">
+
+            <div class="swiper mySwiper-1">
+                <div class="swiper-wrapper">
+
+                    <div class="swiper-slide">
+                        <div class="slider">
+                            <div class="slider-txt">
+                                <h1>Hamburgesa</h1>
+                                <p>
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.
+                                    <br>
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.
+                                </p>
+                                <div class="botones">
+                                    <a href="#" class="btn-1">Comprar</a>
+                                    <a href="#" class="btn-2" id="abrirModalBtn">Menu</a>
+                                </div>
+                            </div>
+                            <div class="slider-img" >
+                                <img src="../img/menu/Gemini_Generated_Image_qjldohqjldohqjld-removebg-preview (1).png" alt="" width="1000px" height="1000px">
+                            </div>
+                        </div>
+                    </div> 
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </header>
+    
+<div id="miModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span><body>
+    <div class="wrapper">
+  <div class="cols">
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(/Frontend/img/menu/desayunos\ y\ meriendas.png);">
+                        <div id="inner">
+                            <h1>Desayuno <br> y <br> merienda</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                          <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(../img/menu/menuinfantil.png);">
+                        <div id="inner">
+                            <h1>Menu Infantil</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                            <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(../img/menu/chivito\,\ milanesa\,\ chorizo.png)">
+                        <div id="inner">
+                            <h1>Milanesas <br> Hamburgesas <br> Chivitos <br> Chorizo</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                            <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(../img/menu/ensalada\ y\ guar.png)">
+                        <div id="inner">
+                            <h1>Guarniciones <br> y <br> Ensaladas</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                            <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(../img/menu/pizzas.png)">
+                        <div id="inner">
+                            <h1>Pizzas</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                            <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(../img/menu/combos\ y\ picada.png)">
+                        <div id="inner">
+                            <h1>Combos <br> y <br> Especiales</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                            <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(../img/menu/postres.png)">
+                        <div id="inner">
+                            <h1>Postres</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                            <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(../img/menu/bebidas.png)">
+                        <div id="inner">
+                            <h1>Bebidas</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                            <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(../img/menu/tragos.png)">
+                        <div id="inner">
+                            <h1>Tragos</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                            <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(../img/menu/tragos.png)">
+                        <div id="inner">
+                            <h1>Tragos</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                            <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(../img/menu/tragos.png)">
+                        <div id="inner">
+                            <h1>Tragos</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                            <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ontouchstart="this.classList.toggle('hover');">
+                <div id="container">
+                    <div class="front" style="background-image: url(../img/menu/tragos.png)">
+                        <div id="inner">
+                            <h1>Tragos</h1>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div id="inner">
+                            <p>Más información</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+ </div>
+</body>
+  </div>
+</div>
+
+    <main class="Productos">
+        <div class="tabs conteiner" id="productos">
+            <input type="radio" name="tabs" id="tab1" checked="checked" class="tabInput" value="1" >
+            <label for="tab1">Hamburgesa</label>
+            <div class="tab">
+                <div class="swiper mySwiper-2" id="swiper1">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="swiper-card swiper-card--1">
+                                <div class="product">
+                                    <div class="product-img">
+                                        <h4>Nuevo</h4>
+                                        <img src="../img/food1.png" alt="">
+                                    </div>
+                                    <div class="product-txt">
+                                        <h4>Producto</h4>
+                                        <p>Calidad premium</p>
+                                        <span class="prove">$250</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="swiper-card swiper-card--2">
+                                <div class="product">
+                                    <div class="product-img">
+                                        <h4>Nuevo</h4>
+                                        <img src="../img/food2.png" alt="">
+                                    </div>
+                                    <div class="product-txt">
+                                        <h4>Producto</h4>
+                                        <p>Calidad premium</p>
+                                        <span class="prove">$250</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="swiper-card swiper-card--3">
+                                <div class="product">
+                                    <div class="product-img">
+                                        <h4>Nuevo</h4>
+                                        <img src="../img/food3.png" alt="">
+                                    </div>
+                                    <div class="product-txt">
+                                        <h4>Producto</h4>
+                                        <p>Calidad premium</p>
+                                        <span class="prove">$250</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+
+            <input type="radio" name="tabs" id="tab2" class="tabInput" value="2">
+            <label for="tab2">Burritos</label>
+            <div class="tab">
+                <div class="swiper mySwiper-2" id="swiper2">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="swiper-card swiper-card--1">
+                                <div class="product">
+                                    <div class="product-img">
+                                        <h4>Nuevo</h4>
+                                        <img src="../img/food4.png" alt="">
+                                    </div>
+                                    <div class="product-txt">
+                                        <h4>Producto</h4>
+                                        <p>Calidad premium</p>
+                                        <span class="prove">$250</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="swiper-card swiper-card--2">
+                                <div class="product">
+                                    <div class="product-img">
+                                        <h4>Nuevo</h4>
+                                        <img src="../img/food5.png" alt="">
+                                    </div>
+                                    <div class="product-txt">
+                                        <h4>Producto</h4>
+                                        <p>Calidad premium</p>
+                                        <span class="prove">$250</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="swiper-card swiper-card--3">
+                                <div class="product">
+                                    <div class="product-img">
+                                        <h4>Nuevo</h4>
+                                        <img src="../img/food6.png" alt="">
+                                    </div>
+                                    <div class="product-txt">
+                                        <h4>Producto</h4>
+                                        <p>Calidad premium</p>
+                                        <span class="prove">$250</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+
+            <input type="radio" name="tabs" id="tab3" class="tabInput" value="3">
+            <label for="tab3">Variedad</label>
+            <div class="tab">
+                <div class="swiper mySwiper-2" id="swiper3">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="swiper-card swiper-card--1">
+                                <div class="product">
+                                    <div class="product-img">
+                                        <h4>Nuevo</h4>
+                                        <img src="../img/food7.png" alt="">
+                                    </div>
+                                    <div class="product-txt">
+                                        <h4>Producto</h4>
+                                        <p>Calidad premium</p>
+                                        <span class="prove">$250</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="swiper-card swiper-card--2">
+                                <div class="product">
+                                    <div class="product-img">
+                                        <h4>Nuevo</h4>
+                                        <img src="../img/food8.png" alt="">
+                                    </div>
+                                    <div class="product-txt">
+                                        <h4>Producto</h4>
+                                        <p>Calidad premium</p>
+                                        <span class="prove">$250</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="swiper-card swiper-card--3">
+                                <div class="product">
+                                    <div class="product-img">
+                                        <h4>Nuevo</h4>
+                                        <img src="../img/food9.png" alt="">
+                                    </div>
+                                    <div class="product-txt">
+                                        <h4>Producto</h4>
+                                        <p>Calidad premium</p>
+                                        <span class="prove">$250</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <section class="info container">
+        <div class="info-img">
+            <img src="../img/info.png" alt="">
+        </div>
+        <div class="info-text">
+            <h2 id="mas informacion">Informacion</h2>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.
+            </p>
+            <a href="#" class="btn-2">Más informacion</a>
+        </div>
+    </section>
+
+    <section class="horario">
+        <div class="horarios-info container">
+            <h2 id="horario">Horarios</h2>
+            <div class="horarios-txt"> 
+                <div class="txt"> 
+                    <h4>Direccion</h4>
+                    <p>
+                        Franklin D. Roosevelt 1234
+                    </p>
+                    <p>
+                        Colonia del Sacramento, Uruguay
+                    </p>
+                </div>
+                <div class="txt"> 
+                    <h4>Horario</h4>
+                    <p>
+                        Abierto 7 días a la semana
+                    </p>
+                    <p>
+                        7:30hs a 23:30hs 
+                    </p>
+                </div>
+                <div class="txt"> 
+                    <h4>Telefono</h4>
+                    <p>
+                        +589 097793775
+
+                    </p><br>
+                    <p>
+                        
+                    </p>
+                </div>
+                <div class="txt"> 
+                    <h4>Redes Sociales</h4>
+                    <div class="socials">
+                        <a href="https://www.facebook.com/las2reinascolonia/?locale=es_LA" target="_blank">
+                            <div class="social">
+                                <img src="../img/s1.svg" alt="">
+                            </div>
+                        </a>
+                        <a href="#">
+                            <div class="social">
+                                <img src="../img/s2.svg" alt="">
+                            </div>
+                        </a>
+                        <a href="https://www.instagram.com/las2reinascolonia/" target="_blank">
+                            <div class="social">
+                                <img src="../img/s3.svg" alt="">
+                                
+                            </div>
+                        </a>
+                    </div>
+                </div><br><br>
+            </div>
+        </div>
+    </section>
+
+    <section>
+
+        <iframe id="ubicacion" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3229.2359806649756!2d-57.844191582791005!3d-34.4725703142121!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a313006eaf5ae9%3A0x30866766114bce2d!2sLas%202%20Reinas%20Cafeter%C3%ADa%20y%20Restaurant!5e1!3m2!1ses-419!2suy!4v1750363435146!5m2!1ses-419!2suy" width="100%" height="850px" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+    </section>
+
+    <footer class="footer container">
+        <img class="logo-2" id="#principio" onclick="scrollToSection(event, 'principio', 2000)" src="../img/logod2r-removebg-preview.png" alt="">
+        <div class="links">
+            <h4>Lorem</h4>
+            <ul>
+                <li><a href="#">Lorem</a></li>
+                <li><a href="#">Lorem</a></li>
+                <li><a href="#">Lorem</a></li>
+                <li><a href="#">Lorem</a></li>
+            </ul>
+        </div>
+        <div class="links">
+            <h4>Lorem</h4>
+            <ul>
+                <li><a href="#">Lorem</a></li>
+                <li><a href="#">Lorem</a></li>
+                <li><a href="#">Lorem</a></li>
+                <li><a href="#">Lorem</a></li>
+            </ul>
+        </div>
+        <div class="links">
+            <h4>Lorem</h4>
+            <ul>
+                <li><a href="#">Lorem</a></li>
+                <li><a href="#">Lorem</a></li>
+                <li><a href="#">Lorem</a></li>
+                <li><a href="#">Lorem</a></li>
+            </ul>
+        </div>
+        <div class="links">
+            <h4>Lorem</h4>
+            <div class="socials">
+                        <a href="https://www.facebook.com/las2reinascolonia/?locale=es_LA" target="_blank">
+                            <div class="social">
+                                <img src="../img/s1.svg" alt="">
+                            </div>
+                        </a>
+                        <a href="#">
+                            <div class="social">
+                                <img src="../img/s2.svg" alt="">
+                            </div>
+                        </a>
+                        <a href="https://www.instagram.com/las2reinascolonia/" target="_blank">
+                            <div class="social">
+                                <img src="../img/s3.svg" alt="">
+                            </div>
+                        </a>
+                    </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script src="Restaurante1.js"></script>
+</body>
+
+</html>
