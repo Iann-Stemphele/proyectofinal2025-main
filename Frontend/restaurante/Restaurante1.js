@@ -55,8 +55,8 @@ var modal = document.getElementById("miModal");
 // Obtener el botón que abre el modal
 var btn = document.getElementById("abrirModalBtn");
 
-// Obtener el elemento <span> que cierra el modal
-var span = document.getElementsByClassName("close-button")[0];
+// Obtener el elemento <span> que cierra el modal SOLO dentro de miModal
+var span = document.querySelector("#miModal .close-button");
 
 // Cuando el usuario hace clic en el botón, abre el modal
 btn.onclick = function() {

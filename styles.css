@@ -1,0 +1,16 @@
+#shop.shop {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    /* Opcional: centra la imagen y ajusta el tamaño */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent; /* o color si lo prefieres */
+    z-index: 999; /* para que esté por encima de otros elementos */
+}
+/* Si quieres que la imagen tenga un tamaño específico */
+#shop.shop img {
+    max-height: 80px; /* ajusta según lo que necesites */
+}

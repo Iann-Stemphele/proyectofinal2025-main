@@ -1,0 +1,223 @@
+/* Posiciona el ícono del carrito en la parte inferior izquierda */
+#alt-modal-2 {
+    position: fixed;
+    bottom: 20px; /* Distancia desde abajo */
+    left: 20px; /* Distancia desde la izquierda */
+    z-index: 1000; /* Asegura que esté por encima de otro contenido */
+    cursor: pointer;
+}
+
+#alt-shop-icon {
+    display: block; /* Asegura que no haya espacio extra debajo de la imagen */
+}
+
+/* Estilos Generales de Modales */
+.alt-modal-container {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Permanece en su lugar */
+    z-index: 1001; /* Más alto que el ícono para superponerlo */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Habilita el desplazamiento si el contenido es muy largo */
+    background-color: rgba(0,0,0,0.6); /* Fondo negro con opacidad */
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    display: flex; /* Usar flexbox para centrado */
+}
+
+.alt-modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 25px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+/* Botón de cerrar */
+.alt-close-button {
+    color: #aaa;
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.alt-close-button:hover,
+.alt-close-button:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+/* Estilos Específicos del Carrito */
+#alt-cart-items {
+    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.alt-cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.alt-cart-item:last-child {
+    border-bottom: none;
+}
+
+.alt-item-name {
+    flex-grow: 1;
+    font-weight: bold;
+}
+
+.alt-item-quantity-controls {
+    display: flex;
+    align-items: center;
+    margin: 0 15px;
+}
+
+.alt-item-quantity-controls button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.alt-item-quantity {
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+.alt-item-price {
+    font-weight: bold;
+    color: #333;
+    margin-left: 15px;
+}
+
+.alt-delete-item {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 0.9em;
+    margin-left: 15px;
+}
+
+.alt-cart-summary {
+    text-align: right;
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Estilos de Botones */
+.alt-btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.alt-btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.alt-btn-primary:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.alt-btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 15px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.alt-btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Estilos Específicos del Modal de Pago */
+.alt-payment-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+#alt-customer-info-form {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+#alt-customer-info-form input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* Mensaje de Notificación */
+.alt-notification-message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 25px;
+    text-align: center;
+    font-size: 1.1em;
+    display: none;
+}
+
+.alt-notification-message p {
+    margin: 5px 0;
+}
+
+.alt-close-notification {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.alt-close-notification:hover {
+    background-color: #218838;
+}
