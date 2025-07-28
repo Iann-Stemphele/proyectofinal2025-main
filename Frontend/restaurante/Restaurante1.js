@@ -100,3 +100,99 @@ window.onclick = function(event) {
 
                             requestAnimationFrame(animation);
                         }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Modal Más Información ---
+    const modalMasInfo = document.getElementById('modal-mas-info');
+    const closeMasInfoBtn = document.getElementById('close-mas-info');
+    const masInfoTitulo = document.getElementById('mas-info-titulo');
+    const masInfoLista = document.getElementById('mas-info-lista');
+
+    // Delegación para todos los botones "Más información"
+    document.querySelectorAll('.btn-mas-info').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const categoria = btn.dataset.categoria;
+            masInfoTitulo.textContent = 'Cargando...';
+            masInfoLista.innerHTML = '<p>Cargando...</p>';
+            modalMasInfo.style.display = 'flex';
+
+            // --- NOTA: Aquí debes conectar con tu base de datos ---
+            // Debes tener un endpoint tipo: /api/categorias/:categoria
+            // Ejemplo de respuesta esperada: [{id, nombre, precio}, ...]
+            try {
+                const response = await fetch(`/api/categorias/${encodeURIComponent(categoria)}`);
+                if (!response.ok) throw new Error('Error al cargar los alimentos');
+                const alimentos = await response.json();
+
+                masInfoTitulo.textContent = categoria.replace(/-/g, ' ').toUpperCase();
+                if (alimentos.length === 0) {
+                    masInfoLista.innerHTML = '<p>No hay alimentos en esta categoría.</p>';
+                } else {
+                    masInfoLista.innerHTML = '';
+                    alimentos.forEach(alimento => {
+                        // Crear el contenedor del alimento
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'mas-info-item';
+                        itemDiv.innerHTML = `
+                            <span class="mas-info-nombre">${alimento.nombre}</span>
+                            <span class="mas-info-precio">$${alimento.precio.toFixed(2)}</span>
+                            <input type="number" min="1" value="1" class="mas-info-cantidad" style="width:60px;">
+                            <button class="mas-info-agregar" data-id="${alimento.id}" data-nombre="${alimento.nombre}" data-precio="${alimento.precio}">Agregar al carrito</button>
+                        `;
+                        masInfoLista.appendChild(itemDiv);
+                    });
+                }
+            } catch (err) {
+                masInfoTitulo.textContent = 'Error';
+                masInfoLista.innerHTML = '<p>No se pudieron cargar los alimentos.</p>';
+            }
+        });
+    });
+
+    // Cerrar el modal de más información
+    closeMasInfoBtn.addEventListener('click', () => {
+        modalMasInfo.style.display = 'none';
+    });
+    window.addEventListener('click', (event) => {
+        if (event.target === modalMasInfo) {
+            modalMasInfo.style.display = 'none';
+        }
+    });
+
+    // --- Agregar al carrito desde el modal de más información ---
+    document.getElementById('mas-info-lista').addEventListener('click', (e) => {
+        if (e.target.classList.contains('mas-info-agregar')) {
+            const btn = e.target;
+            const id = btn.dataset.id;
+            const nombre = btn.dataset.nombre;
+            const precio = parseFloat(btn.dataset.precio);
+            const cantidadInput = btn.parentElement.querySelector('.mas-info-cantidad');
+            const cantidad = parseInt(cantidadInput.value, 10) || 1;
+
+            // --- Agregar al carrito usando la lógica de localStorage del carrito ---
+            let cart = JSON.parse(localStorage.getItem('altCart')) || [];
+            const existingProductIndex = cart.findIndex(item => item.id == id);
+            if (existingProductIndex > -1) {
+                cart[existingProductIndex].quantity += cantidad;
+            } else {
+                cart.push({ id, name: nombre, price: precio, quantity: cantidad });
+            }
+            localStorage.setItem('altCart', JSON.stringify(cart));
+
+            // Opcional: feedback visual
+            btn.textContent = 'Agregado!';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.textContent = 'Agregar al carrito';
+                btn.disabled = false;
+            }, 1000);
+        }
+    });
+});
+
+
+
+
+
+
+

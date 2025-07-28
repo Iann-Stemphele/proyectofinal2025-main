@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="Restaurante1.css">
     <link rel="stylesheet" href="../Menu Web/Menu.css">
     <link rel="stylesheet" href="../Carrito/carro.css">
+    <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
 
 </head>
 
@@ -28,12 +29,13 @@
 <div id="alt-modal-cart" class="alt-modal-container" style="display:none;">
     <div class="alt-modal-content">
         <span class="alt-close-button" data-modal-id="alt-modal-cart">&times;</span>
-        <h2>Tu Carrito de Compras</h2>
+        <h2 id="tucarro"> <i class='bxr  bxs-cart' id="bxr.bxs-cart"  ></i>  <br> Tu Carrito de Compras</h2>
         <div id="alt-cart-items">
+            <p>Tu carrito está vacío.</p>
             </div>
         <div class="alt-cart-summary">
-            <p>Total: $<span id="alt-cart-total">0.00</span></p>
-            <button id="alt-open-payment-modal" class="alt-btn-primary">Pagar</button>
+            <p id="Total">Total: $<span id="alt-cart-total">0.00</span></p>
+            <button id="alt-open-payment-modal" class="alt-btn-primary"> <i class='bxr  bx-wallet-note'  ></i>  <br> Pagar</button>
         </div>
     </div>
 </div>
@@ -41,7 +43,7 @@
 <div id="alt-modal-payment" class="alt-modal-container" style="display:none;">
     <div class="alt-modal-content">
         <span class="alt-close-button" data-modal-id="alt-modal-payment">&times;</span>
-        <h2>Opciones de Pago</h2>
+        <h2 id="opcionespago">Opciones de Pago</h2>
         <div class="alt-payment-options">
             <button id="alt-pay-cash" class="alt-btn-secondary">Pagar en Efectivo</button>
             <button id="alt-pay-card" class="alt-btn-secondary">Pagar con Tarjeta</button>
@@ -137,28 +139,28 @@
   <div class="cols">
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(/Frontend/img/menu/desayunos\ y\ meriendas.png);">
+                    <div class="front" style="background-image: url(/Frontend/img/menu/Desayuno\ y\ merienda.png);">
                         <div id="inner">
                             <h1>Desayuno <br> y <br> merienda</h1>
                         </div>
                     </div>
                     <div class="back">
                         <div id="inner">
-                          <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="desayuno-merienda">Más información</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(../img/menu/menuinfantil.png);">
+                    <div class="front" style="background-image: url(/Frontend/img/menu/Menu\ Infantil.png);">
                         <div id="inner">
                             <h1>Menu Infantil</h1>
                         </div>
                     </div>
                     <div class="back">
                         <div id="inner">
-                            <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="menu-infantil">Más información</button>
                         </div>
                     </div>
                 </div>
@@ -172,7 +174,7 @@
                     </div>
                     <div class="back">
                         <div id="inner">
-                            <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="milanesas-hamburgesas-chivitos-chorizo">Más información</button>
                         </div>
                     </div>
                 </div>
@@ -186,7 +188,7 @@
                     </div>
                     <div class="back">
                         <div id="inner">
-                            <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="guarniciones-ensaladas">Más información</button>
                         </div>
                     </div>
                 </div>
@@ -200,7 +202,7 @@
                     </div>
                     <div class="back">
                         <div id="inner">
-                            <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="pizzas">Más información</button>
                         </div>
                     </div>
                 </div>
@@ -214,91 +216,91 @@
                     </div>
                     <div class="back">
                         <div id="inner">
-                            <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="combos-especiales">Más información</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(../img/menu/postres.png)">
+                    <div class="front" style="background-image: url(/Frontend/img/menu/postres.png)">
                         <div id="inner">
                             <h1>Postres</h1>
                         </div>
                     </div>
                     <div class="back">
                         <div id="inner">
-                            <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="postres">Más información</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(../img/menu/bebidas.png)">
+                    <div class="front" style="background-image: url(/Frontend/img/menu/bebidas.png)">
                         <div id="inner">
                             <h1>Bebidas</h1>
                         </div>
                     </div>
                     <div class="back">
                         <div id="inner">
-                            <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="bebidas">Más información</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(../img/menu/tragos.png)">
+                    <div class="front" style="background-image: url(/Frontend/img/menu/tragos.png)">
                         <div id="inner">
                             <h1>Tragos</h1>
                         </div>
                     </div>
                     <div class="back">
                         <div id="inner">
-                            <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="tragos">Más información</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(../img/menu/tragos.png)">
+                    <div class="front" style="background-image: url()">
                         <div id="inner">
-                            <h1>Tragos</h1>
+                            <h1>#</h1>
                         </div>
                     </div>
                     <div class="back">
                         <div id="inner">
-                            <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="tragos">Más información</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(../img/menu/tragos.png)">
+                    <div class="front" style="background-image: url()">
                         <div id="inner">
-                            <h1>Tragos</h1>
+                            <h1>#</h1>
                         </div>
                     </div>
                     <div class="back">
                         <div id="inner">
-                            <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="tragos">Más información</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(../img/menu/tragos.png)">
+                    <div class="front" style="background-image: url()">
                         <div id="inner">
-                            <h1>Tragos</h1>
+                            <h1>#</h1>
                         </div>
                     </div>
                     <div class="back">
                         <div id="inner">
-                            <p>Más información</p>
+                          <button class="btn-mas-info" data-categoria="tragos">Más información</button>
                         </div>
                     </div>
                 </div>
@@ -542,7 +544,7 @@
                             </div>
                         </a>
                     </div>
-                </div><br><br>
+                </div>
             </div>
         </div>
     </section>
@@ -583,7 +585,7 @@
             </ul>
         </div>
         <div class="links">
-            <h4>Lorem</h4>
+            <h4>Redes Sociales</h4>
             <div class="socials">
                         <a href="https://www.facebook.com/las2reinascolonia/?locale=es_LA" target="_blank">
                             <div class="social">
@@ -599,9 +601,20 @@
         </div>
     </footer>
 
+
+    <!-- Modal de Más Información -->
+<div id="modal-mas-info" class="alt-modal-container" style="display:none;">
+  <div class="alt-modal-content">
+    <span class="alt-close-button" id="close-mas-info">&times;</span>
+    <h2 id="mas-info-titulo"></h2>
+    <div id="mas-info-lista"></div>
+  </div>
+</div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="Restaurante1.js"></script>
     <script src="../Carrito/carro.js"></script>
+
     
 </body>
 

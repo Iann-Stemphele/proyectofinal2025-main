@@ -82,6 +82,7 @@ body {
 
 .socials{
     display: flex;
+    justify-content: center;
 }
 
 .social{
@@ -358,7 +359,7 @@ header.content{
 }
 
 .horarios {
-    padding: 100px 0px;
+    padding: 100px 50px;
     background-color: #2f2926; 
 }
 
@@ -373,7 +374,6 @@ header.content{
 .horarios-txt {
     display: flex;
     justify-content: center;
-    align-items: center;
 }
 
 .txt {
@@ -388,6 +388,8 @@ header.content{
     font-weight: 600;
     margin-left: 50px;
     margin-right: 50px;
+    margin-top: 20px;
+
 }
 
 .txt p {
