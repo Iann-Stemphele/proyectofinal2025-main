@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Debes tener un endpoint tipo: /api/categorias/:categoria
             // Ejemplo de respuesta esperada: [{id, nombre, precio}, ...]
             try {
-                const response = await fetch(`/api/categorias/${encodeURIComponent(categoria)}`);
+                const response = await fetch('/ProyectoFinal2025/proyectofinal2025-main/Backend/routes/categorias.php?categoria=' + encodeURIComponent(categoria));
                 if (!response.ok) throw new Error('Error al cargar los alimentos');
                 const alimentos = await response.json();
 
@@ -188,6 +188,101 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1000);
         }
     });
+
+// --- MINI-MENUS CON CARDS DINÁMICAS ---
+
+// Relaciona cada categoria de botón con los IDs de productos de tu backend
+const categoriasProductos = {
+  "desayuno-merienda": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33],
+  "menu-infantil": [159,160,161,162,163,164],
+  "milanesas-hamburgesas-chivitos-chorizo": [51,52,53,54,55,56,57,58,59,60,61],
+  "guarniciones-ensaladas": [62,63,64,65,66,67,68,69,70],
+  "pizzas": [145,146,147,148,149,150,151,152,153,154,155,156,157,158],
+  "combos-especiales": [112,113,114,115,49,50],
+  "postres": [116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144],
+  "bebidas": [165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195],
+  "tragos": [85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111]
+};
+
+let todosLosProductos = [];
+
+async function cargarTodosLosProductos() {
+  if (todosLosProductos.length) return todosLosProductos;
+  const res = await fetch('http://localhost/ProyectoFinal2025/proyectofinal2025-main/Backend/routes/api.php?url=comidas');
+  const data = await res.text();
+  console.log('Respuesta del backend:', data);
+  try {
+    todosLosProductos = JSON.parse(data);
+  } catch (e) {
+    alert('Error al parsear productos: ' + e.message);
+    todosLosProductos = [];
+  }
+  return todosLosProductos;
+}
+
+
+function renderizarCards(categoria, productos) {
+  const contenedor = document.querySelector(`#mini-menu-${categoria} .mini-menu-cards`);
+  if (!contenedor) return;
+  if (!productos.length) {
+    contenedor.innerHTML = "<p>No hay productos en esta categoría.</p>";
+    return;
+  }
+  contenedor.innerHTML = productos.map(prod => `
+    <div class="card">
+      <h4>${prod.nombre}</h4>
+      <p>${prod.descripcion || ""}</p>
+      <p><strong>Precio:</strong> $${prod.precio}</p>
+      <p><strong>Stock:</strong> ${prod.stock_disponible}</p>
+    </div>
+  `).join('');
+}
+
+document.querySelectorAll('.btn-mas-info').forEach(btn => {
+  btn.addEventListener('click', async function(e) {
+    e.stopPropagation();
+    document.querySelectorAll('.mini-menu').forEach(m => m.style.display = 'none');
+    const categoria = btn.getAttribute('data-categoria');
+    const miniMenu = document.getElementById('mini-menu-' + categoria);
+    if (miniMenu) miniMenu.style.display = 'block';
+
+    // Filtrar productos por IDs de la categoría
+    await cargarTodosLosProductos();
+    const ids = categoriasProductos[categoria] || [];
+    const productosFiltrados = todosLosProductos.filter(p => ids.includes(Number(p.id_Producto)));
+    renderizarCards(categoria, productosFiltrados);
+  });
+});
+
+document.querySelectorAll('.mini-menu-close').forEach(closeBtn => {
+  closeBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const mini = closeBtn.getAttribute('data-mini');
+    const miniMenu = document.getElementById('mini-menu-' + mini);
+    if (miniMenu) miniMenu.style.display = 'none';
+  });
+});
+
+document.addEventListener('click', function(e) {
+  document.querySelectorAll('.mini-menu').forEach(m => {
+    if (m.style.display === 'block' && !m.contains(e.target)) {
+      m.style.display = 'none';
+    }
+  });
+});
+
+document.querySelectorAll('.mini-menu-content').forEach(content => {
+  content.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+});
+
+function closeModal() {
+  var modal = document.getElementById('carritoModal'); // Usa el id correcto
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
 });
 
 
