@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Debes tener un endpoint tipo: /api/categorias/:categoria
             // Ejemplo de respuesta esperada: [{id, nombre, precio}, ...]
             try {
-                const response = await fetch('/ProyectoFinal2025/proyectofinal2025-main/Backend/routes/categorias.php?categoria=' + encodeURIComponent(categoria));
+                const response = await fetch('http://localhost/ProyectoFinal2025/proyectofinal2025-main/Backend/routes/categorias.php?categoria=' + encodeURIComponent(categoria));
                 if (!response.ok) throw new Error('Error al cargar los alimentos');
                 const alimentos = await response.json();
 
@@ -191,35 +191,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- MINI-MENUS CON CARDS DINÁMICAS ---
 
-// Relaciona cada categoria de botón con los IDs de productos de tu backend
-const categoriasProductos = {
-  "desayuno-merienda": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33],
-  "menu-infantil": [159,160,161,162,163,164],
-  "milanesas-hamburgesas-chivitos-chorizo": [51,52,53,54,55,56,57,58,59,60,61],
-  "guarniciones-ensaladas": [62,63,64,65,66,67,68,69,70],
-  "pizzas": [145,146,147,148,149,150,151,152,153,154,155,156,157,158],
-  "combos-especiales": [112,113,114,115,49,50],
-  "postres": [116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144],
-  "bebidas": [165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195],
-  "tragos": [85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111]
-};
-
-let todosLosProductos = [];
-
-async function cargarTodosLosProductos() {
-  if (todosLosProductos.length) return todosLosProductos;
-  const res = await fetch('http://localhost/ProyectoFinal2025/proyectofinal2025-main/Backend/routes/api.php?url=comidas');
-  const data = await res.text();
-  console.log('Respuesta del backend:', data);
+async function cargarProductosPorCategoria(categoria) {
   try {
-    todosLosProductos = JSON.parse(data);
-  } catch (e) {
-    alert('Error al parsear productos: ' + e.message);
-    todosLosProductos = [];
+    const response = await fetch(`http://localhost/ProyectoFinal2025/proyectofinal2025-main/Backend/routes/categorias.php?categoria=${encodeURIComponent(categoria)}`);
+    if (!response.ok) throw new Error('Error al cargar productos');
+    const productos = await response.json();
+    return productos;
+  } catch (error) {
+    console.error('Error cargando productos:', error);
+    return [];
   }
-  return todosLosProductos;
 }
-
 
 function renderizarCards(categoria, productos) {
   const contenedor = document.querySelector(`#mini-menu-${categoria} .mini-menu-cards`);
@@ -234,6 +216,9 @@ function renderizarCards(categoria, productos) {
       <p>${prod.descripcion || ""}</p>
       <p><strong>Precio:</strong> $${prod.precio}</p>
       <p><strong>Stock:</strong> ${prod.stock_disponible}</p>
+      <button class="card-add-to-cart" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}">
+        Agregar al carrito
+      </button>
     </div>
   `).join('');
 }
@@ -246,12 +231,38 @@ document.querySelectorAll('.btn-mas-info').forEach(btn => {
     const miniMenu = document.getElementById('mini-menu-' + categoria);
     if (miniMenu) miniMenu.style.display = 'block';
 
-    // Filtrar productos por IDs de la categoría
-    await cargarTodosLosProductos();
-    const ids = categoriasProductos[categoria] || [];
-    const productosFiltrados = todosLosProductos.filter(p => ids.includes(Number(p.id_Producto)));
-    renderizarCards(categoria, productosFiltrados);
+    // Cargar productos de la categoría desde la API
+    const productos = await cargarProductosPorCategoria(categoria);
+    renderizarCards(categoria, productos);
   });
+});
+
+// Add to cart functionality for mini-menu cards
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('card-add-to-cart')) {
+    const btn = e.target;
+    const id = btn.dataset.id;
+    const nombre = btn.dataset.nombre;
+    const precio = parseFloat(btn.dataset.precio);
+    
+    // Add to cart using localStorage
+    let cart = JSON.parse(localStorage.getItem('altCart')) || [];
+    const existingProductIndex = cart.findIndex(item => item.id == id);
+    if (existingProductIndex > -1) {
+      cart[existingProductIndex].quantity += 1;
+    } else {
+      cart.push({ id, name: nombre, price: precio, quantity: 1 });
+    }
+    localStorage.setItem('altCart', JSON.stringify(cart));
+    
+    // Visual feedback
+    btn.textContent = 'Agregado!';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = 'Agregar al carrito';
+      btn.disabled = false;
+    }, 1000);
+  }
 });
 
 document.querySelectorAll('.mini-menu-close').forEach(closeBtn => {
