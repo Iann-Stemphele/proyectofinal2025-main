@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Debes tener un endpoint tipo: /api/categorias/:categoria
             // Ejemplo de respuesta esperada: [{id, nombre, precio}, ...]
             try {
-                const response = await fetch(`/api/categorias/${encodeURIComponent(categoria)}`);
+                const response = await fetch('http://localhost/ProyectoFinal2025/proyectofinal2025-main/Backend/routes/categorias.php?categoria=' + encodeURIComponent(categoria));
                 if (!response.ok) throw new Error('Error al cargar los alimentos');
                 const alimentos = await response.json();
 
@@ -188,6 +188,112 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1000);
         }
     });
+
+// --- MINI-MENUS CON CARDS DINÁMICAS ---
+
+async function cargarProductosPorCategoria(categoria) {
+  try {
+    const response = await fetch(`http://localhost/ProyectoFinal2025/proyectofinal2025-main/Backend/routes/categorias.php?categoria=${encodeURIComponent(categoria)}`);
+    if (!response.ok) throw new Error('Error al cargar productos');
+    const productos = await response.json();
+    return productos;
+  } catch (error) {
+    console.error('Error cargando productos:', error);
+    return [];
+  }
+}
+
+function renderizarCards(categoria, productos) {
+  const contenedor = document.querySelector(`#mini-menu-${categoria} .mini-menu-cards`);
+  if (!contenedor) return;
+  if (!productos.length) {
+    contenedor.innerHTML = "<p>No hay productos en esta categoría.</p>";
+    return;
+  }
+  contenedor.innerHTML = productos.map(prod => `
+    <div class="card">
+      <h4>${prod.nombre}</h4>
+      <p>${prod.descripcion || ""}</p>
+      <p><strong>Precio:</strong> $${prod.precio}</p>
+      <p><strong>Stock:</strong> ${prod.stock_disponible}</p>
+      <button class="card-add-to-cart" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}">
+        Agregar al carrito
+      </button>
+    </div>
+  `).join('');
+}
+
+document.querySelectorAll('.btn-mas-info').forEach(btn => {
+  btn.addEventListener('click', async function(e) {
+    e.stopPropagation();
+    document.querySelectorAll('.mini-menu').forEach(m => m.style.display = 'none');
+    const categoria = btn.getAttribute('data-categoria');
+    const miniMenu = document.getElementById('mini-menu-' + categoria);
+    if (miniMenu) miniMenu.style.display = 'block';
+
+    // Cargar productos de la categoría desde la API
+    const productos = await cargarProductosPorCategoria(categoria);
+    renderizarCards(categoria, productos);
+  });
+});
+
+// Add to cart functionality for mini-menu cards
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('card-add-to-cart')) {
+    const btn = e.target;
+    const id = btn.dataset.id;
+    const nombre = btn.dataset.nombre;
+    const precio = parseFloat(btn.dataset.precio);
+    
+    // Add to cart using localStorage
+    let cart = JSON.parse(localStorage.getItem('altCart')) || [];
+    const existingProductIndex = cart.findIndex(item => item.id == id);
+    if (existingProductIndex > -1) {
+      cart[existingProductIndex].quantity += 1;
+    } else {
+      cart.push({ id, name: nombre, price: precio, quantity: 1 });
+    }
+    localStorage.setItem('altCart', JSON.stringify(cart));
+    
+    // Visual feedback
+    btn.textContent = 'Agregado!';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = 'Agregar al carrito';
+      btn.disabled = false;
+    }, 1000);
+  }
+});
+
+document.querySelectorAll('.mini-menu-close').forEach(closeBtn => {
+  closeBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const mini = closeBtn.getAttribute('data-mini');
+    const miniMenu = document.getElementById('mini-menu-' + mini);
+    if (miniMenu) miniMenu.style.display = 'none';
+  });
+});
+
+document.addEventListener('click', function(e) {
+  document.querySelectorAll('.mini-menu').forEach(m => {
+    if (m.style.display === 'block' && !m.contains(e.target)) {
+      m.style.display = 'none';
+    }
+  });
+});
+
+document.querySelectorAll('.mini-menu-content').forEach(content => {
+  content.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+});
+
+function closeModal() {
+  var modal = document.getElementById('carritoModal'); // Usa el id correcto
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
 });
 
 
