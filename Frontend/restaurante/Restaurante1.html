@@ -23,7 +23,10 @@
 </df-messenger> 
 
 <div id="alt-modal-2">
-    <img class="alt-Shop" id="alt-shop-icon" src="../img/AAF71278-6722-4187-8DF1-DCFFB04DF32E.png" alt="Carrito de Compras" width="55px" height="50px">
+    <button class="cart-button" id="alt-shop-icon" aria-label="Carrito de Compras">
+        <img src="../img/AAF71278-6722-4187-8DF1-DCFFB04DF32E.png" alt="Carrito de Compras" width="30px" height="30px">
+        <span class="cart-counter" id="cart-counter">0</span>
+    </button>
 </div>
 
 <div id="alt-modal-cart" class="alt-modal-container" style="display:none;">
@@ -721,6 +724,8 @@
         </div>
     </div>
 </div>
+    <div id="adding-to-cart" class="adding-to-cart">Agregando al carrito...</div>
+    
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="Restaurante1.js"></script>
     <script src="../Carrito/carro.js"></script>

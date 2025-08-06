@@ -1,14 +1,55 @@
-/* Posiciona el ícono del carrito en la parte inferior izquierda */
+/* Posiciona el ícono del carrito en la parte inferior derecha */
 #alt-modal-2 {
     position: fixed;
     bottom: 20px; /* Distancia desde abajo */
-    left: 20px; /* Distancia desde la izquierda */
+    right: 20px; /* Distancia desde la derecha */
     z-index: 1000; /* Asegura que esté por encima de otro contenido */
     cursor: pointer;
 }
 
-#alt-shop-icon {
-    display: block; /* Asegura que no haya espacio extra debajo de la imagen */
+/* Estilo único para el botón del carrito */
+.cart-button {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #cc6600;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.cart-button:hover {
+    background: #e67300;
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.cart-button img {
+    width: 30px;
+    height: 30px;
+}
+
+/* Contador de items en el carrito */
+.cart-counter {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #050100;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Estilos Generales de Modales */
@@ -263,4 +304,103 @@
     background-color: transparent;
     border-color: transparent;
     font-size: larger;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+    .cart-button {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .cart-button img {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .cart-counter {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    #alt-modal-2 {
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .cart-button {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .cart-button img {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .cart-counter {
+        width: 18px;
+        height: 18px;
+        font-size: 9px;
+    }
+    
+    .alt-cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .alt-item-quantity-controls {
+        margin: 10px 0;
+    }
+    
+    .alt-item-price {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+    
+    .alt-delete-item {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+
+/* Animation for cart counter updates */
+@keyframes cartCounterPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.cart-counter.updated {
+    animation: cartCounterPulse 0.3s ease-in-out;
+}
+
+/* Visual feedback when adding items to cart */
+.adding-to-cart {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 5px;
+    z-index: 2000;
+    font-size: 18px;
+    display: none;
+}
+
+.adding-to-cart.show {
+    display: block;
+    animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
 }

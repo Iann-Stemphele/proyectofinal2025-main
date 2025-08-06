@@ -24,8 +24,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Estado del Carrito y Funciones de Almacenamiento Local ---
     let cart = JSON.parse(localStorage.getItem('altCart')) || [];
 
+    // Función para actualizar el contaddel carrito
+    const updateCartCounter = () => {
+        const counter = document.getElementById('cart-counter');
+        if (counter) {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            counter.textContent = totalItems;
+            // Ocultar el contador si el carrito está vacío
+            counter.style.display = totalItems > 0 ? 'flex' : 'none';
+            
+            // Trigger cart counter animation
+            counter.classList.remove('updated');
+            void counter.offsetWidth; // Trigger reflow
+            counter.classList.add('updated');
+        }
+    };
+
     const saveCart = () => {
         localStorage.setItem('altCart', JSON.stringify(cart));
+        updateCartCounter(); // Actualizar el contador cada vez que se guarda el carrito
     };
 
     // Esta función añade o actualiza un producto en el carrito
@@ -38,6 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         saveCart();
         renderCart();
+        
+        // Trigger cart counter animation
+        const cartCounter = document.getElementById('cart-counter');
+        if (cartCounter) {
+            cartCounter.classList.remove('updated');
+            void cartCounter.offsetWidth; // Trigger reflow
+            cartCounter.classList.add('updated');
+        }
     };
 
     // Esta función renderiza los productos en el modal del carrito
@@ -229,6 +254,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Renderizado Inicial ---
     renderCart(); // Muestra el contenido del carrito al cargar la página
+    updateCartCounter(); // Actualiza el contador del carrito al cargar la página
+    
+    // Listen for cart updates from other parts of the application
+    window.addEventListener('cartUpdated', () => {
+        // Update cart data from localStorage
+        cart = JSON.parse(localStorage.getItem('altCart')) || [];
+        // Re-render the cart display
+        renderCart();
+        updateCartCounter();
+    });
 
     // --- Simulación: Botones "Añadir al Carrito" ---
     // Deberías integrar esto con la lógica de visualización de tus productos reales.
@@ -242,7 +277,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 price: parseFloat(event.target.dataset.productPrice)
             };
             addProductToCart(product);
-            alert(`"${product.name}" ha sido añadido al carrito.`);
+            
+            // Visual feedback
+            const feedback = document.getElementById('adding-to-cart');
+            if (feedback) {
+                feedback.textContent = `"${product.name}" agregado al carrito`;
+                feedback.classList.add('show');
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 2000);
+            } else {
+                alert(`"${product.name}" ha sido añadido al carrito.`);
+            }
         });
     });
 });

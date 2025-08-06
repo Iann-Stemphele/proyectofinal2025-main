@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Debes tener un endpoint tipo: /api/categorias/:categoria
             // Ejemplo de respuesta esperada: [{id, nombre, precio}, ...]
             try {
-                const response = await fetch('http://localhost/ProyectoFinal2025/proyectofinal2025-main/Backend/routes/categorias.php?categoria=' + encodeURIComponent(categoria));
+                const response = await fetch('http://localhost/proyectofinal2025-main/Backend/routes/categorias.php?categoria=' + encodeURIComponent(categoria));
                 if (!response.ok) throw new Error('Error al cargar los alimentos');
                 const alimentos = await response.json();
 
@@ -179,6 +179,39 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             localStorage.setItem('altCart', JSON.stringify(cart));
 
+            // Actualizar el contador del carrito
+            const counter = document.getElementById('cart-counter');
+            if (counter) {
+                const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+                counter.textContent = totalItems;
+                counter.style.display = totalItems > 0 ? 'flex' : 'none';
+            }
+
+            // Actualizar el contador del carrito
+            const cartCounter = document.getElementById('cart-counter');
+            if (cartCounter) {
+                const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+                cartCounter.textContent = totalItems;
+                cartCounter.style.display = totalItems > 0 ? 'flex' : 'none';
+                // Agregar clase para animación
+                cartCounter.classList.remove('updated');
+                void cartCounter.offsetWidth; // Trigger reflow
+                cartCounter.classList.add('updated');
+            }
+
+            // Visual feedback
+            const feedback = document.getElementById('adding-to-cart');
+            if (feedback) {
+                feedback.textContent = `"${nombre}" agregado al carrito`;
+                feedback.classList.add('show');
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 2000);
+            }
+
+            // Dispatch custom event to update cart display
+            window.dispatchEvent(new CustomEvent('cartUpdated'));
+
             // Opcional: feedback visual
             btn.textContent = 'Agregado!';
             btn.disabled = true;
@@ -193,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function cargarProductosPorCategoria(categoria) {
   try {
-    const response = await fetch(`http://localhost/ProyectoFinal2025/proyectofinal2025-main/Backend/routes/categorias.php?categoria=${encodeURIComponent(categoria)}`);
+    const response = await fetch(`http://localhost/proyectofinal2025-main/Backend/routes/categorias.php?categoria=${encodeURIComponent(categoria)}`);
     if (!response.ok) throw new Error('Error al cargar productos');
     const productos = await response.json();
     return productos;
@@ -239,30 +272,55 @@ document.querySelectorAll('.btn-mas-info').forEach(btn => {
 
 // Add to cart functionality for mini-menu cards
 document.addEventListener('click', function(e) {
-  if (e.target.classList.contains('card-add-to-cart')) {
-    const btn = e.target;
-    const id = btn.dataset.id;
-    const nombre = btn.dataset.nombre;
-    const precio = parseFloat(btn.dataset.precio);
-    
-    // Add to cart using localStorage
-    let cart = JSON.parse(localStorage.getItem('altCart')) || [];
-    const existingProductIndex = cart.findIndex(item => item.id == id);
-    if (existingProductIndex > -1) {
-      cart[existingProductIndex].quantity += 1;
-    } else {
-      cart.push({ id, name: nombre, price: precio, quantity: 1 });
+    if (e.target.classList.contains('card-add-to-cart')) {
+        const btn = e.target;
+        const id = btn.dataset.id;
+        const nombre = btn.dataset.nombre;
+        const precio = parseFloat(btn.dataset.precio);
+        
+        // Add to cart using localStorage
+        let cart = JSON.parse(localStorage.getItem('altCart')) || [];
+        const existingProductIndex = cart.findIndex(item => item.id == id);
+        if (existingProductIndex > -1) {
+            cart[existingProductIndex].quantity += 1;
+        } else {
+            cart.push({ id, name: nombre, price: precio, quantity: 1 });
+        }
+        localStorage.setItem('altCart', JSON.stringify(cart));
+        
+        // Actualizar el contador del carrito
+        const cartCounter = document.getElementById('cart-counter');
+        if (cartCounter) {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCounter.textContent = totalItems;
+            cartCounter.style.display = totalItems > 0 ? 'flex' : 'none';
+            // Agregar clase para animación
+            cartCounter.classList.remove('updated');
+            void cartCounter.offsetWidth; // Trigger reflow
+            cartCounter.classList.add('updated');
+        }
+        
+        // Visual feedback
+        const feedback = document.getElementById('adding-to-cart');
+        if (feedback) {
+            feedback.textContent = `"${nombre}" agregado al carrito`;
+            feedback.classList.add('show');
+            setTimeout(() => {
+                feedback.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Dispatch custom event to update cart display
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
+
+        // Visual feedback
+        btn.textContent = 'Agregado!';
+        btn.disabled = true;
+        setTimeout(() => {
+            btn.textContent = 'Agregar al carrito';
+            btn.disabled = false;
+        }, 1000);
     }
-    localStorage.setItem('altCart', JSON.stringify(cart));
-    
-    // Visual feedback
-    btn.textContent = 'Agregado!';
-    btn.disabled = true;
-    setTimeout(() => {
-      btn.textContent = 'Agregar al carrito';
-      btn.disabled = false;
-    }, 1000);
-  }
 });
 
 document.querySelectorAll('.mini-menu-close').forEach(closeBtn => {
