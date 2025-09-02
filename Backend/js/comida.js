@@ -43,12 +43,20 @@ function mostrarComidasPorRango(min, max) {
     console.log("Filtradas:", filtradas); // Verifica en consola
     contenedor.innerHTML = filtradas.length
         ? filtradas.map(comida => `
-            <div class="card">
-                <h3>${comida.nombre}</h3>
-                <p>${comida.descripcion || ""}</p>
-                <p>Precio: $${comida.precio}</p>
-                <p>Stock: ${comida.stock_disponible}</p>
+        <div class="card comida-item">
+            <div class="card-content">
+                <h3 class="comida-nombre">${comida.nombre}</h3>
+                <p class="comida-descripcion">${comida.descripcion || ""}</p>
+                <div class="comida-precio-stock">
+                    <span class="comida-precio">Precio: $${comida.precio}</span>
+                    <span class="comida-stock">Stock: ${comida.stock_disponible}</span>
+                </div>
+                <div class="comida-actions">
+                    <input type="number" min="1" value="1" class="comida-cantidad" style="width:60px; margin-right:8px; border-radius:6px; border:1px solid #ccc; padding:4px; font-size:1rem;">
+                    <button class="comida-agregar-btn">Agregar al carrito</button>
+                </div>
             </div>
+        </div>
         `).join('')
         : "<p>No hay productos en esta categoría.</p>";
 }
@@ -63,13 +71,19 @@ function mostrarPorCategoria(cat) {
     return;
   }
   contenedor.innerHTML = filtrados.map(comida => `
-    <div class="card">
-      <div class="card-content">
-        <h3 class="card-title">${comida.nombre}</h3>
-        <p class="card-text">${comida.descripcion || ""}</p>
-        <p><strong>Precio:</strong> $${comida.precio}</p>
-        <p><strong>Stock:</strong> ${comida.stock_disponible}</p>
-      </div>
+    <div class="card comida-item">
+        <div class="card-content">
+            <h3 class="comida-nombre">${comida.nombre}</h3>
+            <p class="comida-descripcion">${comida.descripcion || ""}</p>
+            <div class="comida-precio-stock">
+                <span class="comida-precio">Precio: $${comida.precio}</span>
+                <span class="comida-stock">Stock: ${comida.stock_disponible}</span>
+            </div>
+            <div class="comida-actions">
+                <input type="number" min="1" value="1" class="comida-cantidad" style="width:60px; margin-right:8px; border-radius:6px; border:1px solid #ccc; padding:4px; font-size:1rem;">
+                <button class="comida-agregar-btn">Agregar al carrito</button>
+            </div>
+        </div>
     </div>
   `).join('');
 }

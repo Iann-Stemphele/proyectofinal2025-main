@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const altCustomerInfoForm = document.getElementById('alt-customer-info-form');
     const altCustomerNameInput = document.getElementById('alt-customer-name');
     const altCustomerLastnameInput = document.getElementById('alt-customer-lastname');
+    const altCustomerEmailInput = document.getElementById('alt-customer-email');
     const altCustomerPhoneInput = document.getElementById('alt-customer-phone');
     const altConfirmOrderButton = document.getElementById('alt-confirm-order');
     const altOrderConfirmationMessage = document.getElementById('alt-order-confirmation-message');
@@ -109,10 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (event.target.classList.contains('alt-decrease-quantity')) {
             if (cart[productIndex].quantity > 1) {
                 cart[productIndex].quantity--;
-            } else {
-                // Si la cantidad llega a 0, elimina el producto del carrito
-                cart.splice(productIndex, 1);
             }
+            // Prevent quantity from going below 1
         } else if (event.target.classList.contains('alt-delete-item')) {
             cart.splice(productIndex, 1); // Elimina el producto directamente
         }
@@ -198,10 +197,28 @@ document.addEventListener('DOMContentLoaded', () => {
     altConfirmOrderButton.addEventListener('click', async () => {
         const name = altCustomerNameInput.value.trim();
         const lastname = altCustomerLastnameInput.value.trim();
+        const email = altCustomerEmailInput.value.trim();
         const phone = altCustomerPhoneInput.value.trim();
 
-        if (!name || !lastname || !phone) {
-            alert('Por favor, completa todos tus datos: Nombre, Apellido y Número de Teléfono.');
+        // Validation
+        const nameRegex = /^[a-zA-Z\s]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^\d+$/;
+
+        if (!name || !nameRegex.test(name)) {
+            alert('El nombre debe contener solo letras.');
+            return;
+        }
+        if (!lastname || !nameRegex.test(lastname)) {
+            alert('El apellido debe contener solo letras.');
+            return;
+        }
+        if (!email || !emailRegex.test(email)) {
+            alert('Por favor, ingresa un email válido.');
+            return;
+        }
+        if (!phone || !phoneRegex.test(phone)) {
+            alert('El teléfono debe contener solo números.');
             return;
         }
 
@@ -210,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: {
                 name: name,
                 lastname: lastname,
+                email: email,
                 phone: phone
             },
             cartItems: cart, // Los artículos actualmente en el carrito

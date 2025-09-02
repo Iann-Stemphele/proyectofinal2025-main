@@ -1,8 +1,8 @@
-/* Posiciona el ícono del carrito en la parte inferior derecha */
+/* Posiciona el ícono del carrito en la parte inferior izquierda */
 #alt-modal-2 {
     position: fixed;
     bottom: 20px; /* Distancia desde abajo */
-    right: 20px; /* Distancia desde la derecha */
+    left: 20px; /* Distancia desde la izquierda */
     z-index: 1000; /* Asegura que esté por encima de otro contenido */
     cursor: pointer;
 }
@@ -115,6 +115,8 @@
     align-items: center;
     padding: 10px 0;
     border-bottom: 1px solid #eee;
+    font-family: 'Poppins', sans-serif;
+    color: #050100;
 }
 
 .alt-cart-item:last-child {

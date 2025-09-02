@@ -682,3 +682,89 @@ header.content{
   max-width: 220px;
   flex: 1 1 180px;
 }
+
+/* Grid layout for "agregar al carrito" modal */
+#mas-info-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  font-family: 'Poppins', sans-serif;
+  color: #050100;
+}
+
+.mas-info-item {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mas-info-nombre {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #cc6600;
+}
+
+.mas-info-precio {
+  color: #050100;
+  font-size: 1rem;
+}
+
+.mas-info-cantidad {
+  width: 60px;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.mas-info-agregar {
+  background-color: #cc6600;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.mas-info-agregar:hover {
+  background-color: #e67300;
+}
+
+/* Styles for "Agregar al carrito" buttons */
+.comida-agregar-btn,
+.card-add-to-cart,
+.mas-info-agregar {
+  background-color: #cc6600;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 10px;
+}
+
+.comida-agregar-btn:hover,
+.card-add-to-cart:hover,
+.mas-info-agregar:hover {
+  background-color: #e67300;
+  transform: scale(1.05);
+}
+
+.comida-agregar-btn:disabled,
+.card-add-to-cart:disabled,
+.mas-info-agregar:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}

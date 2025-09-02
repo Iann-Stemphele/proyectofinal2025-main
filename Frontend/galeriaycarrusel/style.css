@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
   margin: 0;
   background: #f0f0f0;
   padding: 20px;
@@ -45,17 +45,88 @@ body {
   color: #555;
 }
 
-.card-button {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 8px 12px;
-  background: #007bff;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 6px;
-  transition: background 0.2s;
 }
 
-.card-button:hover {
-  background: #0056b3;
+.comida-agregar-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 18px;
+  background: #ff9800;
+  color: #fff;
+  font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.comida-agregar-btn:hover {
+  background: #e65100;
+  transform: scale(1.05);
+}
+
+/* Para el nombre del producto */
+.comida-nombre {
+  font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.comida-descripcion {
+  color: #555;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.comida-precio-stock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.comida-precio {
+  color: #388e3c;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.comida-stock {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.comida-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.comida-cantidad {
+  width: 60px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  padding: 4px;
+  font-size: 1rem;
+  font-family: 'Roboto', Arial, sans-serif;
+  text-align: center;
+}
+}
+
+.comida-item {
+  border: 1px solid #ececec;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  border-radius: 16px;
+  background: #fff;
+  padding: 18px;
+  margin: 10px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.comida-item:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  transform: translateY(-6px);
+}
 }
