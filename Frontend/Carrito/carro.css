@@ -10,10 +10,10 @@
 /* Estilo único para el botón del carrito */
 .cart-button {
     position: relative;
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
-    background: #cc6600;
+    background: #050100;
     border: none;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -24,14 +24,14 @@
 }
 
 .cart-button:hover {
-    background: #e67300;
+    background: rgba(105, 53, 1, 0.85);
     transform: scale(1.1);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
 .cart-button img {
-    width: 30px;
-    height: 30px;
+    width: 353px;
+    height: 35px;
 }
 
 /* Contador de items en el carrito */
