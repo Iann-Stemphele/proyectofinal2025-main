@@ -80,7 +80,7 @@ function mostrarPorCategoria(cat) {
                 <span class="comida-stock">Stock: ${comida.stock_disponible}</span>
             </div>
             <div class="comida-actions">
-                <input type="number" min="1" value="1" class="comida-cantidad" style="width:60px; margin-right:8px; border-radius:6px; border:1px solid #ccc; padding:4px; font-size:1rem;">
+                <input type="number" min="0" value="0" class="comida-cantidad" style="width:60px; margin-right:8px; border-radius:6px; border:1px solid #ccc; padding:4px; font-size:1rem;">
                 <button class="comida-agregar-btn">Agregar al carrito</button>
             </div>
         </div>

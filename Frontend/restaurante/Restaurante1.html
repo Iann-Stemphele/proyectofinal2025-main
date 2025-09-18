@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="Restaurante1.css">
     <link rel="stylesheet" href="../Menu Web/Menu.css">
     <link rel="stylesheet" href="../Carrito/carro.css">
+    <link rel="stylesheet" href="../Comprar/comprar.css">
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
 
 </head>
@@ -119,7 +120,7 @@
                                     
                                 </p>
                                 <div class="botones">
-                                    <a href="#" class="btn-1">Comprar</a>
+                                    <a href="#" class="btn-1" id="abrirModalcomprar">Comprar</a>
                                     <a href="#" class="btn-2" id="abrirModalBtn">Menu</a>
                                 </div>
                             </div>
@@ -134,10 +135,27 @@
             </div>
         </div>
     </header>
+
+
+
+    <!-- Modal Platos del Día -->
+    <div id="modal-platos-dia" class="alt-modal-container" style="display:none;">
+        <div class="alt-modal-content">
+            <span class="alt-close-button" id="close-platos-dia">&times;</span>
+            <h2>Platos del Día</h2>
+            <div id="platos-dia-lista">
+                <p>Cargando platos del día...</p>
+            </div>
+        </div>
+    </div>
+
+   
+
+    
     
 <div id="miModal" class="modal">
-    
-        <i class='bxr  bxs-cart-plus'  ></i> 
+        
+    <i class='bxr  bxs-cart-plus'  ></i> 
   <div class="modal-content">
     <span class="close-button">&times;</span><body>
     <div class="wrapper">
@@ -731,6 +749,7 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="Restaurante1.js"></script>
     <script src="../Carrito/carro.js"></script>
+    <script src="../Comprar/comprar.js"></script>
 
     
 </body>

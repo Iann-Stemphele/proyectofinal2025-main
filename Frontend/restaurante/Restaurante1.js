@@ -353,10 +353,3 @@ function closeModal() {
   }
 }
 });
-
-
-
-
-
-
-

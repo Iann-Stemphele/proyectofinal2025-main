@@ -1,0 +1,95 @@
+ #modal-platos-dia.alt-modal-container {
+        position: fixed;
+        z-index: 9999;
+        left: 0; top: 0; width: 100vw; height: 100vh;
+        background: rgba(0,0,0,0.5);
+        display: flex; align-items: center; justify-content: center;
+    }
+    #modal-platos-dia .alt-modal-content {
+        background-color: #ffffff;
+        border-radius: 16px;
+        padding: 32px 24px;
+        max-width: 400px;
+        width: 90vw;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        position: relative;
+        animation: fadeInScale 0.3s;
+    }
+    #modal-platos-dia .alt-close-button {
+        position: absolute;
+        top: 16px; right: 20px;
+        font-size: 2rem;
+        color: #aaa;
+        cursor: pointer;
+    }
+    #modal-platos-dia .alt-close-button:hover {
+        color: #050100;
+    }
+    #modal-platos-dia h2 {
+        margin-top: 0;
+        font-size: 25px;
+        color: #e67e22;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+    }
+    #platos-dia-lista {
+        margin-top: 18px;
+    }
+    #platos-dia-lista ul {
+        list-style: none;
+        padding: 0;
+    }
+    #platos-dia-lista li {
+        background: #f0efef;
+        margin-bottom: 12px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 1,5rem;
+        box-shadow: 0 2px 8px rgba(230,126,34,0.07);
+        display: flex;
+        flex-direction: column;
+    }
+    #platos-dia-lista .plato-nombre {
+        font-weight: bold;
+        color: #e67e22;
+    }
+    #platos-dia-lista .plato-desc {
+        font-size: 0.97em;
+        color: #666;
+    }
+    @keyframes fadeInScale {
+        from { opacity: 0; transform: scale(0.9);}
+        to { opacity: 1; transform: scale(1);}
+    }
+
+
+    /* --- Estilos para la Notificación Personalizada --- */
+#custom-notification {
+    /* Posicionamiento */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000; /* Asegura que esté por encima de todo */
+
+    /* Apariencia */
+    background-color: rgba(30, 30, 30, 0.8); /* Fondo semitransparente */
+    color: white;
+    padding: 16px 28px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+
+    /* Estado inicial (oculto) */
+    opacity: 0;
+    visibility: hidden;
+    
+    /* Animación de entrada y salida */
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* Clase que se añade con JavaScript para mostrar la notificación */
+#custom-notification.show {
+    opacity: 1;
+    visibility: visible;
+}
