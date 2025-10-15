@@ -6,26 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Las 2 Reinas</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="/">
-    <link rel="stylesheet" href="../Menu Web/Menu.css">
-    <link rel="stylesheet" href="../Carrito/carro.css">
-    <link rel="stylesheet" href="../Comprar/comprar.css">
+    <link rel="stylesheet" href="Frontend/restaurante/Restaurante1.css">
+    <link rel="stylesheet" href="Frontend/Menu Web/Menu.css">
+    <link rel="stylesheet" href="Frontend/Carrito/carro.css">
+    <link rel="stylesheet" href="Frontend/Comprar/comprar.css">
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
 
 </head>
 
 <body>
-    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+ <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 <df-messenger
   intent="WELCOME"
-  chat-title="proyecto_bot"
-  agent-id="1854a80a-4d31-4460-a6a2-d127e0254365"
-  language-code="es">
-</df-messenger> 
+  chat-title="DosReinasBot"
+  agent-id="20066842-c0c5-4301-9ee1-22167ae168ab"
+  language-code="en"
+></df-messenger> 
 
 <div id="alt-modal-2">
     <button class="cart-button" id="alt-shop-icon" aria-label="Carrito de Compras">
-        <img src="../img/AAF71278-6722-4187-8DF1-DCFFB04DF32E.png" alt="Carrito de Compras" width="30px" height="30px">
+        <img src="Frontend/img/AAF71278-6722-4187-8DF1-DCFFB04DF32E.png" alt="Carrito de Compras" width="30px" height="30px">
         <span class="cart-counter" id="cart-counter">0</span>
     </button>
 </div>
@@ -74,7 +74,7 @@
     <header>
         <div id="principio" class="menu continer">
             <label for="menu ">
-                <img src="../img/menu.png" class="menu-icon" alt="">
+                <img src="Frontend/img/menu.png" class="menu-icon" alt="">
             </label>
             <nav class="navbar">
                 <div class="menu-1">
@@ -84,7 +84,7 @@
                         <li><a href="#horario" onclick="scrollToSection(event, 'horario', 2000)">Horario</a></li>
                     </ul>
                 </div>
-                <img class="logo-1" src="../img/logod2r-removebg-preview.png" alt="">
+                <img class="logo-1" src="Frontend/img/logod2r-removebg-preview.png" alt="">
                 <div class="menu-2">
                     <ul>
                         <li><a href="#ubicacion" onclick="scrollToSection(event, 'ubicacion', 2000)">Ubicacion</a></li>
@@ -92,12 +92,12 @@
                     <div class="socials">
                         <a href="https://www.facebook.com/las2reinascolonia/?locale=es_LA" target="_blank">
                             <div class="social">
-                                <img src="../img/s1.svg" alt="">
+                                <img src="Frontend/img/s1.svg" alt="">
                             </div>
                         </a>
                         <a href="https://www.instagram.com/las2reinascolonia/" target="_blank">
                             <div class="social">
-                                <img src="../img/s3.svg" alt="">
+                                <img src="Frontend/img/s3.svg" alt="">
                             </div>
                         </a>
                     </div>
@@ -125,7 +125,7 @@
                                 </div>
                             </div>
                             <div class="slider-img" >
-                                <img src="../img/user_image_20250912_16354978614dbbfa5.png" alt="" width="850px" height="100%">
+                                <img src="Frontend/img/user_image_20250912_16354978614dbbfa5.png" alt="" width="850px" height="100%">
                             </div>
                         </div>
                     </div> 
@@ -162,7 +162,7 @@
   <div class="cols">
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(/Frontend/img/menu/Desayuno\ y\ merienda.png);">
+                    <div class="front" style="background-image: url(Frontend/img/menu/Desayuno\ y\ merienda.png);">
                         <div id="inner">
                             <h1>Desayuno <br> y <br> merienda</h1>
                         </div>
@@ -176,7 +176,7 @@
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(/Frontend/img/menu/Menu\ Infantil.png);">
+                    <div class="front" style="background-image: url(Frontend/img/menu/Menu\ Infantil.png);">
                         <div id="inner">
                             <h1>Menu Infantil</h1>
                         </div>
@@ -190,7 +190,7 @@
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(../img/menu/chivito\,\ milanesa\,\ chorizo.png)">
+                    <div class="front" style="background-image: url(Frontend/img/menu/chivito\,\ milanesa\,\ chorizo.png)">
                         <div id="inner">
                             <h1>Milanesas <br> Hamburgesas <br> Chivitos <br> Chorizo</h1>
                         </div>
@@ -204,7 +204,7 @@
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(../img/menu/ensalada\ y\ guar.png)">
+                    <div class="front" style="background-image: url(Frontend/img/menu/ensalada\ y\ guar.png)">
                         <div id="inner">
                             <h1>Guarniciones <br> y <br> Ensaladas</h1>
                         </div>
@@ -218,7 +218,7 @@
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(../img/menu/pizzas.png)">
+                    <div class="front" style="background-image: url(Frontend/img/menu/pizzas.png)">
                         <div id="inner">
                             <h1>Pizzas</h1>
                         </div>
@@ -232,7 +232,7 @@
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(../img/menu/combos\ y\ picada.png)">
+                    <div class="front" style="background-image: url(Frontend/img/menu/combos\ y\ picada.png)">
                         <div id="inner">
                             <h1>Combos <br> y <br> Especiales</h1>
                         </div>
@@ -246,7 +246,7 @@
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(/Frontend/img/menu/postres.png)">
+                    <div class="front" style="background-image: url(Frontend/img/menu/postres.png)">
                         <div id="inner">
                             <h1>Postres</h1>
                         </div>
@@ -260,7 +260,7 @@
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(/Frontend/img/menu/bebidas.png)">
+                    <div class="front" style="background-image: url(Frontend/img/menu/bebidas.png)">
                         <div id="inner">
                             <h1>Bebidas</h1>
                         </div>
@@ -274,7 +274,7 @@
             </div>
             <div class="col" ontouchstart="this.classList.toggle('hover');">
                 <div id="container">
-                    <div class="front" style="background-image: url(/Frontend/img/menu/tragos.png)">
+                    <div class="front" style="background-image: url(Frontend/img/menu/tragos.png)">
                         <div id="inner">
                             <h1>Tragos</h1>
                         </div>
@@ -346,7 +346,7 @@
                                 <div class="product">
                                     <div class="product-img">
                                         <h4>Nuevo</h4>
-                                        <img src="../img/food1.png" alt="">
+                                        <img src="Frontend/img/food1.png" alt="">
                                     </div>
                                     <div class="product-txt">
                                         <h4>Producto</h4>
@@ -361,7 +361,7 @@
                                 <div class="product">
                                     <div class="product-img">
                                         <h4>Nuevo</h4>
-                                        <img src="../img/food2.png" alt="">
+                                        <img src="Frontend/img/food2.png" alt="">
                                     </div>
                                     <div class="product-txt">
                                         <h4>Producto</h4>
@@ -376,7 +376,7 @@
                                 <div class="product">
                                     <div class="product-img">
                                         <h4>Nuevo</h4>
-                                        <img src="../img/food3.png" alt="">
+                                        <img src="Frontend/img/food3.png" alt="">
                                     </div>
                                     <div class="product-txt">
                                         <h4>Producto</h4>
@@ -402,7 +402,7 @@
                                 <div class="product">
                                     <div class="product-img">
                                         <h4>Nuevo</h4>
-                                        <img src="../img/food4.png" alt="">
+                                        <img src="Frontend/img/food4.png" alt="">
                                     </div>
                                     <div class="product-txt">
                                         <h4>Producto</h4>
@@ -417,7 +417,7 @@
                                 <div class="product">
                                     <div class="product-img">
                                         <h4>Nuevo</h4>
-                                        <img src="../img/food5.png" alt="">
+                                        <img src="Frontend/img/food5.png" alt="">
                                     </div>
                                     <div class="product-txt">
                                         <h4>Producto</h4>
@@ -432,7 +432,7 @@
                                 <div class="product">
                                     <div class="product-img">
                                         <h4>Nuevo</h4>
-                                        <img src="../img/food6.png" alt="">
+                                        <img src="Frontend/img/food6.png" alt="">
                                     </div>
                                     <div class="product-txt">
                                         <h4>Producto</h4>
@@ -458,7 +458,7 @@
                                 <div class="product">
                                     <div class="product-img">
                                         <h4>Nuevo</h4>
-                                        <img src="../img/food7.png" alt="">
+                                        <img src="Frontend/img/food7.png" alt="">
                                     </div>
                                     <div class="product-txt">
                                         <h4>Producto</h4>
@@ -473,7 +473,7 @@
                                 <div class="product">
                                     <div class="product-img">
                                         <h4>Nuevo</h4>
-                                        <img src="../img/food8.png" alt="">
+                                        <img src="Frontend/img/food8.png" alt="">
                                     </div>
                                     <div class="product-txt">
                                         <h4>Producto</h4>
@@ -488,7 +488,7 @@
                                 <div class="product">
                                     <div class="product-img">
                                         <h4>Nuevo</h4>
-                                        <img src="../img/food9.png" alt="">
+                                        <img src="Frontend/img/food9.png" alt="">
                                     </div>
                                     <div class="product-txt">
                                         <h4>Producto</h4>
@@ -509,7 +509,7 @@
 
     <section class="info container">
         <div class="info-img">
-            <img src="../img/info.png" alt="">
+            <img src="Frontend/img/info.png" alt="">
         </div>
         <div class="info-text">
             <h2 id="mas informacion">Informacion</h2>
@@ -557,12 +557,12 @@
                     <div class="socials">
                         <a href="https://www.facebook.com/las2reinascolonia/?locale=es_LA" target="_blank">
                             <div class="social">
-                                <img src="../img/s1.svg" alt="">
+                                <img src="Frontend/img/s1.svg" alt="">
                             </div>
                         </a>
                         <a href="https://www.instagram.com/las2reinascolonia/" target="_blank">
                             <div class="social">
-                                <img src="../img/s3.svg" alt="">
+                                <img src="Frontend/img/s3.svg" alt="">
                                 
                             </div>
                         </a>
@@ -579,8 +579,8 @@
     </section>
 
     <footer class="footer container">
-        <img class="logo-2" id="#principio" onclick="scrollToSection(event, 'principio', 2000)" src="../img/logod2r-removebg-preview.png" alt="">
-        <div class="links">
+        <img class="logo-2" id="#principio" onclick="scrollToSection(event, 'principio', 2000)" src="Frontend/img/logod2r-removebg-preview.png" alt="">
+        <!-- Menu card images  <div class="links">
             <h4>Lorem</h4>
             <ul>
                 <li><a href="#">Lorem</a></li>
@@ -607,17 +607,18 @@
                 <li><a href="#">Lorem</a></li>
             </ul>
         </div>
+        -->
         <div class="links">
             <h4>Redes Sociales</h4>
             <div class="socials">
                         <a href="https://www.facebook.com/las2reinascolonia/?locale=es_LA" target="_blank">
                             <div class="social">
-                                <img src="../img/s1.svg" alt="">
+                                <img src="Frontend/img/s1.svg" alt="">
                             </div>
                         </a>
                         <a href="https://www.instagram.com/las2reinascolonia/" target="_blank">
                             <div class="social">
-                                <img src="../img/s3.svg" alt="">
+                                <img src="Frontend/img/s3.svg" alt="">
                             </div>
                         </a>
                     </div>
@@ -747,9 +748,9 @@
     <div id="adding-to-cart" class="adding-to-cart">Agregando al carrito...</div>
     
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-    <script src="Restaurante1.js"></script>
-    <script src="../Carrito/carro.js"></script>
-    <script src="../Comprar/comprar.js"></script>
+    <script src="Frontend/restaurante/Restaurante1.js"></script>
+    <script src="Frontend/Carrito/carro.js"></script>
+    <script src="Frontend/Comprar/comprar.js"></script>
 
     
 </body>
