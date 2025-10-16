@@ -261,6 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveCart();
                 renderCart();
             } else {
+                const errorText = await response.text();
+                console.error('Error response:', errorText);
                 alert('Error al procesar el pedido. Inténtalo de nuevo.');
             }
         } catch (error) {

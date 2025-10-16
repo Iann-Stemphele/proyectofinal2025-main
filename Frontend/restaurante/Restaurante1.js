@@ -15,7 +15,7 @@ var swiper1 = new Swiper (".mySwiper-1", {
 var swiper2 = new Swiper (".mySwiper-2", {
     slidesPerView: 1, // Cambiado a 1 para evitar el warning de loop
     spaceBetween: 20,
-    loop:true,
+    loop: false, // Disabled loop to avoid warning with insufficient slides
     loopFillGroupWithBlank: true,
     navigation: {
         nextEl:".swiper-button-next",
