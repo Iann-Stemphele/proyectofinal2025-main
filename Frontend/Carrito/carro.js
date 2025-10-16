@@ -316,9 +316,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
         })
-        .then(response => {
+        .then(async response => {
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const errorText = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Response is not JSON');
             }
             return response.json();
         })
