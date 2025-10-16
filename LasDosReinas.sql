@@ -45,7 +45,9 @@ CREATE TABLE `administrador` (
 CREATE TABLE `contiene` (
   `id_contiene` int(11) NOT NULL,
   `id_pedido` int(11) DEFAULT NULL,
-  `id_producto` int(11) DEFAULT NULL
+  `id_producto` int(11) DEFAULT NULL,
+  `cantidad` int(11) DEFAULT 1,
+  `precio_unitario` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -70,7 +72,13 @@ CREATE TABLE `pedido` (
   `fecha` date DEFAULT NULL,
   `monto_total` decimal(10,2) DEFAULT NULL,
   `estado` varchar(50) DEFAULT NULL,
-  `nombre_cliente` varchar(100) DEFAULT NULL
+  `nombre_cliente` varchar(100) DEFAULT NULL,
+  `email_cliente` varchar(100) DEFAULT NULL,
+  `telefono_cliente` varchar(20) DEFAULT NULL,
+  `metodo_pago` varchar(20) DEFAULT NULL,
+  `preference_id` varchar(100) DEFAULT NULL,
+  `hora_inicio` datetime DEFAULT CURRENT_TIMESTAMP,
+  `tiempo_estimado` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

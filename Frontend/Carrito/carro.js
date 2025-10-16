@@ -199,33 +199,74 @@ document.addEventListener('DOMContentLoaded', () => {
     altPayCashButton.addEventListener('click', () => {
         altCustomerInfoForm.style.display = 'block';
         altOrderConfirmationMessage.style.display = 'none';
+        document.getElementById('alt-card-payment-form').style.display = 'none';
     });
 
     altPayCardButton.addEventListener('click', () => {
-        altCustomerInfoForm.style.display = 'block';
+        document.getElementById('alt-card-payment-form').style.display = 'block';
+        altCustomerInfoForm.style.display = 'none';
         altOrderConfirmationMessage.style.display = 'none';
+        initializeMercadoPago();
     });
 
     // Confirma el pedido (se mantiene tu lógica asíncrona)
     altConfirmOrderButton.addEventListener('click', async () => {
         // ... (Tu lógica de validación de formulario y FETCH aquí) ...
         // Se asume que esto funciona y limpia el carrito si es exitoso.
-        
+
         // Simulación:
+        const name = altCustomerNameInput.value.trim();
+        const lastname = altCustomerLastnameInput.value.trim();
+        const email = altCustomerEmailInput.value.trim();
         const phone = altCustomerPhoneInput.value.trim();
+
         // Validación básica...
-        if (!phone) { alert('Ingresa un teléfono válido.'); return; }
+        if (!name || !lastname || !email || !phone) {
+            alert('Por favor completa todos los campos.');
+            return;
+        }
 
-        // Si la validación pasa y el fetch es exitoso:
-        console.log('Pedido enviado exitosamente (simulado)');
-        altNotifCustomerPhoneSpan.textContent = phone;
-        altCustomerInfoForm.style.display = 'none';
-        altOrderConfirmationMessage.style.display = 'block';
+        try {
+            const response = await fetch('Backend/routes/create_cash_order.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    items: cart,
+                    total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                    customer: {
+                        name: name,
+                        lastname: lastname,
+                        email: email,
+                        phone: phone
+                    }
+                })
+            });
 
-        // Limpia el carrito después de un pedido exitoso
-        cart = [];
-        saveCart();
-        renderCart(); 
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Pedido enviado exitosamente');
+                altNotifCustomerPhoneSpan.textContent = phone;
+                altCustomerInfoForm.style.display = 'none';
+                altOrderConfirmationMessage.style.display = 'block';
+
+                // Redirect to order status page
+                setTimeout(() => {
+                    window.location.href = `order_status.html?order_id=${encodeURIComponent(email)}`;
+                }, 2000);
+
+                // Limpia el carrito después de un pedido exitoso
+                cart = [];
+                saveCart();
+                renderCart();
+            } else {
+                alert('Error al procesar el pedido. Inténtalo de nuevo.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al procesar el pedido. Inténtalo de nuevo.');
+        }
     });
 
 
@@ -248,6 +289,55 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- Función para inicializar Mercado Pago ---
+    const initializeMercadoPago = () => {
+        const mp = new MercadoPago('APP_USR-a294acdc-355e-44b8-a2b9-6df401a8f2ab', {
+            locale: 'es-UY'
+        });
+
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        fetch('Backend/routes/create_preference.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                items: cart,
+                total: total,
+                customer: {
+                    name: document.getElementById('alt-card-customer-name').value,
+                    lastname: document.getElementById('alt-card-customer-lastname').value,
+                    email: document.getElementById('alt-card-customer-email').value,
+                    phone: document.getElementById('alt-card-customer-phone').value
+                }
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.id) {
+                document.getElementById('alt-mercado-pago-wallet').innerHTML = '<div class="alert alert-danger">No se pudo obtener el preferenceId.</div>';
+                return;
+            }
+            mp.bricks().create("wallet", "alt-mercado-pago-wallet", {
+                initialization: {
+                    preferenceId: data.id,
+                    redirectMode: 'self'
+                },
+                customization: {
+                    texts: {
+                        action: "pay",
+                        valueProp: 'security_safety',
+                    },
+                },
+            });
+        })
+        .catch(error => {
+            document.getElementById('alt-mercado-pago-wallet').innerHTML = '<div class="alert alert-danger">Error al conectar con el servidor.</div>';
+            console.error(error);
+        });
+    };
 
     // --- Renderizado Inicial ---
     renderCart();

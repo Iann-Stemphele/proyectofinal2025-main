@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado del Pedido - Las Dos Reinas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .status-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .status-icon {
+            font-size: 4em;
+            margin: 20px 0;
+        }
+        .status-inicializando { color: #ffa500; }
+        .status-en-proceso { color: #007bff; }
+        .status-completado { color: #28a745; }
+        .order-details {
+            text-align: left;
+            margin: 20px 0;
+        }
+        .order-items {
+            margin: 20px 0;
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .refresh-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .refresh-btn:hover {
+            background: #0056b3;
+        }
+        .pickup-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="status-container">
+        <h1>Estado de tu Pedido</h1>
+        <div id="order-status">
+            <!-- Order status will be loaded here -->
+        </div>
+        <button class="refresh-btn" onclick="loadOrderStatus()">Actualizar Estado</button>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderIdentifier = urlParams.get('order_id');
+
+        let orderData = null;
+
+        async function loadOrderStatus() {
+            if (!orderIdentifier) {
+                document.getElementById('order-status').innerHTML = '<p>Error: No se encontró el identificador del pedido.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`Backend/routes/get_order_status.php?order_id=${encodeURIComponent(orderIdentifier)}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    document.getElementById('order-status').innerHTML = `<p>${data.error}</p>`;
+                    return;
+                }
+
+                orderData = data;
+                renderOrderStatus();
+            } catch (error) {
+                console.error('Error loading order status:', error);
+                document.getElementById('order-status').innerHTML = '<p>Error al cargar el estado del pedido.</p>';
+            }
+        }
+
+        function renderOrderStatus() {
+            if (!orderData) return;
+
+            const statusClass = orderData.estado.replace(/\s+/g, '-').toLowerCase();
+            let statusIcon = '⏳'; // Default
+            let statusText = orderData.estado;
+
+            switch (orderData.estado.toLowerCase()) {
+                case 'inicializando':
+                    statusIcon = '⏳';
+                    statusText = 'Inicializando';
+                    break;
+                case 'en proceso':
+                    statusIcon = '👨‍🍳';
+                    statusText = 'En Proceso';
+                    break;
+                case 'completado':
+                    statusIcon = '✅';
+                    statusText = 'Completado - Listo para retirar';
+                    break;
+            }
+
+            let pickupInfo = '';
+            if (orderData.metodo_pago === 'efectivo') {
+                pickupInfo = `
+                    <div class="pickup-info">
+                        <h3>Información de Retiro</h3>
+                        <p>Tu pedido se retira en el local y se paga en el momento de levantarlo.</p>
+                        <p><strong>Dirección:</strong> Terminal de Ómnibus, Av. Buenos Aires esq, 70000, Colonia del Sacramento, Uruguay</p>
+                        <p><strong>Horarios:</strong> Abierto 7 días a la semana, 7:30hs a 23:30hs</p>
+                        ${orderData.tiempo_estimado ? `<p><strong>Tiempo estimado de preparación:</strong> ${orderData.tiempo_estimado} minutos</p>` : ''}
+                    </div>
+                `;
+            }
+
+            const orderHtml = `
+                <div class="status-icon status-${statusClass}">${statusIcon}</div>
+                <h2>${statusText}</h2>
+                <div class="order-details">
+                    <p><strong>Pedido #:</strong> ${orderData.id_pedido}</p>
+                    <p><strong>Fecha:</strong> ${orderData.fecha}</p>
+                    <p><strong>Hora de inicio:</strong> ${orderData.hora_inicio}</p>
+                    <p><strong>Total:</strong> $${orderData.monto_total}</p>
+                    <p><strong>Método de pago:</strong> ${orderData.metodo_pago === 'tarjeta' ? 'Tarjeta' : 'Efectivo'}</p>
+                </div>
+                <div class="order-items">
+                    <h3>Productos:</h3>
+                    ${orderData.items.map(item => `
+                        <div class="order-item">
+                            <span>${item.nombre} x${item.cantidad}</span>
+                            <span>$${(item.precio_unitario * item.cantidad).toFixed(2)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                ${pickupInfo}
+            `;
+
+            document.getElementById('order-status').innerHTML = orderHtml;
+        }
+
+        // Load order status on page load
+        loadOrderStatus();
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadOrderStatus, 30000);
+    </script>
+</body>
+</html>

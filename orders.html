@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pedidos - Las Dos Reinas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .orders-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .order-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+        }
+        .status-inicializando { background-color: #ffa500; }
+        .status-en-proceso { background-color: #007bff; }
+        .status-completado { background-color: #28a745; }
+        .order-items {
+            margin: 15px 0;
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .status-controls {
+            margin-top: 15px;
+        }
+        .status-controls select {
+            padding: 5px;
+            margin-right: 10px;
+        }
+        .time-controls {
+            margin-top: 10px;
+        }
+        .time-controls input {
+            padding: 5px;
+            margin-right: 10px;
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="orders-container">
+        <h1>Gestión de Pedidos</h1>
+        <div id="orders-list">
+            <!-- Orders will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        let orders = [];
+
+        async function loadOrders() {
+            try {
+                const response = await fetch('Backend/routes/get_orders.php');
+                orders = await response.json();
+                renderOrders();
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        function renderOrders() {
+            const ordersList = document.getElementById('orders-list');
+            ordersList.innerHTML = '';
+
+            orders.forEach(order => {
+                const orderCard = document.createElement('div');
+                orderCard.className = 'order-card';
+
+                const statusClass = order.estado.replace(/\s+/g, '-').toLowerCase();
+
+                orderCard.innerHTML = `
+                    <div class="order-header">
+                        <h3>Pedido #${order.id_pedido}</h3>
+                        <span class="order-status status-${statusClass}">${order.estado}</span>
+                    </div>
+                    <div class="order-info">
+                        <p><strong>Cliente:</strong> ${order.nombre_cliente}</p>
+                        <p><strong>Email:</strong> ${order.email_cliente || 'N/A'}</p>
+                        <p><strong>Teléfono:</strong> ${order.telefono_cliente || 'N/A'}</p>
+                        <p><strong>Fecha:</strong> ${order.fecha}</p>
+                        <p><strong>Hora inicio:</strong> ${order.hora_inicio}</p>
+                        <p><strong>Método de pago:</strong> ${order.metodo_pago}</p>
+                        <p><strong>Total:</strong> $${order.monto_total}</p>
+                        ${order.tiempo_estimado ? `<p><strong>Tiempo estimado:</strong> ${order.tiempo_estimado} minutos</p>` : ''}
+                    </div>
+                    <div class="order-items">
+                        <h4>Productos:</h4>
+                        ${order.items.map(item => `
+                            <div class="order-item">
+                                <span>${item.nombre} x${item.cantidad}</span>
+                                <span>$${(item.precio_unitario * item.cantidad).toFixed(2)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="status-controls">
+                        <label>Cambiar estado:</label>
+                        <select onchange="updateOrderStatus(${order.id_pedido}, this.value)">
+                            <option value="">Seleccionar...</option>
+                            <option value="inicializando">Inicializando</option>
+                            <option value="en proceso">En Proceso</option>
+                            <option value="completado">Completado</option>
+                        </select>
+                    </div>
+                    <div class="time-controls">
+                        <label>Tiempo estimado (minutos):</label>
+                        <input type="number" value="${order.tiempo_estimado || ''}" onchange="updateEstimatedTime(${order.id_pedido}, this.value)">
+                    </div>
+                `;
+
+                ordersList.appendChild(orderCard);
+            });
+        }
+
+        async function updateOrderStatus(orderId, newStatus) {
+            if (!newStatus) return;
+
+            try {
+                const response = await fetch('Backend/routes/update_order_status.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        orderId: orderId,
+                        status: newStatus
+                    })
+                });
+
+                if (response.ok) {
+                    // Update local orders array
+                    const order = orders.find(o => o.id_pedido == orderId);
+                    if (order) {
+                        order.estado = newStatus;
+                        renderOrders();
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating order status:', error);
+            }
+        }
+
+        async function updateEstimatedTime(orderId, estimatedTime) {
+            try {
+                const response = await fetch('Backend/routes/update_estimated_time.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        orderId: orderId,
+                        estimatedTime: estimatedTime
+                    })
+                });
+
+                if (response.ok) {
+                    // Update local orders array
+                    const order = orders.find(o => o.id_pedido == orderId);
+                    if (order) {
+                        order.tiempo_estimado = estimatedTime;
+                        renderOrders();
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating estimated time:', error);
+            }
+        }
+
+        // Load orders on page load
+        loadOrders();
+
+        // Refresh orders every 30 seconds
+        setInterval(loadOrders, 30000);
+    </script>
+</body>
+</html>

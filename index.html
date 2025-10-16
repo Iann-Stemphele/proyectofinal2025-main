@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="Frontend/Carrito/carro.css">
     <link rel="stylesheet" href="Frontend/Comprar/comprar.css">
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
 
 </head>
 
@@ -62,6 +63,16 @@
             <input type="email" id="alt-customer-email" placeholder="Email" required>
             <input type="tel" id="alt-customer-phone" placeholder="Número de Teléfono" required>
             <button id="alt-confirm-order" class="alt-btn-primary">Confirmar Pedido</button>
+        </div>
+
+        <div id="alt-card-payment-form" style="display: none;">
+            <h3>Pago con Tarjeta</h3>
+            <p>Ingresa tus datos para procesar el pago con Mercado Pago.</p>
+            <input type="text" id="alt-card-customer-name" placeholder="Nombre" required>
+            <input type="text" id="alt-card-customer-lastname" placeholder="Apellido" required>
+            <input type="email" id="alt-card-customer-email" placeholder="Email" required>
+            <input type="tel" id="alt-card-customer-phone" placeholder="Número de Teléfono" required>
+            <div id="alt-mercado-pago-wallet"></div>
         </div>
 
         <div id="alt-order-confirmation-message" class="alt-notification-message" style="display: none;">
