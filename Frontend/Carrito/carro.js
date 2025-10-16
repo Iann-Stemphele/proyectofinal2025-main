@@ -316,7 +316,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (!data.id) {
                 document.getElementById('alt-mercado-pago-wallet').innerHTML = '<div class="alert alert-danger">No se pudo obtener el preferenceId.</div>';

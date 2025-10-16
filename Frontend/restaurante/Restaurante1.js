@@ -1,7 +1,7 @@
 var swiper1 = new Swiper (".mySwiper-1", {
     slidesPerView: 1,
     spaceBetween: 30,
-    loop:true,
+    loop: false, // Disabled loop as there's only 1 slide
     pagination: {
         el:".swiper-pagination",
         clickable:true,
