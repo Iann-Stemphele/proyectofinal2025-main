@@ -328,6 +328,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
+            if (data.error) {
+                document.getElementById('alt-mercado-pago-wallet').innerHTML = '<div class="alert alert-danger">Error: ' + data.error + '</div>';
+                return;
+            }
             if (!data.id) {
                 document.getElementById('alt-mercado-pago-wallet').innerHTML = '<div class="alert alert-danger">No se pudo obtener el preferenceId.</div>';
                 return;
@@ -346,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         })
         .catch(error => {
-            document.getElementById('alt-mercado-pago-wallet').innerHTML = '<div class="alert alert-danger">Error al conectar con el servidor.</div>';
+            document.getElementById('alt-mercado-pago-wallet').innerHTML = '<div class="alert alert-danger">Error al conectar con el servidor: ' + error.message + '</div>';
             console.error(error);
         });
     };

@@ -1,8 +1,8 @@
 <?php
 header('Content-Type: application/json');
 error_reporting(E_ERROR | E_PARSE);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 use MercadoPago\Client\Preference\PreferenceClient;
@@ -29,24 +29,29 @@ if (isset($input['items']) && is_array($input['items'])) {
     }
 }
 
-$preference = $client->create([
-    "items" => $items,
-    "statement_descriptor" => "LAS DOS REINAS",
-    "external_reference" => "ORDER_" . time(),
-    "back_urls" => [
-        "success" => "http://localhost/proyectofinal2025-main/order_status.html?order_id=" . (isset($input['customer']['email']) ? urlencode($input['customer']['email']) : ''),
-        "failure" => "http://localhost/proyectofinal2025-main/index.html",
-        "pending" => "http://localhost/proyectofinal2025-main/order_status.html?order_id=" . (isset($input['customer']['email']) ? urlencode($input['customer']['email']) : '')
-    ],
-    "auto_return" => "approved"
-]);
+try {
+    $preference = $client->create([
+        "items" => $items,
+        "statement_descriptor" => "LAS DOS REINAS",
+        "external_reference" => "ORDER_" . time(),
+        "back_urls" => [
+            "success" => "http://localhost/proyectofinal2025-main/order_status.html?order_id=" . (isset($input['customer']['email']) ? urlencode($input['customer']['email']) : ''),
+            "failure" => "http://localhost/proyectofinal2025-main/index.html",
+            "pending" => "http://localhost/proyectofinal2025-main/order_status.html?order_id=" . (isset($input['customer']['email']) ? urlencode($input['customer']['email']) : '')
+        ],
+        "auto_return" => "approved"
+    ]);
 
-// Save order to database
-if (isset($input['customer'])) {
-    saveOrderToDatabase($input['items'], $total, $input['customer'], $preference->id);
+    // Save order to database
+    if (isset($input['customer'])) {
+        saveOrderToDatabase($input['items'], $total, $input['customer'], $preference->id);
+    }
+
+    echo json_encode(['id' => $preference->id]);
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Failed to create MercadoPago preference: ' . $e->getMessage()]);
 }
-
-echo json_encode(['id' => $preference->id]);
 
 function saveOrderToDatabase($items, $total, $customer, $preferenceId) {
     // Database connection
