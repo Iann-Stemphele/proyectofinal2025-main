@@ -1,86 +1,82 @@
 <?php
 header('Content-Type: application/json');
-error_reporting(E_ERROR | E_PARSE);
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 
-// require_once __DIR__ . '/../../vendor/autoload.php';
-// use MercadoPago\Client\Preference\PreferenceClient;
-// use MercadoPago\MercadoPagoConfig;
-
-// MercadoPagoConfig::setAccessToken("APP_USR-3116660017260656-101416-b076654c1ec24219b73242f8f92e9c8d-2925612020");
-// $client = new PreferenceClient();
-
-// Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
+if (!$input || !isset($input['items']) || !isset($input['customer'])) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Invalid input']);
+    exit;
+}
 
-$items = [];
+$mp_items = [];
 $total = 0;
-
-if (isset($input['items']) && is_array($input['items'])) {
-    foreach ($input['items'] as $item) {
-        $items[] = [
-            "id" => $item['id'],
-            "title" => $item['name'],
-            "quantity" => $item['quantity'],
-            "unit_price" => $item['price']
-        ];
-        $total += $item['price'] * $item['quantity'];
-    }
+foreach ($input['items'] as $it) {
+    $qty = (int)($it['quantity'] ?? 1);
+    $price = (float)($it['price'] ?? 0);
+    $mp_items[] = [
+        'title' => $it['name'] ?? 'Producto',
+        'quantity' => $qty,
+        'unit_price' => $price
+    ];
+    $total += $price * $qty;
 }
 
-try {
-    // For testing/development, return a mock preference ID
-    $mockPreferenceId = 'TEST_' . time() . '_' . rand(1000, 9999);
+// ---- CONFIG: pon aquí tu ACCESS_TOKEN (server-side) ----
+$access_token = 'APP_USR-3116660017260656-101416-b076654c1ec24219b73242f8f92e9c8d-2925612020';
+// --------------------------------------------------------
 
-    // Save order to database with mock ID
-    if (isset($input['customer'])) {
-        saveOrderToDatabase($input['items'], $total, $input['customer'], $mockPreferenceId);
-    }
+$payload = [
+    'items' => $mp_items,
+    'payer' => [
+        'name' => $input['customer']['name'] ?? '',
+        'surname' => $input['customer']['lastname'] ?? '',
+        'email' => $input['customer']['email'] ?? ''
+    ],
+    'back_urls' => [
+        'success' => 'http://localhost/ProyectoFinal2025-main/orders.html?status=success',
+        'failure' => 'http://localhost/ProyectoFinal2025-main/orders.html?status=failure',
+        'pending' => 'http://localhost/ProyectoFinal2025-main/orders.html?status=pending'
+    ],
+    'auto_return' => 'approved'
+];
 
-    echo json_encode(['id' => $mockPreferenceId]);
-} catch (Throwable $e) {
+$ch = curl_init('https://api.mercadopago.com/checkout/preferences');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'Authorization: Bearer ' . $access_token
+]);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+$response = curl_exec($ch);
+$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+if (curl_errno($ch)) {
+    error_log("MP curl error: " . curl_error($ch));
+}
+curl_close($ch);
+
+if ($httpcode < 200 || $httpcode >= 300) {
+    error_log("create_preference MP API failed ({$httpcode}): {$response}");
     http_response_code(500);
-    echo json_encode(['error' => 'Failed to create MercadoPago preference: ' . $e->getMessage() . ' - Line: ' . $e->getLine() . ' - File: ' . basename($e->getFile())]);
+    echo json_encode(['error' => 'MP API failed', 'status' => $httpcode, 'raw' => $response]);
+    exit;
 }
 
-function saveOrderToDatabase($items, $total, $customer, $preferenceId) {
-    // Database connection
-    $servername = "127.0.0.1";
-    $username = "root";
-    $password = "";
-    $dbname = "lasdosreinas";
+$respJson = json_decode($response, true);
+$preferenceId = $respJson['id'] ?? null;
+$init_point = $respJson['init_point'] ?? ($respJson['sandbox_init_point'] ?? null);
 
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        throw new Exception("Connection failed: " . $conn->connect_error);
-    }
-
-    // Insert order
-    $stmt = $conn->prepare("INSERT INTO pedido (fecha, monto_total, estado, nombre_cliente, email_cliente, telefono_cliente, metodo_pago, preference_id) VALUES (CURDATE(), ?, 'inicializando', ?, ?, ?, 'tarjeta', ?)");
-    $name = $customer['name'] . ' ' . $customer['lastname'];
-    $email = $customer['email'];
-    $phone = $customer['phone'];
-    $stmt->bind_param("dssss", $total, $name, $email, $phone, $preferenceId);
-    $result = $stmt->execute();
-    if (!$result) {
-        throw new Exception("Error inserting order: " . $stmt->error);
-    }
-    $orderId = $conn->insert_id;
-
-    // Insert order items
-    foreach ($items as $item) {
-        $stmt2 = $conn->prepare("INSERT INTO contiene (id_pedido, id_producto, cantidad, precio_unitario) VALUES (?, ?, ?, ?)");
-        $stmt2->bind_param("iiid", $orderId, $item['id'], $item['quantity'], $item['price']);
-        $result = $stmt2->execute();
-        if (!$result) {
-            throw new Exception("Error inserting order item: " . $stmt2->error);
-        }
-        $stmt2->close();
-    }
-
-    $stmt->close();
-    $conn->close();
+if (!$preferenceId || !$init_point) {
+    error_log("create_preference missing id/init_point: " . $response);
+    http_response_code(500);
+    echo json_encode(['error' => 'MP did not return preference id/init_point', 'raw' => $respJson]);
+    exit;
 }
+
+// (Opcional) guardar pedido en BD aquí — mantén la transacción como antes
+echo json_encode(['ok' => true, 'init_point' => $init_point, 'preference_id' => $preferenceId]);
+exit;
 ?>

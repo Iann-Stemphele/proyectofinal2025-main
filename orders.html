@@ -76,9 +76,21 @@
                 const response = await fetch('Backend/routes/get_orders.php');
                 orders = await response.json();
                 renderOrders();
+                // If preference_id in URL, highlight that order
+                const params = new URLSearchParams(window.location.search);
+                const pref = params.get('preference_id') || params.get('preferenceId') || null;
+                if (pref) highlightOrderByPreference(pref);
             } catch (error) {
                 console.error('Error loading orders:', error);
             }
+        }
+
+        function getClientDisplay(order) {
+            // soporte para distintos nombres de campo
+            if (order.nombre_cliente && order.nombre_cliente.trim() !== '') return order.nombre_cliente;
+            if (order.nombre && order.apellido) return (order.nombre + ' ' + order.apellido).trim();
+            if (order.nombre) return order.nombre;
+            return 'Cliente desconocido';
         }
 
         function renderOrders() {
@@ -88,30 +100,36 @@
             orders.forEach(order => {
                 const orderCard = document.createElement('div');
                 orderCard.className = 'order-card';
+                orderCard.id = 'order-' + order.id_pedido;
 
-                const statusClass = order.estado.replace(/\s+/g, '-').toLowerCase();
+                const statusClass = (order.estado || '').replace(/\s+/g, '-').toLowerCase();
+
+                const clienteName = getClientDisplay(order);
+
+                // show delete button only for completed orders
+                const canDelete = (order.estado || '').toLowerCase() === 'completado' || (order.estado || '').toLowerCase() === 'completa';
 
                 orderCard.innerHTML = `
                     <div class="order-header">
                         <h3>Pedido #${order.id_pedido}</h3>
-                        <span class="order-status status-${statusClass}">${order.estado}</span>
+                        <span class="order-status status-${statusClass}">${order.estado || 'N/A'}</span>
                     </div>
                     <div class="order-info">
-                        <p><strong>Cliente:</strong> ${order.nombre_cliente}</p>
+                        <p><strong>Cliente:</strong> ${clienteName}</p>
                         <p><strong>Email:</strong> ${order.email_cliente || 'N/A'}</p>
                         <p><strong>Teléfono:</strong> ${order.telefono_cliente || 'N/A'}</p>
-                        <p><strong>Fecha:</strong> ${order.fecha}</p>
-                        <p><strong>Hora inicio:</strong> ${order.hora_inicio}</p>
-                        <p><strong>Método de pago:</strong> ${order.metodo_pago}</p>
-                        <p><strong>Total:</strong> $${order.monto_total}</p>
+                        <p><strong>Fecha:</strong> ${order.fecha || ''}</p>
+                        <p><strong>Hora inicio:</strong> ${order.hora_inicio || ''}</p>
+                        <p><strong>Método de pago:</strong> ${order.metodo_pago || ''}</p>
+                        <p><strong>Total:</strong> $${order.monto_total || 0}</p>
                         ${order.tiempo_estimado ? `<p><strong>Tiempo estimado:</strong> ${order.tiempo_estimado} minutos</p>` : ''}
                     </div>
                     <div class="order-items">
                         <h4>Productos:</h4>
-                        ${order.items.map(item => `
+                        ${ (order.items || []).map(item => `
                             <div class="order-item">
-                                <span>${item.nombre} x${item.cantidad}</span>
-                                <span>$${(item.precio_unitario * item.cantidad).toFixed(2)}</span>
+                                <span>${item.nombre || item.name || 'Producto'} x${item.cantidad}</span>
+                                <span>$${((item.precio_unitario || item.price || 0) * (item.cantidad || 1)).toFixed(2)}</span>
                             </div>
                         `).join('')}
                     </div>
@@ -123,39 +141,33 @@
                             <option value="en proceso">En Proceso</option>
                             <option value="completado">Completado</option>
                         </select>
+                        ${ canDelete ? `<button onclick="deleteOrder(${order.id_pedido})" style="margin-left:12px;background:#ff6a00;border:none;color:#000;padding:6px 10px;border-radius:6px;cursor:pointer">Eliminar</button>` : '' }
                     </div>
                     <div class="time-controls">
                         <label>Tiempo estimado (minutos):</label>
                         <input type="number" value="${order.tiempo_estimado || ''}" onchange="updateEstimatedTime(${order.id_pedido}, this.value)">
                     </div>
                 `;
-
                 ordersList.appendChild(orderCard);
             });
         }
 
         async function updateOrderStatus(orderId, newStatus) {
             if (!newStatus) return;
-
             try {
                 const response = await fetch('Backend/routes/update_order_status.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        orderId: orderId,
-                        status: newStatus
-                    })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ orderId: orderId, status: newStatus })
                 });
-
                 if (response.ok) {
-                    // Update local orders array
                     const order = orders.find(o => o.id_pedido == orderId);
                     if (order) {
                         order.estado = newStatus;
                         renderOrders();
                     }
+                } else {
+                    console.error('Failed update status', await response.text());
                 }
             } catch (error) {
                 console.error('Error updating order status:', error);
@@ -166,32 +178,58 @@
             try {
                 const response = await fetch('Backend/routes/update_estimated_time.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        orderId: orderId,
-                        estimatedTime: estimatedTime
-                    })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ orderId: orderId, estimatedTime: estimatedTime })
                 });
-
                 if (response.ok) {
-                    // Update local orders array
                     const order = orders.find(o => o.id_pedido == orderId);
                     if (order) {
                         order.tiempo_estimado = estimatedTime;
                         renderOrders();
                     }
+                } else {
+                    console.error('Failed update time', await response.text());
                 }
             } catch (error) {
                 console.error('Error updating estimated time:', error);
             }
         }
 
-        // Load orders on page load
-        loadOrders();
+        async function deleteOrder(orderId) {
+            if (!confirm('Eliminar este pedido permanentemente?')) return;
+            try {
+                const res = await fetch('Backend/routes/delete_order.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ orderId })
+                });
+                const json = await res.json();
+                if (res.ok && json.ok) {
+                    // remove locally and re-render
+                    orders = orders.filter(o => o.id_pedido != orderId);
+                    renderOrders();
+                } else {
+                    alert('No se pudo eliminar: ' + (json.error || 'error'));
+                }
+            } catch (error) {
+                console.error('Error deleting order:', error);
+            }
+        }
 
-        // Refresh orders every 30 seconds
+        function highlightOrderByPreference(prefId) {
+            // intenta buscar orden con ese preference_id y marcarla
+            const ord = orders.find(o => (o.preference_id && o.preference_id == prefId) || (o.preferenceId && o.preferenceId == prefId));
+            if (ord) {
+                const el = document.getElementById('order-' + ord.id_pedido);
+                if (el) {
+                    el.style.boxShadow = '0 0 0 4px rgba(255,106,0,0.12)';
+                    el.scrollIntoView({behavior:'smooth', block:'center'});
+                }
+            }
+        }
+
+        // Load orders on page load and refresh every 30s
+        loadOrders();
         setInterval(loadOrders, 30000);
     </script>
 </body>

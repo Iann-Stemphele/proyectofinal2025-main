@@ -4,6 +4,9 @@ $db   = 'LasDosReinas';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
+// contraseña del hostin de infinity "LasDosReinas"
+// nombre if0_40194248
+
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
