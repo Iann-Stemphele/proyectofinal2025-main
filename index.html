@@ -10,9 +10,10 @@
     <link rel="stylesheet" href="Frontend/Menu Web/Menu.css">
     <link rel="stylesheet" href="Frontend/Carrito/carro.css">
     <link rel="stylesheet" href="Frontend/Comprar/comprar.css">
+    <link rel="stylesheet" href="Frontend/css/main.css">
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <link rel="stylesheet" href="/ProyectoFinal2025-main/Frontend/css/main.css">
+    <link rel="stylesheet" href="/proyectofinal2025-main/styles.css">
 
 </head>
 
@@ -74,6 +75,7 @@
             <input type="email" id="alt-card-customer-email" placeholder="Email" required>
             <input type="tel" id="alt-card-customer-phone" placeholder="Número de Teléfono" required>
             <div id="alt-mercado-pago-wallet"></div>
+            <div id="wallet_container"></div>
         </div>
 
         <div id="alt-order-confirmation-message" class="alt-notification-message" style="display: none;">
@@ -763,8 +765,90 @@
     <script src="Frontend/restaurante/Restaurante1.js"></script>
     <script src="Frontend/Carrito/carro.js"></script>
     <script src="Frontend/Comprar/comprar.js"></script>
+    <!-- contenedor para MercadoPago Bricks (kept in place) -->
+  <div id="wallet_container" style="max-width:420px;margin:20px auto;"></div>
 
-    
+  <script>
+    (function () {
+      // PUBLIC KEY pública — usa la correspondiente (sandbox/production)
+      const PUBLIC_KEY = 'APP_USR-a294acdc-355e-44b8-a2b9-6df401a8f2ab';
+      // Inicializa MP client-side con locale es-MX (según tu prompt)
+      const mp = new MercadoPago(PUBLIC_KEY, { locale: 'es-MX' });
+
+      // Intenta obtener una preference ya creada (ruta opcional)
+      async function fetchPreferenceFromServer() {
+        try {
+          const res = await fetch('Backend/routes/get_preference.php');
+          if (!res.ok) throw new Error('no-pref-endpoint');
+          const json = await res.json();
+          return json.id || json.preference_id || json.preferenceId || null;
+        } catch (e) {
+          // fallback: no pref endpoint available
+          return null;
+        }
+      }
+
+      async function fetchCart() {
+        const res = await fetch('Backend/routes/get_cart.php');
+        if (!res.ok) throw new Error('No se pudo obtener el carrito');
+        return res.json();
+      }
+
+      async function createPreference(items) {
+        const res = await fetch('Backend/routes/create_preference.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items })
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(JSON.stringify(json));
+        return json.id || json.preference_id || json.preferenceId || null;
+      }
+
+      async function initWallet() {
+        try {
+          // 1) try server GET preference endpoint first (if provided)
+          let prefId = await fetchPreferenceFromServer();
+
+          // 2) if not present, build items from cart and ask server to create preference
+          if (!prefId) {
+            const cart = await fetchCart();
+            const items = (cart.items || []).map(i => ({
+              title: i.name || i.nombre || 'Producto',
+              quantity: i.quantity ?? i.cantidad ?? 1,
+              unit_price: parseFloat(i.price ?? i.precio ?? i.precio_unitario ?? 0)
+            }));
+            if (!items.length) {
+              document.getElementById('wallet_container').innerHTML = '<div style="color:#fff;text-align:center">Carrito vacío</div>';
+              return;
+            }
+            prefId = await createPreference(items);
+          }
+
+          if (!prefId) {
+            document.getElementById('wallet_container').innerHTML = '<div style="color:#ff6a00;text-align:center">No se pudo obtener la preferencia de pago</div>';
+            return;
+          }
+
+          // Render Bricks wallet
+          mp.bricks().create('wallet', 'wallet_container', {
+            initialization: { preferenceId: prefId, redirectMode: 'self' },
+            customization: { texts: { action: 'Pagar', valueProp: 'security_safety' } }
+          });
+        } catch (err) {
+          console.error('Error inicializando MercadoPago Bricks:', err);
+          document.getElementById('wallet_container').innerHTML = '<div style="color:#ff6a00;text-align:center">Error al iniciar el pago. Revisa la consola.</div>';
+        }
+      }
+
+      // Mostrar formulario y lanzar bricks al click en "Pagar con Tarjeta"
+      document.getElementById('alt-pay-card').addEventListener('click', () => {
+        document.getElementById('alt-card-payment-form').style.display = 'block';
+        // initWallet idempotent: si wallet ya renderizado, no vuelve a crear otro control
+        initWallet();
+      });
+    })();
+  </script>
 </body>
 
 </html>
