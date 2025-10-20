@@ -1,0 +1,7 @@
+/* Minimal loader for the site's main stylesheet.
+   Keeps existing <link href="Frontend/css/main.css"> in index.html working
+   by importing the project's central styles.css. Adjust path if your vhost differs.
+*/
+@import url("/proyectofinal2025-main/styles.css");
+
+/* You can add page-specific overrides here if needed */

@@ -1,5 +1,4 @@
 <?php
-<?php
 header('Content-Type: application/json');
 session_start();
 // Devuelve estructura mínima esperada por comprar.js y refreshCart()

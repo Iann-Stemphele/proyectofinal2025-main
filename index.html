@@ -348,7 +348,7 @@
   </div>
 </div>
 
-    <main class="Productos">
+    <!-- <main class="Productos">
         <div class="tabs conteiner" id="productos">
             <input type="radio" name="tabs" id="tab1" checked="checked" class="tabInput" value="1" >
             <label for="tab1">Hamburgesa</label>
@@ -519,6 +519,7 @@
             </div>
         </div>
     </main>
+-->
 
 
     <section class="info container">
@@ -528,7 +529,7 @@
         <div class="info-text">
             <h2 id="mas informacion">Informacion</h2>
             <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.
+                Las Dos Reinas Restaurante ofrece platillos tradicionales con un toque moderno, preparados con ingredientes frescos y de calidad. Un lugar ideal para disfrutar en familia o con amigos, donde la buena comida y el ambiente acogedor se unen para brindarte una experiencia única.
             </p>
             <a href="#" class="btn-2">Más informacion</a>
         </div>
@@ -594,34 +595,14 @@
 
     <footer class="footer container">
         <img class="logo-2" id="#principio" onclick="scrollToSection(event, 'principio', 2000)" src="Frontend/img/logod2r-removebg-preview.png" alt="">
-        <!-- Menu card images  <div class="links">
-            <h4>Lorem</h4>
-            <ul>
-                <li><a href="#">Lorem</a></li>
-                <li><a href="#">Lorem</a></li>
-                <li><a href="#">Lorem</a></li>
-                <li><a href="#">Lorem</a></li>
-            </ul>
-        </div>
         <div class="links">
-            <h4>Lorem</h4>
-            <ul>
-                <li><a href="#">Lorem</a></li>
-                <li><a href="#">Lorem</a></li>
-                <li><a href="#">Lorem</a></li>
-                <li><a href="#">Lorem</a></li>
-            </ul>
-        </div>
-        <div class="links">
-            <h4>Lorem</h4>
-            <ul>
-                <li><a href="#">Lorem</a></li>
-                <li><a href="#">Lorem</a></li>
-                <li><a href="#">Lorem</a></li>
-                <li><a href="#">Lorem</a></li>
-            </ul>
-        </div>
-        -->
+  <h4>Sobre Las Dos Reinas</h4>
+  <p>Restaurante tradicional con toque moderno, ingredientes frescos y ambiente familiar.</p>
+  <p>Ven y disfruta de una experiencia culinaria única.</p>
+
+</div>
+
+     
         <div class="links">
             <h4>Redes Sociales</h4>
             <div class="socials">
@@ -794,11 +775,23 @@
         return res.json();
       }
 
+      // Collect customer values from the form (fallback to retiro form fields if needed)
+      function collectCustomerFromDOM() {
+        return {
+          name: (document.getElementById('alt-card-customer-name')?.value) || (document.getElementById('alt-customer-name')?.value) || 'Cliente',
+          lastname: (document.getElementById('alt-card-customer-lastname')?.value) || (document.getElementById('alt-customer-lastname')?.value) || '',
+          email: (document.getElementById('alt-card-customer-email')?.value) || (document.getElementById('alt-customer-email')?.value) || 'cliente@example.com',
+          phone: (document.getElementById('alt-card-customer-phone')?.value) || (document.getElementById('alt-customer-phone')?.value) || ''
+        };
+      }
+
+      // Send items + customer to backend to create preference and (server) create the order record
       async function createPreference(items) {
+        const customer = collectCustomerFromDOM();
         const res = await fetch('Backend/routes/create_preference.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items })
+          body: JSON.stringify({ items, customer })
         });
         const json = await res.json();
         if (!res.ok) throw new Error(JSON.stringify(json));
@@ -810,13 +803,14 @@
           // 1) try server GET preference endpoint first (if provided)
           let prefId = await fetchPreferenceFromServer();
 
-          // 2) if not present, build items from cart and ask server to create preference
+          // 2) if not present, build items from cart and ask server to create preference (server will create the DB order)
           if (!prefId) {
             const cart = await fetchCart();
             const items = (cart.items || []).map(i => ({
-              title: i.name || i.nombre || 'Producto',
+              id: i.id ?? i.id_producto ?? null,
+              name: i.name || i.nombre || i.nombre_producto || 'Producto',
               quantity: i.quantity ?? i.cantidad ?? 1,
-              unit_price: parseFloat(i.price ?? i.precio ?? i.precio_unitario ?? 0)
+              price: parseFloat(i.price ?? i.precio ?? i.precio_unitario ?? 0)
             }));
             if (!items.length) {
               document.getElementById('wallet_container').innerHTML = '<div style="color:#fff;text-align:center">Carrito vacío</div>';
@@ -830,9 +824,9 @@
             return;
           }
 
-          // Render Bricks wallet
+          // Render Bricks wallet and open MercadoPago in a new tab when redirect occurs
           mp.bricks().create('wallet', 'wallet_container', {
-            initialization: { preferenceId: prefId, redirectMode: 'self' },
+            initialization: { preferenceId: prefId, redirectMode: 'blank' },
             customization: { texts: { action: 'Pagar', valueProp: 'security_safety' } }
           });
         } catch (err) {

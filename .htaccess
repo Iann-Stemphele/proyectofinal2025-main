@@ -1,0 +1,15 @@
+# Redirect requests for /img/... to the Frontend/img/ folder
+# This avoids 404s when code uses root-relative "img/..." while images live in Frontend/img/...
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # If the request starts with /img/ and the target file doesn't exist, rewrite to Frontend/img/
+    RewriteCond %{REQUEST_URI} ^/proyectofinal2025-main/img/(.*)$ [NC]
+    RewriteCond %{DOCUMENT_ROOT}/proyectofinal2025-main/%{REQUEST_URI} !-f
+    RewriteRule ^img/(.*)$ /proyectofinal2025-main/Frontend/img/$1 [L]
+
+    # Also handle requests without the project folder in URI (if using /proyectofinal2025-main as base)
+    RewriteCond %{REQUEST_URI} ^/img/(.*)$ [NC]
+    RewriteCond %{DOCUMENT_ROOT}/proyectofinal2025-main/Frontend/img/%1 -f
+    RewriteRule ^img/(.*)$ /proyectofinal2025-main/Frontend/img/$1 [L]
+</IfModule>

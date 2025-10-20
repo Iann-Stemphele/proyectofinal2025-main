@@ -295,7 +295,17 @@ INSERT INTO `producto` (`id_Producto`, `nombre`, `descripcion`, `precio`, `stock
 (192, 'VINO NOVECENTO MALBEC', '', 280.00, 100, 'bebidas'),
 (193, 'VINO DON PASCUAL BRUT 750 ML', '', 390.00, 100, 'bebidas'),
 (194, 'VINO DON PASCUAL COASTAL 750 ML', '', 590.00, 100, 'bebidas'),
-(195, 'VINO DON PASCUAL RESERVA 750ML', '', 650.00, 100, 'bebidas');
+(195, 'VINO DON PASCUAL RESERVA 750ML', '', 650.00, 100, 'bebidas'),
+(196, 'LOMITO A LA PIMIENTA - PLATO DEL DÍA', 'Lomo en salsa de pimienta acompañado de papas rústicas y ensalada', 890.00, 50, 'platos-dia'),
+(197, 'PESCADO DEL DÍA - PLATO DEL DÍA', 'Filete de pescado del día a la plancha con verduras salteadas', 720.00, 50, 'platos-dia'),
+(198, 'PASTA CASERA - PLATO DEL DÍA', 'Tallarines caseros con salsa a elección (tuco / bolognesa / caruso)', 480.00, 50, 'platos-dia'),
+(199, 'MILANESA DEL DÍA - PLATO DEL DÍA', 'Milanesa (vacuna o pollo) con guarnición del día', 590.00, 50, 'platos-dia'),
+(200, 'ENSALADA ESPECIAL - PLATO DEL DÍA', 'Ensalada con mix de hojas, vegetales asados, queso y aderezo especial', 420.00, 50, 'platos-dia'),
+(201, 'PICADA DEL DÍA - PLATO DEL DÍA', 'Picada surtida para compartir (variedad de fiambres y quesos)', 1290.00, 20, 'platos-dia');
+
+-- Ensure producto table will auto-increment from next id (202)
+ALTER TABLE `producto`
+  MODIFY `id_Producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=202;
 
 --
 -- Índices para tablas volcadas

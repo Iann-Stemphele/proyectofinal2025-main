@@ -418,13 +418,12 @@ header.content{
     margin-bottom: 25px;
 }
 
-.links ul li a {
+.links p  {
     color: #cfd4d6;
     font-size: 16px;
     margin-bottom: 5px;
     display: inline-block;
 }
-
 
 /* Contenedor del modal */
 .modal-container {
