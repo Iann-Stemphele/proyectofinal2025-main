@@ -23,7 +23,7 @@ function mostrarNotificacion(mensaje, duracion = 2000) {
 const platosPorDia = {
   1: [{ nombre: "Bondiola a la pizza con puré", descripcion: "Deliciosa bondiola de cerdo con salsa de tomate y muzzarella.", precio:195.00, Images:["../img/comprar/bondiola.png"] }],
   2: [{ nombre: "Arroz amarillo con pollo y vegetales", descripcion: "Un clásico casero.", precio:195.00, Images:["../img/comprar/arroz amarillo con polo.png"] }],
-  3: [{ nombre: "Creps de jamón y queso con papas rústicas", descripcion: "Suaves creps rellenos.", precio
+  3: [{ nombre: "Creps de jamón y queso con papas rústicas", descripcion: "Suaves creps rellenos.", precio:195.00, Images:["../img/comprar/creps.png"] }],
   4: [{ nombre: "Ravioles con tuco", descripcion: "Pasta rellena con una salsa tradicional.", precio:195.00, Images:["../img/comprar/Ravioles-con-tuco-Photoroom.png"] }],
   5: [{ nombre: "Muslo de pollo con arroz, choclo y arvejas", descripcion: "Un plato completo.", precio:195.00, Images:["../img/comprar/muslo-arroz.png"] }]
 };
@@ -229,6 +229,7 @@ document.addEventListener('DOMContentLoaded', refreshCart);
   let mpBtn = container.querySelector('#mp-pay-btn');
 
   function createInfo() {
+    if (document.querySelector('.mp-info')) return document.querySelector('.mp-info');
     if (!infoEl) {
       infoEl = document.createElement('div');
       infoEl.className = 'mp-info';
@@ -237,6 +238,7 @@ document.addEventListener('DOMContentLoaded', refreshCart);
       infoEl.style.fontWeight = '600';
       container.prepend(infoEl);
     }
+    return infoEl;
   }
 
   function removeInfo() {
@@ -244,6 +246,7 @@ document.addEventListener('DOMContentLoaded', refreshCart);
   }
 
   function createMpButton() {
+    if (document.getElementById('mp-pay-btn')) return document.getElementById('mp-pay-btn');
     if (mpBtn) return mpBtn;
     mpBtn = document.createElement('button');
     mpBtn.id = 'mp-pay-btn';
@@ -267,9 +270,9 @@ document.addEventListener('DOMContentLoaded', refreshCart);
 
   function listMissingFields() {
     const missing = [];
-    if (!nameInput || nameInput.value.trim().length < 3) missing.push('Nombre (mín 3 caracteres)');
-    if (!emailInput || !emailInput.value.includes('@')) missing.push('Email válido');
-    if (!addressInput || addressInput.value.trim().length < 5) missing.push('Dirección (mín 5 caracteres)');
+    if (!nameInput || nameInput.value.trim().length < 3) missing.push('Name (min 3 characters)');
+    if (!emailInput || !emailInput.value.includes('@')) missing.push('Valid email');
+    if (!addressInput || addressInput.value.trim().length < 5) missing.push('Address (min 5 characters)');
     return missing;
   }
 
@@ -277,7 +280,7 @@ document.addEventListener('DOMContentLoaded', refreshCart);
     const missing = listMissingFields();
     if (missing.length) {
       createInfo();
-      infoEl.textContent = 'Completa los campos: ' + missing.join(', ');
+      infoEl.textContent = 'Complete the fields: ' + missing.join(', ');
       // marcar inputs en rojo mínimamente
       [nameInput, emailInput, addressInput].forEach(i => {
         if (!i) return;
@@ -327,10 +330,10 @@ document.addEventListener('DOMContentLoaded', refreshCart);
     }
   }
 
-  // Manejo click del botón MP: abre ventana en blanco y luego la navega al init_point
+  // Manejo click del botón MP: abre nueva pestaña en blanco y luego la navega al init_point
   async function onMpClick(e) {
     e.preventDefault();
-    // abre la pestaña en el mismo evento de usuario
+    // abre nueva pestaña en blanco en el mismo evento de usuario
     const paymentWin = window.open('', '_blank');
 
     // indica al usuario que se está procesando

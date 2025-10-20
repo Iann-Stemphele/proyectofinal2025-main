@@ -23,7 +23,7 @@ if (empty($orderIdentifier)) {
     exit;
 }
 
-// Try to find order by email or preference_id
+// Try to find order by email, preference_id, or order_id
 $sql = "SELECT p.*, GROUP_CONCAT(
     CONCAT('{\"nombre\":\"', pr.nombre, '\",\"cantidad\":', c.cantidad, ',\"precio_unitario\":', c.precio_unitario, '}')
     SEPARATOR '|||'
@@ -31,13 +31,13 @@ $sql = "SELECT p.*, GROUP_CONCAT(
 FROM pedido p
 LEFT JOIN contiene c ON p.id_pedido = c.id_pedido
 LEFT JOIN producto pr ON c.id_producto = pr.id_Producto
-WHERE p.email_cliente = ? OR p.preference_id = ?
+WHERE p.email_cliente = ? OR p.preference_id = ? OR p.id_pedido = ?
 GROUP BY p.id_pedido
 ORDER BY p.hora_inicio DESC
 LIMIT 1";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ss", $orderIdentifier, $orderIdentifier);
+$stmt->bind_param("sss", $orderIdentifier, $orderIdentifier, $orderIdentifier);
 $stmt->execute();
 $result = $stmt->get_result();
 

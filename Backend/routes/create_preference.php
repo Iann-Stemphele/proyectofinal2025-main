@@ -90,76 +90,40 @@ if (!$preferenceId || !$init_point) {
     exit;
 }
 
-// -- Persist order in DB so employees see the customer and preference_id --
+// -- Create temp preference instead of full order --
 $order_id = null;
 try {
-    // Try to load project DB config if exists
-    $dbFile = __DIR__ . '/../config/database.php';
-    if (file_exists($dbFile)) {
-        require_once $dbFile; // expected to define $db_host,$db_user,$db_pass,$db_name or $conn
+    // Database connection
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "LasDosReinas";
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error) {
+        throw new Exception('DB connect error: ' . $conn->connect_error);
     }
 
-    // If $conn not provided by config, create fallback mysqli connection
-    if (!isset($conn) || !($conn instanceof mysqli)) {
-        $db_host = $db_host ?? 'localhost';
-        $db_user = $db_user ?? 'root';
-        $db_pass = $db_pass ?? '';
-        $db_name = $db_name ?? 'lasdosreinas';
-        $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
-        if ($conn->connect_error) {
-            throw new Exception('DB connect error: ' . $conn->connect_error);
-        }
-    }
-
-    // Insert pedido
-    $fecha = date('Y-m-d');
-    $estado = 'inicializando';
-    $metodo_pago = 'tarjeta';
-    $stmt = $conn->prepare("INSERT INTO pedido (fecha, monto_total, estado, nombre_cliente, email_cliente, telefono_cliente, metodo_pago, preference_id, hora_inicio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+    // Insert into temp_preference table
+    $stmt = $conn->prepare("INSERT INTO temp_preference (preference_id, customer_json, items_json, total) VALUES (?, ?, ?, ?)");
     if ($stmt) {
-        $nombre_cliente = trim(($customer['name'] ?? '') . ' ' . ($customer['lastname'] ?? ''));
-        $email_cliente = $customer['email'] ?? '';
-        $telefono_cliente = $customer['phone'] ?? '';
-        $stmt->bind_param('sdssssss', $fecha, $total, $estado, $nombre_cliente, $email_cliente, $telefono_cliente, $metodo_pago, $preferenceId);
+        $customer_json = json_encode($customer);
+        $items_json = json_encode($input['items']);
+        $stmt->bind_param("sssd", $preferenceId, $customer_json, $items_json, $total);
         $ok = $stmt->execute();
         if ($ok) {
-            $order_id = $conn->insert_id;
-            error_log("create_preference: created pedido id {$order_id}");
-            // Insert contiene rows when possible (use item.id if provided)
-            $insertCont = $conn->prepare("INSERT INTO contiene (id_pedido, id_producto, cantidad, precio_unitario) VALUES (?, ?, ?, ?)");
-            if ($insertCont) {
-                foreach ($input['items'] as $it) {
-                    $id_producto = isset($it['id']) ? (int)$it['id'] : (isset($it['id_producto']) ? (int)$it['id_producto'] : null);
-                    $cantidad = max(1, (int)($it['quantity'] ?? $it['cantidad'] ?? 1));
-                    $precio_unitario = max(0.0, (float)($it['price'] ?? $it['precio'] ?? $it['unit_price'] ?? 0));
-                    // bind_param expects types: i (int), i (int or null), i, d
-                    if ($id_producto === null) {
-                        // bind as NULL for id_producto
-                        $insertCont->bind_param('iiid', $order_id, $id_producto, $cantidad, $precio_unitario);
-                        // setting $id_producto to null will result in 0; to explicitly insert NULL use a different query
-                        // we'll insert NULL explicitly if no product id
-                        $q = $conn->prepare("INSERT INTO contiene (id_pedido, id_producto, cantidad, precio_unitario) VALUES (?, NULL, ?, ?)");
-                        if ($q) {
-                            $q->bind_param('iid', $order_id, $cantidad, $precio_unitario);
-                            $q->execute();
-                            $q->close();
-                        }
-                    } else {
-                        $insertCont->bind_param('iiid', $order_id, $id_producto, $cantidad, $precio_unitario);
-                        $insertCont->execute();
-                    }
-                }
-                $insertCont->close();
-            }
+            error_log("create_preference: created temp preference {$preferenceId}");
         } else {
-            error_log("Failed insert pedido: " . $stmt->error);
+            error_log("Failed insert temp_preference: " . $stmt->error);
         }
         $stmt->close();
     } else {
-        error_log("Failed prepare pedido insert: " . $conn->error);
+        error_log("Failed prepare temp_preference insert: " . $conn->error);
     }
+    $conn->close();
 } catch (Exception $e) {
-    error_log("DB error creating pedido: " . $e->getMessage());
+    error_log("DB error creating temp preference: " . $e->getMessage());
     // don't fail preference creation: proceed to return MP info but log error
 }
 

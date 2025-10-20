@@ -110,6 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         altCartTotalSpan.textContent = total.toFixed(2);
+
+        // Add refresh button to cart modal
+        addRefreshButtonToCart();
     };
 
 
@@ -206,7 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('alt-card-payment-form').style.display = 'block';
         altCustomerInfoForm.style.display = 'none';
         altOrderConfirmationMessage.style.display = 'none';
-        initializeMercadoPago();
+        // Initialize MercadoPago validation instead of immediately creating
+        initializeMercadoPagoValidation();
     });
 
     // Confirma el pedido (se mantiene tu lógica asíncrona)
@@ -292,7 +296,118 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Función para inicializar Mercado Pago ---
+    // --- Función para inicializar validación de MercadoPago con campos dinámicos ---
+    const initializeMercadoPagoValidation = () => {
+        const cardForm = document.getElementById('alt-card-payment-form');
+        if (!cardForm) return;
+
+        // Get input fields
+        const nameInput = document.getElementById('alt-card-customer-name');
+        const lastnameInput = document.getElementById('alt-card-customer-lastname');
+        const emailInput = document.getElementById('alt-card-customer-email');
+        const phoneInput = document.getElementById('alt-card-customer-phone');
+        const mpContainer = document.getElementById('alt-mercado-pago-wallet');
+
+        // Clear previous content
+        if (mpContainer) mpContainer.innerHTML = '';
+
+        // Create container for validation messages and button
+        let validationContainer = document.getElementById('mp-validation-container');
+        if (!validationContainer) {
+            validationContainer = document.createElement('div');
+            validationContainer.id = 'mp-validation-container';
+            validationContainer.style.marginTop = '15px';
+            cardForm.appendChild(validationContainer);
+        }
+
+        let infoEl = validationContainer.querySelector('.mp-card-info');
+        let mpBtn = validationContainer.querySelector('#mp-card-pay-btn');
+
+        function createInfo() {
+            if (!infoEl) {
+                infoEl = document.createElement('div');
+                infoEl.className = 'mp-card-info';
+                infoEl.style.color = '#b30000';
+                infoEl.style.marginBottom = '8px';
+                infoEl.style.fontWeight = '600';
+                validationContainer.prepend(infoEl);
+            }
+            return infoEl;
+        }
+
+        function removeInfo() {
+            if (infoEl) { infoEl.remove(); infoEl = null; }
+        }
+
+        function createMpButton() {
+            if (document.getElementById('mp-card-pay-btn')) return document.getElementById('mp-card-pay-btn');
+            if (mpBtn) return mpBtn;
+            mpBtn = document.createElement('button');
+            mpBtn.id = 'mp-card-pay-btn';
+            mpBtn.type = 'button';
+            mpBtn.textContent = 'Pagar con MercadoPago';
+            mpBtn.style.background = '#3483FA';
+            mpBtn.style.color = '#fff';
+            mpBtn.style.border = 'none';
+            mpBtn.style.padding = '10px 14px';
+            mpBtn.style.borderRadius = '4px';
+            mpBtn.style.cursor = 'pointer';
+            mpBtn.style.fontWeight = '700';
+            mpBtn.style.width = '100%';
+            validationContainer.appendChild(mpBtn);
+            mpBtn.addEventListener('click', onCardMpClick);
+            return mpBtn;
+        }
+
+        function removeMpButton() {
+            if (mpBtn) { mpBtn.removeEventListener('click', onCardMpClick); mpBtn.remove(); mpBtn = null; }
+        }
+
+        function listMissingFields() {
+            const missing = [];
+            if (!nameInput || nameInput.value.trim().length < 3) missing.push('Nombre (mín 3 caracteres)');
+            if (!lastnameInput || lastnameInput.value.trim().length < 3) missing.push('Apellido (mín 3 caracteres)');
+            if (!emailInput || !emailInput.value.includes('@')) missing.push('Email válido');
+            if (!phoneInput || phoneInput.value.trim().length < 8) missing.push('Teléfono (mín 8 caracteres)');
+            return missing;
+        }
+
+        function updateCardPaymentUI() {
+            const missing = listMissingFields();
+            if (missing.length) {
+                createInfo();
+                infoEl.textContent = 'Complete los campos: ' + missing.join(', ');
+                // marcar inputs en rojo mínimamente
+                [nameInput, lastnameInput, emailInput, phoneInput].forEach(i => {
+                    if (!i) return;
+                    const isValid = !(
+                        (i === nameInput && i.value.trim().length < 3) ||
+                        (i === lastnameInput && i.value.trim().length < 3) ||
+                        (i === emailInput && !i.value.includes('@')) ||
+                        (i === phoneInput && i.value.trim().length < 8)
+                    );
+                    i.style.outline = isValid ? '' : '2px solid #ff6b6b';
+                });
+                removeMpButton();
+            } else {
+                removeInfo();
+                [nameInput, lastnameInput, emailInput, phoneInput].forEach(i => { if (i) i.style.outline = ''; });
+                createMpButton();
+            }
+        }
+
+        // Escucha cambios en inputs
+        [nameInput, lastnameInput, emailInput, phoneInput].forEach(i => {
+            if (!i) return;
+            i.addEventListener('input', updateCardPaymentUI);
+            i.addEventListener('blur', updateCardPaymentUI);
+        });
+
+        // Inicializar UI
+        updateCardPaymentUI();
+    };
+
+    // --- Función para inicializar Mercado Pago (crea la preferencia y muestra el botón) ---
     const initializeMercadoPago = () => {
         const mp = new MercadoPago('APP_USR-a294acdc-355e-44b8-a2b9-6df401a8f2ab', {
             locale: 'es-UY'
@@ -354,6 +469,124 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error);
         });
     };
+
+    // --- Función para manejar click en botón de MercadoPago en modal de tarjeta ---
+    async function onCardMpClick(e) {
+        e.preventDefault();
+
+        const name = document.getElementById('alt-card-customer-name').value.trim();
+        const lastname = document.getElementById('alt-card-customer-lastname').value.trim();
+        const email = document.getElementById('alt-card-customer-email').value.trim();
+        const phone = document.getElementById('alt-card-customer-phone').value.trim();
+
+        // Validación básica
+        if (!name || !lastname || !email || !phone) {
+            alert('Por favor completa todos los campos.');
+            return;
+        }
+
+        // Abrir nueva pestaña inmediatamente al hacer click
+        const paymentWin = window.open('', '_blank');
+
+        try {
+            // Crear preferencia temporal (no crea pedido aún)
+            const response = await fetch('Backend/routes/create_preference.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    customer: {
+                        name: name,
+                        lastname: lastname,
+                        email: email,
+                        phone: phone
+                    },
+                    items: cart,
+                    total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+                })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Preferencia creada exitosamente:', result);
+
+                if (result.init_point) {
+                    // Navegar la pestaña abierta al init_point de MercadoPago
+                    paymentWin.location.href = result.init_point;
+
+                    // Redirigir la página principal a order_status.html con preference_id para confirmar después
+                    window.location.href = `order_status.html?preference_id=${encodeURIComponent(result.preference_id)}&name=${encodeURIComponent(name)}&lastname=${encodeURIComponent(lastname)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`;
+                } else {
+                    paymentWin.close();
+                    alert('Error: No se pudo obtener el enlace de pago.');
+                }
+            } else {
+                paymentWin.close();
+                const errorText = await response.text();
+                console.error('Error response:', errorText);
+                alert('Error al crear la preferencia de pago. Inténtalo de nuevo.');
+            }
+        } catch (error) {
+            if (paymentWin) paymentWin.close();
+            console.error('Error:', error);
+            alert('Error al procesar el pago. Inténtalo de nuevo.');
+        }
+    }
+
+    // --- Función para añadir botón de refresh al carrito ---
+    const addRefreshButtonToCart = () => {
+        // Remove existing refresh button if any
+        const existingBtn = document.getElementById('cart-refresh-btn');
+        if (existingBtn) existingBtn.remove();
+
+        // Create refresh button
+        const refreshBtn = document.createElement('button');
+        refreshBtn.id = 'cart-refresh-btn';
+        refreshBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12a8 8 0 018-8V2.5a.5.5 0 01.5-.5h3a.5.5 0 01.5.5V4a8 8 0 018 8h-1.5a6.5 6.5 0 00-6.5-6.5V7.5a.5.5 0 01-.5.5h-3a.5.5 0 01-.5-.5V5.5A6.5 6.5 0 005.5 12H4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 16l4-4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Refresh Cart';
+        refreshBtn.style.background = '#28a745';
+        refreshBtn.style.color = '#fff';
+        refreshBtn.style.border = 'none';
+        refreshBtn.style.padding = '8px 12px';
+        refreshBtn.style.borderRadius = '4px';
+        refreshBtn.style.cursor = 'pointer';
+        refreshBtn.style.marginTop = '10px';
+        refreshBtn.style.width = '100%';
+        refreshBtn.style.display = 'flex';
+        refreshBtn.style.alignItems = 'center';
+        refreshBtn.style.justifyContent = 'center';
+        refreshBtn.style.gap = '5px';
+
+        refreshBtn.addEventListener('click', async () => {
+            // Refresh cart from localStorage (since cart works with localStorage)
+            try {
+                // Reload cart from localStorage
+                const savedCart = JSON.parse(localStorage.getItem('altCart')) || [];
+                cart = savedCart;
+                renderCart();
+                updateCartCounter();
+                mostrarNotificacion('Cart refreshed successfully!', 1500);
+            } catch (err) {
+                console.error('Refresh cart error:', err);
+                mostrarNotificacion('Error refreshing cart', 2500);
+            }
+        });
+
+        // Add button after cart items container
+        altCartItemsContainer.parentNode.insertBefore(refreshBtn, altCartItemsContainer.nextSibling);
+    };
+
+    // --- Auto-refresh cart every 4 seconds ---
+    setInterval(() => {
+        // Only refresh if cart modal is not open to avoid interrupting user interaction
+        const cartModal = document.getElementById('alt-modal-cart');
+        if (cartModal && cartModal.style.display !== 'flex') {
+            // Reload cart from localStorage (since cart works with localStorage)
+            const savedCart = JSON.parse(localStorage.getItem('altCart')) || [];
+            cart = savedCart;
+            updateCartCounter();
+        }
+    }, 4000);
 
     // --- Renderizado Inicial ---
     renderCart();
