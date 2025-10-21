@@ -1,11 +1,10 @@
 <?php
+// Configuración de base de datos para InfinityFree
 $host = 'sql306.infinityfree.com';
 $db   = 'if0_40194248_lasdosreinas';
 $user = 'if0_40194248';
 $pass = 'LasDosReinas';
 $charset = 'utf8mb4';
-// Configuración para InfinityFree hosting
-// Database: if0_40194248_lasdosreinas
 
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

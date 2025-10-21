@@ -9,7 +9,7 @@ class Producto {
     }
 
     public function obtenerTodos() {
-        $stmt = $this->pdo->prepare("SELECT id_Producto, nombre, descripcion, precio, stock_disponible FROM Producto");
+        $stmt = $this->pdo->prepare("SELECT id_Producto, nombre, descripcion, precio, stock_disponible FROM producto");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

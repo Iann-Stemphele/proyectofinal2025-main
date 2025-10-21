@@ -36,10 +36,68 @@ foreach ($input['items'] as $it) {
 $access_token = 'APP_USR-3116660017260656-101416-b076654c1ec24219b73242f8f92e9c8d-2925612020';
 // --------------------------------------------------------------
 
-// back_urls (asegúrate que sean accesibles desde MercadoPago)
-$back_success = 'https://tu-sitio.infinityfreeapp.com/orders.html?status=success';
-$back_failure = 'https://tu-sitio.infinityfreeapp.com/orders.html?status=failure';
-$back_pending = 'https://tu-sitio.infinityfreeapp.com/orders.html?status=pending';
+// Primero crear el pedido en la base de datos
+try {
+    // Database connection
+    $servername = "sql306.infinityfree.com";
+    $username = "if0_40194248";
+    $password = "LasDosReinas";
+    $dbname = "if0_40194248_lasdosreinas";
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    if ($conn->connect_error) {
+        throw new Exception('DB connect error: ' . $conn->connect_error);
+    }
+
+    // Crear pedido
+    $name = trim(($customer['name'] ?? '') . ' ' . ($customer['lastname'] ?? ''));
+    $email = $customer['email'] ?? '';
+    $phone = $customer['phone'] ?? '';
+
+    $insertOrderSql = "INSERT INTO pedido (fecha, monto_total, estado, nombre_cliente, email_cliente, telefono_cliente, metodo_pago, hora_inicio) VALUES (CURDATE(), ?, 'inicializando', ?, ?, ?, 'tarjeta', NOW())";
+    $stmtOrder = $conn->prepare($insertOrderSql);
+    if ($stmtOrder === false) {
+        throw new Exception("Prepare failed: " . $conn->error);
+    }
+
+    $stmtOrder->bind_param("dsss", $total, $name, $email, $phone);
+    if (!$stmtOrder->execute()) {
+        throw new Exception("Error inserting order: " . $stmtOrder->error);
+    }
+    $orderId = $conn->insert_id;
+    $stmtOrder->close();
+
+    // Insertar items del pedido
+    $insertItemStmt = $conn->prepare("INSERT INTO contiene (id_pedido, id_producto, cantidad, precio_unitario) VALUES (?, ?, ?, ?)");
+    if ($insertItemStmt === false) {
+        throw new Exception("Prepare failed: " . $conn->error);
+    }
+
+    foreach ($input['items'] as $item) {
+        $prodId = isset($item['id']) ? (int)$item['id'] : 0;
+        $quantity = isset($item['quantity']) ? (int)$item['quantity'] : 0;
+        $price = isset($item['price']) ? (float)$item['price'] : 0.0;
+        
+        if ($prodId > 0 && $quantity > 0) {
+            $insertItemStmt->bind_param("iiid", $orderId, $prodId, $quantity, $price);
+            if (!$insertItemStmt->execute()) {
+                throw new Exception("Error inserting item: " . $insertItemStmt->error);
+            }
+        }
+    }
+    $insertItemStmt->close();
+    $conn->close();
+
+} catch (Exception $e) {
+    error_log("Error creating order: " . $e->getMessage());
+    echo json_encode(['error' => 'Error creating order: ' . $e->getMessage()]);
+    exit;
+}
+
+// back_urls apuntando a order_status.html con el ID del pedido
+$back_success = 'https://lasdosreinas.wuaze.com/order_status.html?order_id=' . $orderId . '&status=success';
+$back_failure = 'https://lasdosreinas.wuaze.com/order_status.html?order_id=' . $orderId . '&status=failure';
+$back_pending = 'https://lasdosreinas.wuaze.com/order_status.html?order_id=' . $orderId . '&status=pending';
 
 $payload = [
     'items' => $mp_items,
@@ -52,7 +110,10 @@ $payload = [
         'success' => $back_success,
         'failure' => $back_failure,
         'pending' => $back_pending
-    ]
+    ],
+    'auto_return' => 'approved',
+    'external_reference' => (string)$orderId,
+    'notification_url' => 'https://lasdosreinas.wuaze.com/Backend/routes/mercadopago_webhook.php'
 ];
 
 error_log("create_preference -> payload to MP: " . json_encode($payload));
@@ -90,42 +151,8 @@ if (!$preferenceId || !$init_point) {
     exit;
 }
 
-// -- Create temp preference instead of full order --
-$order_id = null;
-try {
-    // Database connection
-    $servername = "sql306.infinityfree.com";
-    $username = "if0_40194248";
-    $password = "LasDosReinas";
-    $dbname = "if0_40194248_lasdosreinas";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        throw new Exception('DB connect error: ' . $conn->connect_error);
-    }
-
-    // Insert into temp_preference table
-    $stmt = $conn->prepare("INSERT INTO temp_preference (preference_id, customer_json, items_json, total) VALUES (?, ?, ?, ?)");
-    if ($stmt) {
-        $customer_json = json_encode($customer);
-        $items_json = json_encode($input['items']);
-        $stmt->bind_param("sssd", $preferenceId, $customer_json, $items_json, $total);
-        $ok = $stmt->execute();
-        if ($ok) {
-            error_log("create_preference: created temp preference {$preferenceId}");
-        } else {
-            error_log("Failed insert temp_preference: " . $stmt->error);
-        }
-        $stmt->close();
-    } else {
-        error_log("Failed prepare temp_preference insert: " . $conn->error);
-    }
-    $conn->close();
-} catch (Exception $e) {
-    error_log("DB error creating temp preference: " . $e->getMessage());
-    // don't fail preference creation: proceed to return MP info but log error
-}
+// -- Order was already created above --
+$order_id = $orderId;
 
 // return init_point and preference_id to frontend
 // Si el cliente solicita HTML o añade ?open_tab=1, devolvemos una página que abre
