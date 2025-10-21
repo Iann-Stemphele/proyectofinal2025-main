@@ -665,6 +665,57 @@ header.content{
   cursor: pointer;
 }
 
+/* Modal category grid */
+.cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  justify-items: center;
+}
+
+/* Responsive for mobile */
+@media (max-width: 768px) {
+  .cols {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Individual col styling for better mobile responsiveness */
+.col {
+  width: 100%;
+  max-width: 200px;
+  min-width: 150px;
+}
+
+@media (max-width: 768px) {
+  .col {
+    max-width: 100%;
+    min-width: auto;
+  }
+}
+
+/* Enhanced mobile responsiveness for modal */
+@media (max-width: 480px) {
+  .modal-content {
+    width: 95vw;
+    padding: 16px;
+  }
+
+  .cols {
+    gap: 0.5rem;
+  }
+
+  .col {
+    max-width: 100%;
+  }
+}
+
 /* Cards dentro de mini-menu */
 .mini-menu-cards {
   display: flex;
@@ -711,6 +762,13 @@ header.content{
 .mas-info-precio {
   color: #050100;
   font-size: 1rem;
+}
+
+.mas-info-descripcion {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  font-style: italic;
 }
 
 .mas-info-cantidad {

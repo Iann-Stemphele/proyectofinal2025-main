@@ -136,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         itemDiv.innerHTML = `
                             <span class="mas-info-nombre">${alimento.nombre}</span>
                             <span class="mas-info-precio">$${alimento.precio.toFixed(2)}</span>
+                            ${alimento.descripcion ? `<p class="mas-info-descripcion">${alimento.descripcion}</p>` : ''}
                             <input type="number" min="1" value="1" class="mas-info-cantidad" style="width:60px;">
                             <button class="mas-info-agregar" data-id="${alimento.id}" data-nombre="${alimento.nombre}" data-precio="${alimento.precio}">Agregar al carrito</button>
                         `;
