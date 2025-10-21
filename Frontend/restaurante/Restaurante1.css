@@ -632,7 +632,7 @@ header.content{
   width: 100%; /* Ancho completo */
   height: 100%; /* Alto completo */
   overflow: auto; /* Permite scroll si el contenido es muy largo */
-  background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente */
+  background-color: rgba(50, 50, 50, 0.27); /* Fondo semi-transparente */
   justify-content: center; /* Centra el contenido horizontalmente (usado con display:flex) */
   align-items: center; /* Centra el contenido verticalmente (usado con display:flex) */
 }
@@ -642,8 +642,8 @@ header.content{
   background-color: #fefefe;
   margin: 50px; /* Centrado si no se usa flexbox en el .modal */
   border: 1px solid #888;
-  width: 80%; /* Ancho del contenido */
-  max-width: 500px; /* Ancho máximo */
+  width: 90%; /* Ancho del contenido */
+  max-width: 900px; /* Ancho máximo aumentado para mejor display */
   border-radius: 8px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
   position: relative; /* Para posicionar el botón de cierre */
@@ -651,7 +651,7 @@ header.content{
 
 /* Botón de cierre */
 .close-button {
-  color: #aaa;
+  color: #ff9d00;
   float: right; /* Alinea a la derecha */
   font-size: 28px;
   font-weight: bold;
@@ -671,6 +671,13 @@ header.content{
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   justify-items: center;
+}
+
+/* Mobile responsiveness for category grid */
+@media (max-width: 768px) {
+  .cols {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 
 /* Responsive for mobile */
@@ -718,10 +725,17 @@ header.content{
 
 /* Cards dentro de mini-menu */
 .mini-menu-cards {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin-top: 1rem;
+}
+
+/* Mobile responsiveness for category-specific product display */
+@media (max-width: 768px) {
+  .mini-menu-cards {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 .mini-menu-cards .card {
   background: #fff;
@@ -736,10 +750,17 @@ header.content{
 /* Grid layout for "agregar al carrito" modal */
 #mas-info-lista {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   font-family: 'Poppins', sans-serif;
   color: #050100;
+}
+
+/* Mobile responsiveness for general product display */
+@media (max-width: 768px) {
+  #mas-info-lista {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 
 .mas-info-item {
