@@ -4,7 +4,7 @@ const especialIDs = [49, 50];
 const carruselIDs = promoIDs.concat(especialIDs);
 
 async function cargarCarrusel() {
-    const res = await fetch('http://localhost/ProyectoFinal2025/Backend/routes/api.php?url=comidas');
+    const res = await fetch('Backend/routes/api.php?url=comidas');
     const productos = await res.json();
     const productosCarrusel = productos.filter(p => carruselIDs.includes(Number(p.id_Producto)));
     const scroll = document.getElementById("carrusel-scroll");

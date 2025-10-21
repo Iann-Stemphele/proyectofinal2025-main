@@ -2,6 +2,6 @@
    Keeps existing <link href="Frontend/css/main.css"> in index.html working
    by importing the project's central styles.css. Adjust path if your vhost differs.
 */
-@import url("/proyectofinal2025-main/styles.css");
+@import url("../../styles.css");
 
 /* You can add page-specific overrides here if needed */

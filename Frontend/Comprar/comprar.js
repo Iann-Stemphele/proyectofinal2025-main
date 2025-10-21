@@ -120,7 +120,7 @@ function createCartItemElement(item, tempId) {
 // Envía al backend (add_to_cart.php) — ajusta ruta si es necesario
 async function addToCart(item) {
   // RUTA corregida (minusculas)
-  const url = '/proyectofinal2025-main/Backend/routes/add_to_cart.php';
+  const url = 'Backend/routes/add_to_cart.php';
 
   // Optimistic UI: actualizar contador y lista inmediatamente
   const countEl = document.getElementById('cart-count');
@@ -178,7 +178,7 @@ async function addToCart(item) {
 async function refreshCart() {
   try {
     // RUTA corregida (minusculas)
-    const res = await fetch('/proyectofinal2025-main/Backend/routes/get_cart.php');
+    const res = await fetch('Backend/routes/get_cart.php');
     if (!res.ok) return;
     const json = await res.json();
     // Actualiza contador si existe elemento con id 'cart-count'
@@ -312,7 +312,7 @@ document.addEventListener('DOMContentLoaded', refreshCart);
   // Obtener items del carrito desde el backend (falla segura si no hay items)
   async function fetchCartItems() {
     try {
-      const res = await fetch('/proyectofinal2025-main/Backend/routes/get_cart.php');
+      const res = await fetch('Backend/routes/get_cart.php');
       if (!res.ok) return [];
       const json = await res.json();
       // Espera un formato { items: [{ id, quantity, price, name }, ... ] }
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', refreshCart);
     };
 
     try {
-      const res = await fetch('/proyectofinal2025-main/Backend/routes/create_preference.php', {
+      const res = await fetch('Backend/routes/create_preference.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(payload)
@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', refreshCart);
         }
         // opcional: redirigir la pestaña actual a página de espera/estado
         if (data.order_id) {
-          window.location.href = `/proyectofinal2025-main/Frontend/order_waiting.html?order_id=${encodeURIComponent(data.order_id)}`;
+          window.location.href = `Frontend/order_waiting.html?order_id=${encodeURIComponent(data.order_id)}`;
         } else {
           removeInfo();
         }

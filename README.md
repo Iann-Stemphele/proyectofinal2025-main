@@ -49,9 +49,9 @@ Este repositorio contiene el proyecto web **Las Dos Reinas**, desarrollado con P
 
 1. Inicia XAMPP y asegúrate que Apache y MySQL estén activos.
 2. Accede a las páginas desde el navegador:
-   - `http://localhost/ProyectoFinal2025/Frontend/galeriaycarrusel/comidas.html`
-   - `http://localhost/ProyectoFinal2025/Frontend/galeriaycarrusel/carrusel.html`
-   - `http://localhost/ProyectoFinal2025/Frontend/restaurante/Restaurante1.html`
+   - `http://tu-dominio.infinityfreeapp.com/Frontend/galeriaycarrusel/comidas.html`
+   - `http://tu-dominio.infinityfreeapp.com/Frontend/galeriaycarrusel/carrusel.html`
+   - `http://tu-dominio.infinityfreeapp.com/Frontend/restaurante/Restaurante1.html`
 3. Navega por las categorías y productos.
 
 ---

@@ -28,7 +28,7 @@ let todasLasComidas = [];
 
 // Carga todos los productos al iniciar
 async function obtenerComidas() {
-    const respuesta = await fetch('http://localhost/ProyectoFinal2025/Backend/routes/api.php?url=comidas');
+    const respuesta = await fetch('Backend/routes/api.php?url=comidas');
     todasLasComidas = await respuesta.json();
     console.log("Comidas recibidas:", todasLasComidas); // Verifica en consola
     document.querySelector(".card-container").innerHTML = "<p>Selecciona una categoría.</p>";

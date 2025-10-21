@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Debes tener un endpoint tipo: /api/categorias/:categoria
             // Ejemplo de respuesta esperada: [{id, nombre, precio}, ...]
             try {
-                const response = await fetch('http://localhost/proyectofinal2025-main/Backend/routes/categorias.php?categoria=' + encodeURIComponent(categoria));
+                const response = await fetch('Backend/routes/categorias.php?categoria=' + encodeURIComponent(categoria));
                 if (!response.ok) throw new Error('Error al cargar los alimentos');
                 const alimentos = await response.json();
 
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function cargarProductosPorCategoria(categoria) {
   try {
-    const response = await fetch(`http://localhost/proyectofinal2025-main/Backend/routes/categorias.php?categoria=${encodeURIComponent(categoria)}`);
+    const response = await fetch(`Backend/routes/categorias.php?categoria=${encodeURIComponent(categoria)}`);
     if (!response.ok) throw new Error('Error al cargar productos');
     const productos = await response.json();
     return productos;
