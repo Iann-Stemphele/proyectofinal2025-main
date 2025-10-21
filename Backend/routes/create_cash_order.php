@@ -5,10 +5,10 @@ ini_set('display_errors', 1);             // changed to 1 for local debugging
 ini_set('display_startup_errors', 1);     // changed to 1 for local debugging
 
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "LasDosReinas";
+$servername = "sql306.infinityfree.com";
+$username = "if0_40194248";
+$password = "LasDosReinas";
+$dbname = "if0_40194248_lasdosreinas";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 

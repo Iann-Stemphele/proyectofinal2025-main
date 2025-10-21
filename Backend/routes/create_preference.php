@@ -37,9 +37,9 @@ $access_token = 'APP_USR-3116660017260656-101416-b076654c1ec24219b73242f8f92e9c8
 // --------------------------------------------------------------
 
 // back_urls (asegúrate que sean accesibles desde MercadoPago)
-$back_success = 'http://localhost/proyectofinal2025-main/orders.html?status=success';
-$back_failure = 'http://localhost/proyectofinal2025-main/orders.html?status=failure';
-$back_pending = 'http://localhost/proyectofinal2025-main/orders.html?status=pending';
+$back_success = 'https://tu-sitio.infinityfreeapp.com/orders.html?status=success';
+$back_failure = 'https://tu-sitio.infinityfreeapp.com/orders.html?status=failure';
+$back_pending = 'https://tu-sitio.infinityfreeapp.com/orders.html?status=pending';
 
 $payload = [
     'items' => $mp_items,
@@ -94,10 +94,10 @@ if (!$preferenceId || !$init_point) {
 $order_id = null;
 try {
     // Database connection
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "LasDosReinas";
+    $servername = "sql306.infinityfree.com";
+    $username = "if0_40194248";
+    $password = "LasDosReinas";
+    $dbname = "if0_40194248_lasdosreinas";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 

@@ -1,9 +1,9 @@
 <?php
 // Script to create temp_preference table if not exists
-$host = 'localhost';
-$user = 'root';
-$pass = '';
-$db = 'LasDosReinas';
+$host = 'sql306.infinityfree.com';
+$user = 'if0_40194248';
+$pass = 'LasDosReinas';
+$db = 'if0_40194248_lasdosreinas';
 
 $conn = new mysqli($host, $user, $pass, $db);
 

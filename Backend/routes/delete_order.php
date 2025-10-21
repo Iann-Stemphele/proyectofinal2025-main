@@ -11,10 +11,10 @@ if (!$input || !isset($input['orderId'])) {
 }
 
 $orderId = (int)$input['orderId'];
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "LasDosReinas";
+$servername = "sql306.infinityfree.com";
+$username = "if0_40194248";
+$password = "LasDosReinas";
+$dbname = "if0_40194248_lasdosreinas";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {

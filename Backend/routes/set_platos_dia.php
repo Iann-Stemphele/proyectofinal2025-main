@@ -17,10 +17,10 @@ try {
     $dbFile = __DIR__ . '/../config/database.php';
     if (file_exists($dbFile)) require_once $dbFile;
 
-    $db_host = $db_host ?? '127.0.0.1';
-    $db_user = $db_user ?? 'root';
-    $db_pass = $db_pass ?? '';
-    $db_name = $db_name ?? 'lasdosreinas';
+    $db_host = $host ?? 'sql306.infinityfree.com';
+    $db_user = $user ?? 'if0_40194248';
+    $db_pass = $pass ?? 'LasDosReinas';
+    $db_name = $db ?? 'if0_40194248_lasdosreinas';
 
     $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
     if ($conn->connect_error) throw new Exception('DB connect error: ' . $conn->connect_error);
