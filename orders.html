@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
     <style>
+        /* Admin info styles ya están incluidos en session_guard.js */
         .orders-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -61,6 +62,9 @@
     </style>
 </head>
 <body>
+    <!-- Admin info bar -->
+    <div id="admin-info"></div>
+
     <div class="orders-container">
         <h1>Gestión de Pedidos</h1>
         <div id="orders-list">
@@ -232,5 +236,8 @@
         loadOrders();
         setInterval(loadOrders, 30000);
     </script>
+    
+    <!-- Session protection -->
+    <script src="Backend/js/session_guard.js"></script>
 </body>
 </html>

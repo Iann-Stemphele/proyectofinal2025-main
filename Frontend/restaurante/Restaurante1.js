@@ -101,7 +101,8 @@ window.onclick = function(event) {
                             requestAnimationFrame(animation);
                         }
 
-document.addEventListener('DOMContentLoaded', () => {
+// Función para inicializar la aplicación cuando la DB esté lista
+function initializeApp() {
     // --- Modal Más Información ---
     const modalMasInfo = document.getElementById('modal-mas-info');
     const closeMasInfoBtn = document.getElementById('close-mas-info');
@@ -111,6 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Delegación para todos los botones "Más información"
     document.querySelectorAll('.btn-mas-info').forEach(btn => {
         btn.addEventListener('click', async (e) => {
+            // Verificar que la DB esté lista antes de hacer peticiones
+            if (!window.connectionManager || !window.connectionManager.isDatabaseReady()) {
+                alert('La conexión a la base de datos no está lista. Por favor espera un momento.');
+                return;
+            }
+
             const categoria = btn.dataset.categoria;
             masInfoTitulo.textContent = 'Cargando...';
             masInfoLista.innerHTML = '<p>Cargando...</p>';
@@ -353,4 +360,4 @@ function closeModal() {
     modal.style.display = 'none';
   }
 }
-});
+};

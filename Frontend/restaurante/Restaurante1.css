@@ -846,3 +846,25 @@ header.content{
   cursor: not-allowed;
   transform: none;
 }
+
+/* Estilo para el ícono de iniciar sesión para que tenga el mismo tamaño que las redes sociales */
+.links .social {
+    margin: 0 10px;
+    height: 40px;
+    width: 40px;
+    border: 1px solid #d7ccc8;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.links .social:hover {
+    background-color: #cc6600;
+}
+
+.links .social img {
+    width: 24px;
+    height: 24px;
+    margin: 0;
+}
