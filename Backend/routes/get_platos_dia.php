@@ -16,8 +16,8 @@ try {
     $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
     if ($conn->connect_error) throw new Exception('DB connect error: ' . $conn->connect_error);
 
-    // Primero intentamos obtener los productos marcados como plato_del_dia
-    $stmt = $conn->prepare("SELECT id_Producto AS id, nombre, descripcion, precio FROM producto WHERE plato_del_dia = 1 ORDER BY id_Producto ASC LIMIT 12");
+    // Obtener productos de la categoría 'platos-dia'
+    $stmt = $conn->prepare("SELECT id_Producto AS id, nombre, descripcion, precio FROM producto WHERE categoria = 'platos-dia' ORDER BY id_Producto ASC");
     $stmt->execute();
     $res = $stmt->get_result();
     $items = [];
@@ -26,11 +26,12 @@ try {
     }
     $stmt->close();
 
-    // Si no hay platos marcados como plato_del_dia, usamos el fallback por categoría (compatibilidad)
+    // Si no hay platos en la categoría platos-dia, usar algunos productos populares
     if (empty($items)) {
-        $category = 'desayuno-merienda';
-        $stmt = $conn->prepare("SELECT id_Producto AS id, nombre, descripcion, precio FROM producto WHERE categoria = ? ORDER BY id_Producto ASC LIMIT 12");
-        $stmt->bind_param('s', $category);
+        $popular_ids = [3, 6, 13, 55, 56, 51, 52, 59, 118, 122]; // Algunos productos populares
+        $placeholders = str_repeat('?,', count($popular_ids) - 1) . '?';
+        $stmt = $conn->prepare("SELECT id_Producto AS id, nombre, descripcion, precio FROM producto WHERE id_Producto IN ($placeholders) ORDER BY id_Producto ASC");
+        $stmt->bind_param(str_repeat('i', count($popular_ids)), ...$popular_ids);
         $stmt->execute();
         $res = $stmt->get_result();
         while ($row = $res->fetch_assoc()) {

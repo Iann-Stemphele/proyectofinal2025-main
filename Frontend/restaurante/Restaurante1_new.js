@@ -101,14 +101,6 @@ function scrollToSection(event, id, duration = 2000) {
 // --- FUNCIONES DE BASE DE DATOS ---
 async function cargarProductosPorCategoria(categoria) {
   try {
-    if (!window.connectionManager || !window.connectionManager.isDatabaseReady()) {
-      console.warn('Database not ready, retrying...');
-      // Esperar un momento y reintentar
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      if (!window.connectionManager || !window.connectionManager.isDatabaseReady()) {
-        throw new Error('Database connection not available');
-      }
-    }
     
     const response = await fetch(`Backend/routes/categorias.php?categoria=${encodeURIComponent(categoria)}`);
     if (!response.ok) throw new Error('Error al cargar productos');
@@ -153,12 +145,6 @@ function initializeApp() {
     // Delegación para todos los botones "Más información"
     document.querySelectorAll('.btn-mas-info').forEach(btn => {
         btn.addEventListener('click', async (e) => {
-            // Verificar que la DB esté lista antes de hacer peticiones
-            if (!window.connectionManager || !window.connectionManager.isDatabaseReady()) {
-                alert('La conexión a la base de datos no está lista. Por favor espera un momento.');
-                return;
-            }
-
             const categoria = btn.dataset.categoria;
             masInfoTitulo.textContent = 'Cargando...';
             masInfoLista.innerHTML = '<p>Cargando...</p>';
@@ -264,12 +250,6 @@ function initMenuButtons() {
         btn.addEventListener('click', async function(e) {
             e.stopPropagation();
             
-            // Verificar conexión a la base de datos
-            if (!window.connectionManager || !window.connectionManager.isDatabaseReady()) {
-                alert('La conexión a la base de datos no está lista. Por favor espera un momento.');
-                return;
-            }
-
             document.querySelectorAll('.mini-menu').forEach(m => m.style.display = 'none');
             const categoria = btn.getAttribute('data-categoria');
             const miniMenu = document.getElementById('mini-menu-' + categoria);
@@ -351,11 +331,6 @@ function initPlatosDia() {
 
     if (platosDiaBtn && modalPlatosDia && platosDiaLista) {
         platosDiaBtn.addEventListener('click', async () => {
-            if (!window.connectionManager || !window.connectionManager.isDatabaseReady()) {
-                alert('La conexión a la base de datos no está lista. Por favor espera un momento.');
-                return;
-            }
-
             platosDiaLista.innerHTML = '<p>Cargando platos del día...</p>';
             modalPlatosDia.style.display = 'flex';
 
@@ -486,19 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Actualizar contador del carrito al cargar la página
     updateCartCounter();
     
-    // Esperar a que se cargue el connection manager
-    setTimeout(() => {
-        if (!window.connectionManager) {
-            console.warn('Connection Manager no encontrado, inicializando aplicación directamente...');
-            initializeApp();
-        } else if (window.connectionManager.isDatabaseReady()) {
-            console.log('Base de datos ya lista, inicializando aplicación...');
-            initializeApp();
-        }
-    }, 3000);
-});
-
-// Inicializar cuando la aplicación esté completamente lista
-document.addEventListener('appReady', () => {
-    console.log('Aplicación completamente cargada');
+    // Inicializar aplicación directamente
+    console.log('Inicializando aplicación...');
+    initializeApp();
 });

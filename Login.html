@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #cc6600 0%, #ff9933 100%);
+            background: #000000; /* Fondo negro sólido */
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,36 +22,34 @@
             background: white;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 35px rgba(255, 255, 255, 0.1); /* Sombra blanca suave para destacar en fondo negro */
             width: 100%;
             max-width: 400px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(204, 102, 0, 0.3); /* Borde sutil naranja */
         }
 
-        .login-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, #cc6600, #ff9933, #cc6600);
-        }
+        
 
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 120px; /* Agrandado para mostrar mejor el logo */
+            height: 120px; /* Agrandado para mostrar mejor el logo */
             margin: 0 auto 20px;
-            background: #cc6600;
+            background: transparent; /* Sin fondo para mostrar el logo */
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
+            border: 3px solid #cc6600; /* Borde naranja */
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
         }
 
         .login-title {
@@ -199,7 +197,7 @@
 <body>
     <div class="login-container">
         <div class="logo">
-            2R
+            <img src="Frontend/img/logod2r-removebg-preview.png" alt="Las Dos Reinas">
         </div>
         
         <h1 class="login-title">Iniciar Sesión</h1>

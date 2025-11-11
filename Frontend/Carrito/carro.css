@@ -65,7 +65,6 @@
     background-color: rgba(0,0,0,0.6); /* Fondo negro con opacidad */
     justify-content: center; /* Centrar horizontalmente */
     align-items: center; /* Centrar verticalmente */
-    display: flex; /* Usar flexbox para centrado */
 }
 
 .alt-modal-content {
@@ -311,19 +310,20 @@
 /* Responsive design for mobile devices */
 @media (max-width: 768px) {
     .cart-button {
-        width: 50px;
-        height: 50px;
+        width: 120px;  /* Duplicado: de 60px a 120px */
+        height: 120px; /* Duplicado: de 60px a 120px */
+        border: 3px solid #cc6600; /* Borde naranja del mismo color */
     }
     
     .cart-button img {
-        width: 25px;
-        height: 25px;
+        width: 70px;  /* Imagen duplicada: de 35px a 70px */
+        height: 70px; /* Imagen duplicada: de 35px a 70px */
     }
     
     .cart-counter {
-        width: 20px;
-        height: 20px;
-        font-size: 10px;
+        width: 48px;  /* Contador duplicado: de 24px a 48px */
+        height: 48px; /* Contador duplicado: de 24px a 48px */
+        font-size: 24px; /* Texto duplicado: de 12px a 24px */
     }
 }
 

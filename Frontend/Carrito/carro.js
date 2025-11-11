@@ -10,19 +10,9 @@ let cart = JSON.parse(localStorage.getItem('altCart')) || [];
 
 const saveCart = () => {
     localStorage.setItem('altCart', JSON.stringify(cart));
-    updateCartCounter();
-};
-
-const updateCartCounter = () => {
-    const counter = document.getElementById('cart-counter');
-    if (counter) {
-        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-        counter.textContent = totalItems;
-        counter.style.display = totalItems > 0 ? 'flex' : 'none';
-        
-        counter.classList.remove('updated');
-        void counter.offsetWidth; // Forzar reflow para animación
-        counter.classList.add('updated');
+    // La función updateCartCounter está definida en Restaurante1_new.js
+    if (typeof updateCartCounter === 'function') {
+        updateCartCounter();
     }
 };
 
@@ -564,7 +554,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const savedCart = JSON.parse(localStorage.getItem('altCart')) || [];
                 cart = savedCart;
                 renderCart();
-                updateCartCounter();
+                if (typeof updateCartCounter === 'function') {
+                    updateCartCounter();
+                }
                 mostrarNotificacion('Cart refreshed successfully!', 1500);
             } catch (err) {
                 console.error('Refresh cart error:', err);
@@ -584,11 +576,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // Reload cart from localStorage (since cart works with localStorage)
             const savedCart = JSON.parse(localStorage.getItem('altCart')) || [];
             cart = savedCart;
-            updateCartCounter();
+            if (typeof updateCartCounter === 'function') {
+                updateCartCounter();
+            }
         }
     }, 4000);
 
     // --- Renderizado Inicial ---
     renderCart();
-    updateCartCounter();
+    if (typeof updateCartCounter === 'function') {
+        updateCartCounter();
+    }
 });

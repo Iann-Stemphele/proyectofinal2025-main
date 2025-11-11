@@ -202,47 +202,116 @@ async function refreshCart() {
   }
 }
 
+// Función para mostrar platos del día en el modal
+window.mostrarPlatosDelDia = async function() {
+  const platosDiaLista = document.getElementById('platos-dia-lista');
+  if (!platosDiaLista) return;
+
+  platosDiaLista.innerHTML = '<p>Cargando platos del día...</p>';
+
+  try {
+    const response = await fetch('Backend/routes/get_platos_dia.php');
+    if (!response.ok) throw new Error('Error al cargar platos del día');
+    const platosDia = await response.json();
+
+    if (platosDia.length === 0) {
+      platosDiaLista.innerHTML = '<p>No hay platos especiales hoy.</p>';
+    } else {
+      platosDiaLista.innerHTML = '';
+      platosDia.forEach(plato => {
+        const platoDiv = document.createElement('div');
+        platoDiv.className = 'plato-dia-item';
+        platoDiv.innerHTML = `
+          <h4>${plato.nombre}</h4>
+          <p>${plato.descripcion || ''}</p>
+          <span class="precio">$${plato.precio}</span>
+          <button class="agregar-plato-dia" data-id="${plato.id}" data-nombre="${plato.nombre}" data-precio="${plato.precio}">
+            Agregar al carrito
+          </button>
+        `;
+        platosDiaLista.appendChild(platoDiv);
+      });
+
+      // Agregar event listeners para los botones de agregar
+      document.querySelectorAll('.agregar-plato-dia').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const id = parseInt(this.dataset.id);
+          const nombre = this.dataset.nombre;
+          const precio = parseFloat(this.dataset.precio);
+
+          // Usar el mismo sistema que el resto del sitio (localStorage altCart)
+          let cart = JSON.parse(localStorage.getItem('altCart')) || [];
+          const existingProductIndex = cart.findIndex(item => item.id == id);
+          
+          if (existingProductIndex > -1) {
+            cart[existingProductIndex].quantity += 1;
+          } else {
+            cart.push({ id: id, name: nombre, price: precio, quantity: 1 });
+          }
+          
+          localStorage.setItem('altCart', JSON.stringify(cart));
+
+          // Actualizar contador del carrito si existe
+          const cartCounter = document.querySelector('.alt-shop-cart .alt-cart-count');
+          if (cartCounter) {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCounter.textContent = totalItems;
+          }
+
+          // Feedback visual
+          mostrarNotificacion(`"${nombre}" se agregó al carrito`);
+          
+          this.textContent = 'Agregado!';
+          this.disabled = true;
+          setTimeout(() => {
+            this.textContent = 'Agregar al carrito';
+            this.disabled = false;
+          }, 1000);
+        });
+      });
+    }
+  } catch (error) {
+    platosDiaLista.innerHTML = '<p>Error al cargar los platos del día.</p>';
+    console.error('Error:', error);
+  }
+};
+
 // Ejecutar al cargar para sincronizar contador
-document.addEventListener('DOMContentLoaded', mostrarPlatosDelDia);
 document.addEventListener('DOMContentLoaded', refreshCart);
 
-/* ---------- Validación y creación dinámica del botón MercadoPago ---------- */
+/* ---------- Validación MercadoPago deshabilitada temporalmente ---------- */
+/*
 (function(){
-  // Intentar localizar inputs (adapta si tus inputs tienen otros ids)
-  const nameInput = document.querySelector('#customer-name') || document.querySelector('input[name="name"]') || null;
-  const emailInput = document.querySelector('#customer-email') || document.querySelector('input[name="email"]') || null;
-  const addressInput = document.querySelector('#customer-address') || document.querySelector('input[name="address"]') || null;
+  // Código MercadoPago comentado para evitar mensajes molestos
+})();
+*/
 
-  // Contenedor donde se mostrará mensaje y botón (crear si no existe)
-  let container = document.querySelector('#mp-button-container');
-  if (!container) {
-    container = document.createElement('div');
-    container.id = 'mp-button-container';
-    container.style.marginTop = '12px';
-    // intenta insertar cerca del formulario o al final del body
-    const form = document.querySelector('form') || document.body;
-    form.appendChild(container);
-  }
-
-  // Elementos dinámicos
-  let infoEl = container.querySelector('.mp-info');
-  let mpBtn = container.querySelector('#mp-pay-btn');
+// --- Funcionalidad MercadoPago ---
+(function(){
+  let mpBtn = null;
+  let infoEl = null;
+  const nameInput = document.getElementById('name');
+  const emailInput = document.getElementById('email');
+  const addressInput = document.getElementById('address');
 
   function createInfo() {
-    if (document.querySelector('.mp-info')) return document.querySelector('.mp-info');
-    if (!infoEl) {
-      infoEl = document.createElement('div');
-      infoEl.className = 'mp-info';
-      infoEl.style.color = '#b30000';
-      infoEl.style.marginBottom = '8px';
-      infoEl.style.fontWeight = '600';
-      container.prepend(infoEl);
-    }
-    return infoEl;
+    if (infoEl) return;
+    infoEl = document.createElement('p');
+    infoEl.id = 'mp-info';
+    infoEl.style.margin = '10px 0';
+    infoEl.style.padding = '8px';
+    infoEl.style.backgroundColor = '#f8f9fa';
+    infoEl.style.border = '1px solid #e9ecef';
+    infoEl.style.borderRadius = '4px';
+    const container = document.querySelector('.payment-container') || document.body;
+    container.appendChild(infoEl);
   }
 
   function removeInfo() {
-    if (infoEl) { infoEl.remove(); infoEl = null; }
+    if (infoEl) {
+      infoEl.remove();
+      infoEl = null;
+    }
   }
 
   function createMpButton() {
@@ -396,7 +465,7 @@ document.addEventListener('DOMContentLoaded', refreshCart);
     }
   }
 
-})();
+})(); 
 
 // --- Bind botones "Agregar al carrito" (soporta múltiples selectores y delegación) ---
 (function(){
