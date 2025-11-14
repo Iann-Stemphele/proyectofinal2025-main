@@ -134,7 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const closeModal = (modalElement) => {
-        modalElement.style.display = 'none';
+        if (modalElement) {
+            modalElement.style.display = 'none';
+        }
     };
 
     altCloseButtons.forEach(button => {

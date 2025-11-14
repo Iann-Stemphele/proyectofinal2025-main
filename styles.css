@@ -63,6 +63,33 @@ html, body {
     overscroll-behavior-x: none;
 }
 
+/* Modal específico para platos del día - tamaño compacto */
+#modal-platos-dia .alt-modal-content {
+    max-width: 340px !important;
+    width: 90% !important;
+    margin: auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+/* Lista de platos del día - centrado sin grid */
+#platos-dia-lista {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+    padding: 0;
+}
+
+/* Eliminar estilos de grid para platos del día */
+#platos-dia-lista.productos-grid {
+    display: flex !important;
+    grid-template-columns: none !important;
+}
+
 #shop.shop {
     position: fixed;
     bottom: 0;

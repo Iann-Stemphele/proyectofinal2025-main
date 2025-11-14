@@ -1,9 +1,9 @@
 <?php
-// Configuración de base de datos para entorno local XAMPP
-$host = 'localhost';
+// Configuración de base de datos para InfinityFree
+$host = 'sql306.infinityfree.com';
 $db   = 'if0_40194248_lasdosreinas';
-$user = 'root';
-$pass = '';
+$user = 'if0_40194248';
+$pass = 'LasDosReinas';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

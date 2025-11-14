@@ -104,9 +104,9 @@ h2{
     }
 }
 
-/* En móvil (1 columna) quitar offsets para que queden centrados y sin solaparse */
+/* En móvil (2 columnas para cards más delgadas) quitar offsets para que queden centrados y sin solaparse */
 @media (max-width: 768px) {
-    .productos-grid { grid-template-columns: 1fr !important; max-width: 720px; padding: 12px; }
+    .productos-grid { grid-template-columns: repeat(2, 1fr) !important; max-width: 720px; padding: 12px; }
 
     /* Forzar que la card ocupe todo el ancho y sea columna */
     .product-card {
@@ -145,7 +145,7 @@ h2{
 
     /* Ajustes visuales para evitar que el contenido sea demasiado alto */
     .product-name { font-size: 1rem; margin-bottom: 6px; }
-    .product-description { -webkit-line-clamp: 3; margin: 0 0 8px 0; }
+    .product-description { -webkit-line-clamp: 2; margin: 0 0 8px 0; }
     .product-card-footer { margin-top: auto; padding-top: 6px; }
 
     .cols {
@@ -165,10 +165,21 @@ h2{
     }
 }
 
-/* Asegurar que en móviles las grids sean 1 columna y las cards sean lista (no cuadrados) */
+/* Asegurar que en móviles las grids sean 3 columnas para cards muy delgadas y las cards sean lista (no cuadrados) */
 @media (max-width: 768px) {
-    /* forzar una sola columna en ambas estructuras */
-    .productos-grid,
+    /* forzar tres columnas en productos-grid, una en cols */
+    .productos-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        max-width: 100% !important;
+        padding: 0 12px !important;
+        gap: 0.5rem !important;
+    }
+    /* Excepción para mas-info-lista: 1 columna en móvil y más estrecho */
+    #mas-info-lista {
+        grid-template-columns: 1fr !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+    }
     .cols {
         grid-template-columns: 1fr !important;
         max-width: 100% !important;
@@ -176,13 +187,13 @@ h2{
         gap: 0.9rem !important;
     }
 
-    /* tarjeta como fila única (lista): contenido ocupa todo el ancho, altura automática */
+    /* tarjeta como fila única (lista): contenido ocupa todo el ancho, altura fija 350px */
     .product-card {
         display: flex !important;
         flex-direction: column !important;
         align-items: stretch !important;
         width: 100% !important;
-        height: auto !important;
+        max-height: 350px !important;
         padding: 8px !important;
         border-radius: 10px;
     }
@@ -200,6 +211,7 @@ h2{
         flex: 1 1 auto !important;
         padding: 8px !important;
         min-height: 0 !important;
+        width: 100% !important;
     }
 
     /* reset offsets aplicados en desktop para evitar desplazamientos en móvil */

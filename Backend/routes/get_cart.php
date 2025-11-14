@@ -11,8 +11,8 @@ if (file_exists($dbPath)) {
 if (!isset($pdo) || !($pdo instanceof PDO)) {
     // Fallback opcional (no crítico para get_cart si carrito está en sesión)
     try {
-        $dsn = "mysql:host=localhost;dbname=if0_40194248_lasdosreinas;charset=utf8mb4";
-        $pdo = new PDO($dsn, 'root', '', [
+        $dsn = "mysql:host=sql306.infinityfree.com;dbname=if0_40194248_lasdosreinas;charset=utf8mb4";
+        $pdo = new PDO($dsn, 'if0_40194248', 'LasDosReinas', [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]);
