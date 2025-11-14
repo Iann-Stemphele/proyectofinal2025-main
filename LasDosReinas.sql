@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 01-08-2025 a las 07:10:20
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Servidor: sql306.infinityfree.com
+-- Tiempo de generación: 13-11-2025 a las 21:40:10
+-- Versión del servidor: 11.4.7-MariaDB
+-- Versión de PHP: 7.2.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `lasdosreinas`
+-- Base de datos: `if0_40194248_lasdosreinas`
 --
 
 -- --------------------------------------------------------
@@ -33,8 +34,18 @@ CREATE TABLE `administrador` (
   `apellido` varchar(50) DEFAULT NULL,
   `cargo` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `telefono` varchar(20) DEFAULT NULL
+  `telefono` varchar(20) DEFAULT NULL,
+  `contraseña` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `administrador`
+--
+
+INSERT INTO `administrador` (`id_Empleado`, `nombre`, `apellido`, `cargo`, `email`, `telefono`, `contraseña`) VALUES
+(1, 'Admin', 'Principal', 'Administrador General', 'admin@lasdosreinas.com', '+598123456789', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'),
+(2, 'Gerente', 'Restaurant', 'Gerente de Restaurant', 'gerente@lasdosreinas.com', '+598987654321', 'ecfba551324356e5bd27b548adf36b728783f60d9b573d142caac7baad62be49'),
+(3, 'Supervisor', 'Cocina', 'Supervisor de Cocina', 'cocina@lasdosreinas.com', '+598555123456', '17fb2b2ef0554390dfdcb2eb9099e1279e12bd4b4b01fb33a1d5f4c0ce15e85c');
 
 -- --------------------------------------------------------
 
@@ -49,6 +60,56 @@ CREATE TABLE `contiene` (
   `cantidad` int(11) DEFAULT 1,
   `precio_unitario` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `contiene`
+--
+
+INSERT INTO `contiene` (`id_contiene`, `id_pedido`, `id_producto`, `cantidad`, `precio_unitario`) VALUES
+(2, 8, 160, 1, '450.00'),
+(3, 9, 160, 1, '450.00'),
+(4, 10, 160, 1, '450.00'),
+(5, 11, 160, 1, '450.00'),
+(6, 12, 60, 1, '890.00'),
+(7, 12, 59, 1, '520.00'),
+(8, 13, 159, 1, '490.00'),
+(9, 14, 159, 1, '490.00'),
+(10, 15, 160, 1, '450.00'),
+(11, 16, 160, 1, '450.00'),
+(12, 17, 160, 1, '450.00'),
+(13, 18, 160, 1, '450.00'),
+(14, 19, 160, 1, '450.00'),
+(15, 20, 160, 1, '450.00'),
+(16, 21, 160, 1, '450.00'),
+(17, 22, 159, 1, '490.00'),
+(18, 23, 77, 1, '75.00'),
+(19, 23, 60, 1, '890.00'),
+(20, 24, 77, 1, '75.00'),
+(21, 24, 60, 1, '890.00'),
+(22, 25, 163, 1, '350.00'),
+(23, 25, 161, 1, '490.00'),
+(24, 26, 163, 1, '350.00'),
+(25, 26, 161, 1, '490.00'),
+(26, 27, 163, 1, '350.00'),
+(27, 27, 161, 1, '490.00'),
+(31, 30, 160, 1, '450.00'),
+(32, 31, 160, 1, '450.00'),
+(33, 32, 113, 1, '990.00'),
+(34, 33, 113, 1, '990.00'),
+(35, 34, 113, 1, '990.00'),
+(36, 35, 113, 1, '990.00'),
+(37, 36, 113, 1, '990.00'),
+(38, 37, 113, 1, '990.00'),
+(40, 39, 113, 1, '990.00'),
+(55, 51, 79, 1, '190.00'),
+(56, 52, 61, 1, '220.00'),
+(57, 52, 70, 1, '270.00'),
+(58, 52, 69, 1, '350.00'),
+(70, 58, 161, 1, '490.00'),
+(76, 64, 60, 1, '890.00'),
+(77, 65, 156, 1, '490.00'),
+(78, 65, 113, 1, '990.00'),
+(79, 65, 167, 1, '60.00');
 
 -- --------------------------------------------------------
 
@@ -77,9 +138,20 @@ CREATE TABLE `pedido` (
   `telefono_cliente` varchar(20) DEFAULT NULL,
   `metodo_pago` varchar(20) DEFAULT NULL,
   `preference_id` varchar(100) DEFAULT NULL,
-  `hora_inicio` datetime DEFAULT CURRENT_TIMESTAMP,
+  `hora_inicio` datetime DEFAULT current_timestamp(),
   `tiempo_estimado` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pedido`
+--
+
+INSERT INTO `pedido` (`id_pedido`, `fecha`, `monto_total`, `estado`, `nombre_cliente`, `email_cliente`, `telefono_cliente`, `metodo_pago`, `preference_id`, `hora_inicio`, `tiempo_estimado`) VALUES
+(51, '2025-10-21', '190.00', 'inicializando', 'Fran berois', 'franberois@gmail.com', '092816737', 'tarjeta', NULL, '2025-10-21 12:06:56', NULL),
+(52, '2025-10-21', '840.00', 'inicializando', 'Manolo Garcia', 'Garcia@gmail.com', '092816737', 'tarjeta', NULL, '2025-10-21 12:15:44', NULL),
+(58, '2025-11-11', '490.00', 'inicializando', 'Fran Ber', 'Franber@gmail.com', '092816737', 'tarjeta', NULL, '2025-11-11 13:01:49', 26),
+(64, '2025-11-11', '890.00', 'en proceso', 'iann stemphelet', 'iann2106@gmail.com', '092941812', 'efectivo', NULL, '2025-11-11 14:31:07', 17),
+(65, '2025-11-13', '1540.00', 'completado', 'yyyy 7yyyy', 'yhy', 'yyy', 'efectivo', NULL, '2025-11-13 11:44:01', NULL);
 
 -- --------------------------------------------------------
 
@@ -101,211 +173,229 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`id_Producto`, `nombre`, `descripcion`, `precio`, `stock_disponible`, `categoria`) VALUES
-(1, 'CAFÉ AMERICANO', '', 145.00, 100, 'desayuno-merienda'),
-(2, 'CAFÉ BAILEYS', 'café doble + baileys + crema', 190.00, 100, 'desayuno-merienda'),
-(3, 'CAFÉ CON LECHE', '', 150.00, 100, 'desayuno-merienda'),
-(4, 'CAFÉ FRIO', '', 190.00, 100, 'desayuno-merienda'),
-(5, 'CAFÉ IRLANDÉS', 'café + whisky + crema', 290.00, 100, 'desayuno-merienda'),
-(6, 'CAFÉ CAPUCCINO', '', 160.00, 100, 'desayuno-merienda'),
-(7, 'CHOCOLATE FRIO O CALIENTE', '', 180.00, 100, 'desayuno-merienda'),
-(8, 'CAFÉ CORTADO', '', 150.00, 100, 'desayuno-merienda'),
-(9, 'CAFÉ EXPRESSO', '', 140.00, 100, 'desayuno-merienda'),
-(10, 'CAFÉ EXPRESSO DOBLE', '', 150.00, 100, 'desayuno-merienda'),
-(11, 'CAFÉ LAGRIMA', '', 140.00, 100, 'desayuno-merienda'),
-(12, 'CAFÉ LATTE', '', 190.00, 100, 'desayuno-merienda'),
-(13, 'SUBMARINO', '', 190.00, 100, 'desayuno-merienda'),
-(14, 'TÉ TWININGS', '', 90.00, 100, 'desayuno-merienda'),
-(15, 'TÉ CON LECHE', '', 130.00, 100, 'desayuno-merienda'),
-(16, 'TÉ FRIO', 'leche deslactosada o vegetal', 130.00, 100, 'desayuno-merienda'),
-(17, 'MEDIALUNA DE JAMON Y QUESO', '', 130.00, 100, 'desayuno-merienda'),
-(18, 'PAN DE QUESO (CHIPA) X3', '', 60.00, 100, 'desayuno-merienda'),
-(19, 'SCONS DE QUESO X1', '', 25.00, 100, 'desayuno-merienda'),
-(20, 'SCOND DE QUESO X2', '', 45.00, 100, 'desayuno-merienda'),
-(21, '2 TOSTADAS CON MANTECA O MERMELADA', '', 90.00, 100, 'desayuno-merienda'),
-(22, 'TOSTADO DE JAMON Y QUESO', '', 290.00, 100, 'desayuno-merienda'),
-(23, 'ALFAJOR CASERO DE MAICENA CHICO', '', 40.00, 100, 'desayuno-merienda'),
-(24, 'ALFAJOR CASERO DE MAICENA GRANDE', '', 60.00, 100, 'desayuno-merienda'),
-(25, 'ALFAJOR CASERO MAICENA (VARIEDAD)', '', 60.00, 100, 'desayuno-merienda'),
-(26, 'BROWNIE', '', 150.00, 100, 'desayuno-merienda'),
-(27, 'BUDIN', '', 150.00, 100, 'desayuno-merienda'),
-(28, 'CARROT CAKE', '', 150.00, 100, 'desayuno-merienda'),
-(29, 'COOKIES CHIPS CHOCO', '', 30.00, 100, 'desayuno-merienda'),
-(30, 'COOKIES VAINILLA', '', 25.00, 100, 'desayuno-merienda'),
-(31, 'MEDIALUNAS DULCES CHICAS', '', 50.00, 100, 'desayuno-merienda'),
-(32, 'PASTA FROLA', '', 150.00, 100, 'desayuno-merienda'),
-(33, 'PASTEL FRITO', '', 60.00, 100, 'desayuno-merienda'),
-(34, 'ALFAJORCITO DE MAICENA X2', '', 80.00, 100, 'desayuno-merienda'),
-(35, 'ALFAJOR DECORADO', '', 90.00, 100, 'desayuno-merienda'),
-(36, 'ALFAJOR SALCHICHON', '', 50.00, 100, 'desayuno-merienda'),
-(37, 'COOKIES X2', '', 80.00, 100, 'desayuno-merienda'),
-(38, 'PANCHITO/PALMERITA X2', '', 80.00, 100, 'desayuno-merienda'),
-(39, 'BROWNIE', '', 210.00, 100, 'desayuno-merienda'),
-(40, 'CHIPA X 3', '', 170.00, 100, 'desayuno-merienda'),
-(41, 'EMPANADA X 2', '', 160.00, 100, 'desayuno-merienda'),
-(42, 'MASITAS DECORADAS X3', '', 50.00, 100, 'desayuno-merienda'),
-(43, 'MUFFIN', '', 55.00, 100, 'desayuno-merienda'),
-(44, 'PASTAFROLA MEMBRILLO', '', 180.00, 100, 'desayuno-merienda'),
-(45, 'PASTAFROLA DULCE DE LECHE', '', 210.00, 100, 'desayuno-merienda'),
-(46, 'PIZZA CON MOZZARELLA (2p)', '', 425.00, 100, 'desayuno-merienda'),
-(47, 'TOSTADO DE JAMON Y QUESO', '', 220.00, 100, 'desayuno-merienda'),
-(48, 'TARTA J&Q', '', 350.00, 100, 'desayuno-merienda'),
-(49, 'ESPECIAL 1', '1 té, café o exprimido de naranja; 1 tostado de jamón y queso o 2 medialunas de manteca; Porción dulce (opción del día)', 350.00, 100, 'desayuno-merienda'),
-(50, 'ESPECIAL 2', '2 Té, café o exprimido de naranja; 2 tostado de jamón y queso o 4 medialunas de manteca; 2 Porciones dulces (opción del día)', 590.00, 100, 'desayuno-merienda'),
-(51, 'MILANESA COMÚN', 'Milanesa de ternera con papas fritas; mayonesa ketchup o mostaza', 450.00, 100, 'milanesas-hamburgesas-chivitos-chorizo'),
-(52, 'MILANESA ESPECIAL', 'Milanesa de ternera; queso; huevo frito; panceta; jamón; papas fritas; mayonesa, ketchup o mostaza', 590.00, 100, 'milanesas-hamburgesas-chivitos-chorizo'),
-(53, 'MILANESA NAPOLITANA DE TERNERA', 'Napolitana; queso; huevo frito; panceta; jamón; papas fritas; mayonesa, ketchup o mostaza', 480.00, 100, 'milanesas-hamburgesas-chivitos-chorizo'),
-(54, 'MILANESA NAPOLITANA DE POLLO', 'Napolitana; queso; huevo frito; panceta; jamón; papas fritas; mayonesa, ketchup o mostaza', 480.00, 100, 'milanesas-hamburgesas-chivitos-chorizo'),
-(55, 'HAMBURGUESA COMÚN', 'Hamburguesa de ternera con papas fritas; mayonesa, ketchup o mostaza', 320.00, 100, 'milanesas-hamburgesas-chivitos-chorizo'),
-(56, 'HAMBURGUESA ESPECIAL', 'Hamburguesa de ternera; queso; huevo frito; panceta; jamón; papas fritas; mayonesa, ketchup o mostaza', 420.00, 100, 'milanesas-hamburgesas-chivitos-chorizo'),
-(57, 'HAMBURGUESA VEGETARIANA COMÚN', 'Hamburguesa vegetariana con papas fritas; mayonesa, ketchup o mostaza', 450.00, 100, 'milanesas-hamburgesas-chivitos-chorizo'),
-(58, 'HAMBURGUESA VEGETARIANA ESPECIAL', 'Hamburguesa vegetariana; queso; huevo frito; papas fritas; mayonesa, ketchup o mostaza', 550.00, 100, 'milanesas-hamburgesas-chivitos-chorizo'),
-(59, 'CHIVITO PARA 1', 'churrasco de ternera con jamón; muzarella; panceta; huevo frito; tomate; lechuga; papas fritas; mayonesa, ketchup o mostaza', 520.00, 100, 'milanesas-hamburgesas-chivitos-chorizo'),
-(60, 'CHIVITO PARA 2', '2 churrascos de ternera con jamón; muzarella; panceta; huevos fritos; tomate; lechuga; papas fritas; mayonesa, ketchup o mostaza', 890.00, 100, 'milanesas-hamburgesas-chivitos-chorizo'),
-(61, 'CHORIZO AL PAN', 'Chorizo, tomate, lechuga, mayonesa, ketchup o mostaza', 220.00, 100, 'milanesas-hamburgesas-chivitos-chorizo'),
-(62, 'PAPAS BRAVAS', '', 320.00, 100, 'guarniciones-ensaladas'),
-(63, 'PAPAS FRITAS', '', 260.00, 100, 'guarniciones-ensaladas'),
-(64, 'PAPAS FRITAS C/2 HUEVOS FRITOS', '', 310.00, 100, 'guarniciones-ensaladas'),
-(65, 'PAPAS FRITAS CON CHEDDAR', '', 320.00, 100, 'guarniciones-ensaladas'),
-(66, 'PAPAS NOISETTES', '', 320.00, 100, 'guarniciones-ensaladas'),
-(67, 'PAPAS RÚSTICAS', '', 280.00, 100, 'guarniciones-ensaladas'),
-(68, 'PURÉ DE PAPAS', '', 250.00, 100, 'guarniciones-ensaladas'),
-(69, 'ENSALADA CÉSAR', '', 350.00, 100, 'guarniciones-ensaladas'),
-(70, 'ENSALADA MIXTA', 'lechuga, tomate y cebolla', 270.00, 100, 'guarniciones-ensaladas'),
-(71, 'CHURRASCO A LA PLANCHA', 'TERNERA O POLLO', 230.00, 100, 'guarniciones-ensaladas'),
-(72, 'NUGGETS DE POLLO', '', 170.00, 100, 'guarniciones-ensaladas'),
-(73, 'OMELETTE', '', 260.00, 100, 'guarniciones-ensaladas'),
-(74, 'OMELETTE JAMÓN Y QUESO', '', 260.00, 100, 'guarniciones-ensaladas'),
-(75, 'MILANESA DE TERNERA O POLLO', '', 260.00, 100, 'guarniciones-ensaladas'),
-(76, 'REVUELTO GRAMAJO', 'Papa, huevo, jamón, panceta, cebolla y queso', 490.00, 100, 'guarniciones-ensaladas'),
-(77, 'EMPANADAS', '', 75.00, 100, 'guarniciones-ensaladas'),
-(78, 'CROQUETAS DE PAPA', '', 190.00, 100, 'guarniciones-ensaladas'),
-(79, 'CROQUETAS DE ARROZ', '', 190.00, 100, 'guarniciones-ensaladas'),
-(80, 'PORCIÓN DE TARTA', 'carne dulce; carne salada; cebolla y panceta; chivito; jamón y queso; pascualina; pollo; zapallito', 149.00, 100, 'guarniciones-ensaladas'),
-(81, 'TALLARINES CON SALSA', '', 320.00, 100, 'guarniciones-ensaladas'),
-(82, 'RAVIOLES CON SALSA', '', 260.00, 100, 'guarniciones-ensaladas'),
-(83, 'ÑOQUIS CON SALSA', '', 310.00, 100, 'guarniciones-ensaladas'),
-(84, 'SALSAS', '4 quesos, caruso, tuco de carne', 190.00, 100, 'guarniciones-ensaladas'),
-(85, '2 REINAS', 'tequila, jugo de naranja, granadina', 290.00, 100, 'tragos'),
-(86, 'AMARGA CON VERMOUTH', '', 210.00, 100, 'tragos'),
-(87, 'APEROL SPRITZ', 'aperol, espumante, soda, naranja', 290.00, 100, 'tragos'),
-(88, 'BAILEYS', '', 190.00, 100, 'tragos'),
-(89, 'CAIPIRIÑA LIMA', 'cachaza, azúcar', 290.00, 100, 'tragos'),
-(90, 'CAIPIROSCA LIMA', 'vodka, azúcar', 290.00, 100, 'tragos'),
-(91, 'CAMPARI CON NARANJA', '', 290.00, 100, 'tragos'),
-(92, 'CUBA LIBRE', 'coca cola y ron', 290.00, 100, 'tragos'),
-(93, 'DAIKIRI', 'ron blanco, frutilla o durazno', 290.00, 100, 'tragos'),
-(94, 'FERNET CON COCA COLA', 'fernet', 180.00, 100, 'tragos'),
-(95, 'GIN TONIC', 'gin, tónica, limón', 290.00, 100, 'tragos'),
-(96, 'JAGER', 'jager, energizante o coca cola', 290.00, 100, 'tragos'),
-(97, 'MARGARITA', 'tequila, licor, jugo de limón, triple sec', 290.00, 100, 'tragos'),
-(98, 'MALIBÚ COCA COLA', 'malibú', 290.00, 100, 'tragos'),
-(99, 'MALIBÚ POMELO O NARANJA', 'malibú', 290.00, 100, 'tragos'),
-(100, 'MOJITO', 'menta, ron, lima, azúcar', 290.00, 100, 'tragos'),
-(101, 'NEGRONI', 'gin, campari, vermouth rosso', 290.00, 100, 'tragos'),
-(102, 'PIÑA COLADA', 'malibú, ron, ananá, crema', 290.00, 100, 'tragos'),
-(103, 'VERMOUTH', '', 150.00, 100, 'tragos'),
-(104, 'WHISCOLA IMPORTADO', '', 290.00, 100, 'tragos'),
-(105, 'WHISCOLA NACIONAL', '', 290.00, 100, 'tragos'),
-(106, 'WHISKY JHONIE WALKER ETIQUETA NEGRA', '', 280.00, 100, 'tragos'),
-(107, 'WHISKY JHONIE WALKER ETIQUETA ROJA', '', 210.00, 100, 'tragos'),
-(108, 'WHISKY NACIONAL DUNBAR GREGSONS', '', 170.00, 100, 'tragos'),
-(109, 'WHISKY SANDY MACEY RESTO', '', 210.00, 100, 'tragos'),
-(110, 'GRAPPA', '', 70.00, 100, 'tragos'),
-(111, 'GRAPPAMIEL', '', 90.00, 100, 'tragos'),
-(112, 'COMBO REINA 1', 'Hamburguesa de ternera; papas fritas; mayonesa, ketchup o mostaza; gaseosa 500ml o 600ml', 490.00, 100, 'combos-especiales'),
-(113, 'COMBO REINA 2', 'Hamburguesa de ternera; queso; huevo frito; panceta; jamón; papas fritas; aderezos y gaseosa de 1lt', 990.00, 100, 'combos-especiales'),
-(114, 'PICADA 2 REINAS PARA 2', 'Aceitunas, bondiola, jamón, mani, papas chips, quesos, salame, pan', 590.00, 100, 'combos-especiales'),
-(115, 'PICADA 2 REINAS PARA 4', 'Aceitunas, bastoners de queso, bondiola, lomito, mani, mortadela, palichips, pan, papas chips, queso, salame, tostaditas', 1490.00, 100, 'combos-especiales'),
-(116, 'ALFAJOR RED VELVET X1', '', 150.00, 100, 'postres'),
-(117, 'ALFAJOR SALCHICHON X1', '', 110.00, 100, 'postres'),
-(118, 'CHEESCAKE', '', 210.00, 100, 'postres'),
-(119, 'CHOCO MAS', '', 210.00, 100, 'postres'),
-(120, 'CLASICO DE DURAZNO', '', 210.00, 100, 'postres'),
-(121, 'DE ANTOLOGIA', '', 210.00, 100, 'postres'),
-(122, 'LEMON PIE', '', 210.00, 100, 'postres'),
-(123, 'MANZANA SUTIL', '', 210.00, 100, 'postres'),
-(124, 'MIL HOJAS (ROGEL)', '', 210.00, 100, 'postres'),
-(125, 'RAMONA', '', 210.00, 100, 'postres'),
-(126, 'RULO LOCO', '', 210.00, 100, 'postres'),
-(127, 'SALCHICHON CHOCOLATE', '', 110.00, 100, 'postres'),
-(128, 'TORTA SALCHICHON', '', 210.00, 100, 'postres'),
-(129, 'TRES X TRES', '', 210.00, 100, 'postres'),
-(130, 'VOLCAN CHOCOLATE X1', '', 160.00, 100, 'postres'),
-(131, 'VOLCAN DULCE DE LECHE X1', '', 160.00, 100, 'postres'),
-(132, 'CHAJA CLÁSICO DE DURAZNO', '', 230.00, 100, 'postres'),
-(133, 'CHAJA SIN FRUTA', '', 230.00, 100, 'postres'),
-(134, 'FLAN', '', 190.00, 100, 'postres'),
-(135, 'FLAN CON DULCE DE LECHE', '', 210.00, 100, 'postres'),
-(136, 'MILHOJAS PORCIÓN', '', 210.00, 100, 'postres'),
-(137, 'LEMON PIE PORCIÓN', '', 210.00, 100, 'postres'),
-(138, '1 BOCHAS DE HELADO', '', 130.00, 100, 'postres'),
-(139, '2 BOCHAS DE HELADO', '', 160.00, 100, 'postres'),
-(140, '3 BOCHAS DE HELADO', '', 190.00, 100, 'postres'),
-(141, 'BROWNIE CON HELADO', '', 250.00, 100, 'postres'),
-(142, 'MILHOJAS INDIVIDUAL', '', 260.00, 100, 'postres'),
-(143, 'LEMON PIE INDIVIDUAL', '', 270.00, 100, 'postres'),
-(144, 'BROWNIE INDIVIDUAL', '', 210.00, 100, 'postres'),
-(145, 'ACEITUNAS', '', 420.00, 100, 'pizzas'),
-(146, 'ANANÁ', '', 490.00, 100, 'pizzas'),
-(147, 'ANANÁ Y JAMÓN', '', 490.00, 100, 'pizzas'),
-(148, 'CALABRESA', '', 420.00, 100, 'pizzas'),
-(149, 'CHOCLO Y JAMÓN', '', 490.00, 100, 'pizzas'),
-(150, 'CUATRO QUESOS', '', 490.00, 100, 'pizzas'),
-(151, 'HUEVO DURO', '', 420.00, 100, 'pizzas'),
-(152, 'JAMÓN', '', 420.00, 100, 'pizzas'),
-(153, 'LOMITO', '', 490.00, 100, 'pizzas'),
-(154, 'MOZZARELLA', '', 390.00, 100, 'pizzas'),
-(155, 'NAPOLITANA', '(tomate, orégano, mozzarella)', 490.00, 100, 'pizzas'),
-(156, 'PALMITOS Y GOLF', '', 490.00, 100, 'pizzas'),
-(157, 'PANCETA', '', 420.00, 100, 'pizzas'),
-(158, 'PIZZA CON MOZZARELLA SIN GLUTEN', '', 425.00, 100, 'pizzas'),
-(159, 'HAMBURGUESA CASERA AL PAN CON QUESO', '+ FRITAS + JUGO', 490.00, 100, 'menu-infantil'),
-(160, '4 NUGGUETS', '+ FRITAS + JUGO', 450.00, 100, 'menu-infantil'),
-(161, 'MILANESA TERNERA O POLLO AL PAN', '+ FRITAS + JUGO', 490.00, 100, 'menu-infantil'),
-(162, 'PANCHO AL PAN', '+ FRITAS + JUGO', 350.00, 100, 'menu-infantil'),
-(163, 'TALLARINES CON FILLETTO', '', 350.00, 100, 'menu-infantil'),
-(164, 'PAN DE HAMBURGUESA O MILANESA SIN GLUTEN', '', 55.00, 100, 'menu-infantil'),
-(165, 'AGUA SABORIZADA VITALE 1lt', '', 149.00, 100, 'bebidas'),
-(166, 'AGUA SABORIZADA VITALE 625ml', '', 69.00, 100, 'bebidas'),
-(167, 'AGUA SIN/CON GAS 500ml', '', 60.00, 100, 'bebidas'),
-(168, 'CEPITA 995ml', '', 89.00, 100, 'bebidas'),
-(169, 'JUGO DE NARANJA', '', 100.00, 100, 'bebidas'),
-(170, 'JUGO DE NARANJA/ZANAHORIA', '', 110.00, 100, 'bebidas'),
-(171, 'JUGO EXPRIMIDO DE NARANJA (VASO)', '', 160.00, 100, 'bebidas'),
-(172, 'JUGUITO 200ml', '', 25.00, 100, 'bebidas'),
-(173, 'JUGO ADES 200ml', '', 40.00, 100, 'bebidas'),
-(174, 'LIMONADA 2 REINAS MENTA Y JENGIBRE', '', 220.00, 100, 'bebidas'),
-(175, 'LINEA COCA COLA 1lt', '', 150.00, 100, 'bebidas'),
-(176, 'LINEA COCA COLA 600ml', '', 95.00, 100, 'bebidas'),
-(177, 'SMOOTHIES', '', 250.00, 100, 'bebidas'),
-(178, 'MONSTER ENERGY', '', 130.00, 100, 'bebidas'),
-(179, 'CORONA 330ml 0% ALCOHOL', '', 149.00, 100, 'bebidas'),
-(180, 'CORONA 710ml', '', 230.00, 100, 'bebidas'),
-(181, 'PATAGONIA 730ml', '', 260.00, 100, 'bebidas'),
-(182, 'PATAGONIA IPA 24.7 730ml', '', 260.00, 100, 'bebidas'),
-(183, 'PATRICIA LAGER 340ml', '', 95.00, 100, 'bebidas'),
-(184, 'PATRICIA LAGER 960ml', '', 240.00, 100, 'bebidas'),
-(185, 'PILSEN 960ml', '', 190.00, 100, 'bebidas'),
-(186, 'PILSEN 340ml', '', 90.00, 100, 'bebidas'),
-(187, 'PILSEN 960ml 0% ALCOHOL', '', 190.00, 100, 'bebidas'),
-(188, 'STELLA ARTOIS 330ml', '(con o sin alcohol)', 190.00, 100, 'bebidas'),
-(189, 'STELLA ARTOIS 975ml', '', 350.00, 100, 'bebidas'),
-(190, 'SMIRNOFF ICE 275ml', '', 140.00, 100, 'bebidas'),
-(191, 'VINO DE LA CASA (tinto)', '', 230.00, 100, 'bebidas'),
-(192, 'VINO NOVECENTO MALBEC', '', 280.00, 100, 'bebidas'),
-(193, 'VINO DON PASCUAL BRUT 750 ML', '', 390.00, 100, 'bebidas'),
-(194, 'VINO DON PASCUAL COASTAL 750 ML', '', 590.00, 100, 'bebidas'),
-(195, 'VINO DON PASCUAL RESERVA 750ML', '', 650.00, 100, 'bebidas'),
-(196, 'LOMITO A LA PIMIENTA - PLATO DEL DÍA', 'Lomo en salsa de pimienta acompañado de papas rústicas y ensalada', 890.00, 50, 'platos-dia'),
-(197, 'PESCADO DEL DÍA - PLATO DEL DÍA', 'Filete de pescado del día a la plancha con verduras salteadas', 720.00, 50, 'platos-dia'),
-(198, 'PASTA CASERA - PLATO DEL DÍA', 'Tallarines caseros con salsa a elección (tuco / bolognesa / caruso)', 480.00, 50, 'platos-dia'),
-(199, 'MILANESA DEL DÍA - PLATO DEL DÍA', 'Milanesa (vacuna o pollo) con guarnición del día', 590.00, 50, 'platos-dia'),
-(200, 'ENSALADA ESPECIAL - PLATO DEL DÍA', 'Ensalada con mix de hojas, vegetales asados, queso y aderezo especial', 420.00, 50, 'platos-dia'),
-(201, 'PICADA DEL DÍA - PLATO DEL DÍA', 'Picada surtida para compartir (variedad de fiambres y quesos)', 1290.00, 20, 'platos-dia');
+(1, 'CAFÉ AMERICANO', '', '145.00', 100, 'desayuno-merienda'),
+(2, 'CAFÉ BAILEYS', 'café doble + baileys + crema', '190.00', 100, 'desayuno-merienda'),
+(3, 'CAFÉ CON LECHE', '', '150.00', 100, 'desayuno-merienda'),
+(4, 'CAFÉ FRIO', '', '190.00', 100, 'desayuno-merienda'),
+(5, 'CAFÉ IRLANDÉS', 'café + whisky + crema', '290.00', 100, 'desayuno-merienda'),
+(6, 'CAFÉ CAPUCCINO', '', '160.00', 100, 'desayuno-merienda'),
+(7, 'CHOCOLATE FRIO O CALIENTE', '', '180.00', 100, 'desayuno-merienda'),
+(8, 'CAFÉ CORTADO', '', '150.00', 100, 'desayuno-merienda'),
+(9, 'CAFÉ EXPRESSO', '', '140.00', 100, 'desayuno-merienda'),
+(10, 'CAFÉ EXPRESSO DOBLE', '', '150.00', 100, 'desayuno-merienda'),
+(11, 'CAFÉ LAGRIMA', '', '140.00', 100, 'desayuno-merienda'),
+(12, 'CAFÉ LATTE', '', '190.00', 100, 'desayuno-merienda'),
+(13, 'SUBMARINO', '', '190.00', 100, 'desayuno-merienda'),
+(14, 'TÉ TWININGS', '', '90.00', 100, 'desayuno-merienda'),
+(15, 'TÉ CON LECHE', '', '130.00', 100, 'desayuno-merienda'),
+(16, 'TÉ FRIO', 'leche deslactosada o vegetal', '130.00', 100, 'desayuno-merienda'),
+(17, 'MEDIALUNA DE JAMON Y QUESO', '', '130.00', 100, 'desayuno-merienda'),
+(18, 'PAN DE QUESO (CHIPA) X3', '', '60.00', 100, 'desayuno-merienda'),
+(19, 'SCONS DE QUESO X1', '', '25.00', 100, 'desayuno-merienda'),
+(20, 'SCOND DE QUESO X2', '', '45.00', 100, 'desayuno-merienda'),
+(21, '2 TOSTADAS CON MANTECA O MERMELADA', '', '90.00', 100, 'desayuno-merienda'),
+(22, 'TOSTADO DE JAMON Y QUESO', '', '290.00', 100, 'desayuno-merienda'),
+(23, 'ALFAJOR CASERO DE MAICENA CHICO', '', '40.00', 100, 'desayuno-merienda'),
+(24, 'ALFAJOR CASERO DE MAICENA GRANDE', '', '60.00', 100, 'desayuno-merienda'),
+(25, 'ALFAJOR CASERO MAICENA (VARIEDAD)', '', '60.00', 100, 'desayuno-merienda'),
+(26, 'BROWNIE', '', '150.00', 100, 'desayuno-merienda'),
+(27, 'BUDIN', '', '150.00', 100, 'desayuno-merienda'),
+(28, 'CARROT CAKE', '', '150.00', 100, 'desayuno-merienda'),
+(29, 'COOKIES CHIPS CHOCO', '', '30.00', 100, 'desayuno-merienda'),
+(30, 'COOKIES VAINILLA', '', '25.00', 100, 'desayuno-merienda'),
+(31, 'MEDIALUNAS DULCES CHICAS', '', '50.00', 100, 'desayuno-merienda'),
+(32, 'PASTA FROLA', '', '150.00', 100, 'desayuno-merienda'),
+(33, 'PASTEL FRITO', '', '60.00', 100, 'desayuno-merienda'),
+(34, 'ALFAJORCITO DE MAICENA X2', '', '80.00', 100, 'desayuno-merienda'),
+(35, 'ALFAJOR DECORADO', '', '90.00', 100, 'desayuno-merienda'),
+(36, 'ALFAJOR SALCHICHON', '', '50.00', 100, 'desayuno-merienda'),
+(37, 'COOKIES X2', '', '80.00', 100, 'desayuno-merienda'),
+(38, 'PANCHITO/PALMERITA X2', '', '80.00', 100, 'desayuno-merienda'),
+(39, 'BROWNIE', '', '210.00', 100, 'desayuno-merienda'),
+(40, 'CHIPA X 3', '', '170.00', 100, 'desayuno-merienda'),
+(41, 'EMPANADA X 2', '', '160.00', 100, 'desayuno-merienda'),
+(42, 'MASITAS DECORADAS X3', '', '50.00', 100, 'desayuno-merienda'),
+(43, 'MUFFIN', '', '55.00', 100, 'desayuno-merienda'),
+(44, 'PASTAFROLA MEMBRILLO', '', '180.00', 100, 'desayuno-merienda'),
+(45, 'PASTAFROLA DULCE DE LECHE', '', '210.00', 100, 'desayuno-merienda'),
+(46, 'PIZZA CON MOZZARELLA (2p)', '', '425.00', 100, 'desayuno-merienda'),
+(47, 'TOSTADO DE JAMON Y QUESO', '', '220.00', 100, 'desayuno-merienda'),
+(48, 'TARTA J&Q', '', '350.00', 100, 'desayuno-merienda'),
+(49, 'ESPECIAL 1', '1 té, café o exprimido de naranja; 1 tostado de jamón y queso o 2 medialunas de manteca; Porción dulce (opción del día)', '350.00', 100, 'desayuno-merienda'),
+(50, 'ESPECIAL 2', '2 Té, café o exprimido de naranja; 2 tostado de jamón y queso o 4 medialunas de manteca; 2 Porciones dulces (opción del día)', '590.00', 100, 'desayuno-merienda'),
+(51, 'MILANESA COMÚN', 'Milanesa de ternera con papas fritas; mayonesa ketchup o mostaza', '450.00', 100, 'milanesas-hamburgesas-chivitos-chorizo'),
+(52, 'MILANESA ESPECIAL', 'Milanesa de ternera; queso; huevo frito; panceta; jamón; papas fritas; mayonesa, ketchup o mostaza', '590.00', 100, 'milanesas-hamburgesas-chivitos-chorizo'),
+(53, 'MILANESA NAPOLITANA DE TERNERA', 'Napolitana; queso; huevo frito; panceta; jamón; papas fritas; mayonesa, ketchup o mostaza', '480.00', 100, 'milanesas-hamburgesas-chivitos-chorizo'),
+(54, 'MILANESA NAPOLITANA DE POLLO', 'Napolitana; queso; huevo frito; panceta; jamón; papas fritas; mayonesa, ketchup o mostaza', '480.00', 100, 'milanesas-hamburgesas-chivitos-chorizo'),
+(55, 'HAMBURGUESA COMÚN', 'Hamburguesa de ternera con papas fritas; mayonesa, ketchup o mostaza', '320.00', 100, 'milanesas-hamburgesas-chivitos-chorizo'),
+(56, 'HAMBURGUESA ESPECIAL', 'Hamburguesa de ternera; queso; huevo frito; panceta; jamón; papas fritas; mayonesa, ketchup o mostaza', '420.00', 100, 'milanesas-hamburgesas-chivitos-chorizo'),
+(57, 'HAMBURGUESA VEGETARIANA COMÚN', 'Hamburguesa vegetariana con papas fritas; mayonesa, ketchup o mostaza', '450.00', 100, 'milanesas-hamburgesas-chivitos-chorizo'),
+(58, 'HAMBURGUESA VEGETARIANA ESPECIAL', 'Hamburguesa vegetariana; queso; huevo frito; papas fritas; mayonesa, ketchup o mostaza', '550.00', 100, 'milanesas-hamburgesas-chivitos-chorizo'),
+(59, 'CHIVITO PARA 1', 'churrasco de ternera con jamón; muzarella; panceta; huevo frito; tomate; lechuga; papas fritas; mayonesa, ketchup o mostaza', '520.00', 100, 'milanesas-hamburgesas-chivitos-chorizo'),
+(60, 'CHIVITO PARA 2', '2 churrascos de ternera con jamón; muzarella; panceta; huevos fritos; tomate; lechuga; papas fritas; mayonesa, ketchup o mostaza', '890.00', 100, 'milanesas-hamburgesas-chivitos-chorizo'),
+(61, 'CHORIZO AL PAN', 'Chorizo, tomate, lechuga, mayonesa, ketchup o mostaza', '220.00', 100, 'milanesas-hamburgesas-chivitos-chorizo'),
+(62, 'PAPAS BRAVAS', '', '320.00', 100, 'guarniciones-ensaladas'),
+(63, 'PAPAS FRITAS', '', '260.00', 100, 'guarniciones-ensaladas'),
+(64, 'PAPAS FRITAS C/2 HUEVOS FRITOS', '', '310.00', 100, 'guarniciones-ensaladas'),
+(65, 'PAPAS FRITAS CON CHEDDAR', '', '320.00', 100, 'guarniciones-ensaladas'),
+(66, 'PAPAS NOISETTES', '', '320.00', 100, 'guarniciones-ensaladas'),
+(67, 'PAPAS RÚSTICAS', '', '280.00', 100, 'guarniciones-ensaladas'),
+(68, 'PURÉ DE PAPAS', '', '250.00', 100, 'guarniciones-ensaladas'),
+(69, 'ENSALADA CÉSAR', '', '350.00', 100, 'guarniciones-ensaladas'),
+(70, 'ENSALADA MIXTA', 'lechuga, tomate y cebolla', '270.00', 100, 'guarniciones-ensaladas'),
+(71, 'CHURRASCO A LA PLANCHA', 'TERNERA O POLLO', '230.00', 100, 'guarniciones-ensaladas'),
+(72, 'NUGGETS DE POLLO', '', '170.00', 100, 'guarniciones-ensaladas'),
+(73, 'OMELETTE', '', '260.00', 100, 'guarniciones-ensaladas'),
+(74, 'OMELETTE JAMÓN Y QUESO', '', '260.00', 100, 'guarniciones-ensaladas'),
+(75, 'MILANESA DE TERNERA O POLLO', '', '260.00', 100, 'guarniciones-ensaladas'),
+(76, 'REVUELTO GRAMAJO', 'Papa, huevo, jamón, panceta, cebolla y queso', '490.00', 100, 'guarniciones-ensaladas'),
+(77, 'EMPANADAS', '', '75.00', 100, 'guarniciones-ensaladas'),
+(78, 'CROQUETAS DE PAPA', '', '190.00', 100, 'guarniciones-ensaladas'),
+(79, 'CROQUETAS DE ARROZ', '', '190.00', 100, 'guarniciones-ensaladas'),
+(80, 'PORCIÓN DE TARTA', 'carne dulce; carne salada; cebolla y panceta; chivito; jamón y queso; pascualina; pollo; zapallito', '149.00', 100, 'guarniciones-ensaladas'),
+(81, 'TALLARINES CON SALSA', '', '320.00', 100, 'guarniciones-ensaladas'),
+(82, 'RAVIOLES CON SALSA', '', '260.00', 100, 'guarniciones-ensaladas'),
+(83, 'ÑOQUIS CON SALSA', '', '310.00', 100, 'guarniciones-ensaladas'),
+(84, 'SALSAS', '4 quesos, caruso, tuco de carne', '190.00', 100, 'guarniciones-ensaladas'),
+(85, '2 REINAS', 'tequila, jugo de naranja, granadina', '290.00', 100, 'tragos'),
+(86, 'AMARGA CON VERMOUTH', '', '210.00', 100, 'tragos'),
+(87, 'APEROL SPRITZ', 'aperol, espumante, soda, naranja', '290.00', 100, 'tragos'),
+(88, 'BAILEYS', '', '190.00', 100, 'tragos'),
+(89, 'CAIPIRIÑA LIMA', 'cachaza, azúcar', '290.00', 100, 'tragos'),
+(90, 'CAIPIROSCA LIMA', 'vodka, azúcar', '290.00', 100, 'tragos'),
+(91, 'CAMPARI CON NARANJA', '', '290.00', 100, 'tragos'),
+(92, 'CUBA LIBRE', 'coca cola y ron', '290.00', 100, 'tragos'),
+(93, 'DAIKIRI', 'ron blanco, frutilla o durazno', '290.00', 100, 'tragos'),
+(94, 'FERNET CON COCA COLA', 'fernet', '180.00', 100, 'tragos'),
+(95, 'GIN TONIC', 'gin, tónica, limón', '290.00', 100, 'tragos'),
+(96, 'JAGER', 'jager, energizante o coca cola', '290.00', 100, 'tragos'),
+(97, 'MARGARITA', 'tequila, licor, jugo de limón, triple sec', '290.00', 100, 'tragos'),
+(98, 'MALIBÚ COCA COLA', 'malibú', '290.00', 100, 'tragos'),
+(99, 'MALIBÚ POMELO O NARANJA', 'malibú', '290.00', 100, 'tragos'),
+(100, 'MOJITO', 'menta, ron, lima, azúcar', '290.00', 100, 'tragos'),
+(101, 'NEGRONI', 'gin, campari, vermouth rosso', '290.00', 100, 'tragos'),
+(102, 'PIÑA COLADA', 'malibú, ron, ananá, crema', '290.00', 100, 'tragos'),
+(103, 'VERMOUTH', '', '150.00', 100, 'tragos'),
+(104, 'WHISCOLA IMPORTADO', '', '290.00', 100, 'tragos'),
+(105, 'WHISCOLA NACIONAL', '', '290.00', 100, 'tragos'),
+(106, 'WHISKY JHONIE WALKER ETIQUETA NEGRA', '', '280.00', 100, 'tragos'),
+(107, 'WHISKY JHONIE WALKER ETIQUETA ROJA', '', '210.00', 100, 'tragos'),
+(108, 'WHISKY NACIONAL DUNBAR GREGSONS', '', '170.00', 100, 'tragos'),
+(109, 'WHISKY SANDY MACEY RESTO', '', '210.00', 100, 'tragos'),
+(110, 'GRAPPA', '', '70.00', 100, 'tragos'),
+(111, 'GRAPPAMIEL', '', '90.00', 100, 'tragos'),
+(112, 'COMBO REINA 1', 'Hamburguesa de ternera; papas fritas; mayonesa, ketchup o mostaza; gaseosa 500ml o 600ml', '490.00', 100, 'combos-especiales'),
+(113, 'COMBO REINA 2', 'Hamburguesa de ternera; queso; huevo frito; panceta; jamón; papas fritas; aderezos y gaseosa de 1lt', '990.00', 100, 'combos-especiales'),
+(114, 'PICADA 2 REINAS PARA 2', 'Aceitunas, bondiola, jamón, mani, papas chips, quesos, salame, pan', '590.00', 100, 'combos-especiales'),
+(115, 'PICADA 2 REINAS PARA 4', 'Aceitunas, bastoners de queso, bondiola, lomito, mani, mortadela, palichips, pan, papas chips, queso, salame, tostaditas', '1490.00', 100, 'combos-especiales'),
+(116, 'ALFAJOR RED VELVET X1', '', '150.00', 100, 'postres'),
+(117, 'ALFAJOR SALCHICHON X1', '', '110.00', 100, 'postres'),
+(118, 'CHEESCAKE', '', '210.00', 100, 'postres'),
+(119, 'CHOCO MAS', '', '210.00', 100, 'postres'),
+(120, 'CLASICO DE DURAZNO', '', '210.00', 100, 'postres'),
+(121, 'DE ANTOLOGIA', '', '210.00', 100, 'postres'),
+(122, 'LEMON PIE', '', '210.00', 100, 'postres'),
+(123, 'MANZANA SUTIL', '', '210.00', 100, 'postres'),
+(124, 'MIL HOJAS (ROGEL)', '', '210.00', 100, 'postres'),
+(125, 'RAMONA', '', '210.00', 100, 'postres'),
+(126, 'RULO LOCO', '', '210.00', 100, 'postres'),
+(127, 'SALCHICHON CHOCOLATE', '', '110.00', 100, 'postres'),
+(128, 'TORTA SALCHICHON', '', '210.00', 100, 'postres'),
+(129, 'TRES X TRES', '', '210.00', 100, 'postres'),
+(130, 'VOLCAN CHOCOLATE X1', '', '160.00', 100, 'postres'),
+(131, 'VOLCAN DULCE DE LECHE X1', '', '160.00', 100, 'postres'),
+(132, 'CHAJA CLÁSICO DE DURAZNO', '', '230.00', 100, 'postres'),
+(133, 'CHAJA SIN FRUTA', '', '230.00', 100, 'postres'),
+(134, 'FLAN', '', '190.00', 100, 'postres'),
+(135, 'FLAN CON DULCE DE LECHE', '', '210.00', 100, 'postres'),
+(136, 'MILHOJAS PORCIÓN', '', '210.00', 100, 'postres'),
+(137, 'LEMON PIE PORCIÓN', '', '210.00', 100, 'postres'),
+(138, '1 BOCHAS DE HELADO', '', '130.00', 100, 'postres'),
+(139, '2 BOCHAS DE HELADO', '', '160.00', 100, 'postres'),
+(140, '3 BOCHAS DE HELADO', '', '190.00', 100, 'postres'),
+(141, 'BROWNIE CON HELADO', '', '250.00', 100, 'postres'),
+(142, 'MILHOJAS INDIVIDUAL', '', '260.00', 100, 'postres'),
+(143, 'LEMON PIE INDIVIDUAL', '', '270.00', 100, 'postres'),
+(144, 'BROWNIE INDIVIDUAL', '', '210.00', 100, 'postres'),
+(145, 'ACEITUNAS', '', '420.00', 100, 'pizzas'),
+(146, 'ANANÁ', '', '490.00', 100, 'pizzas'),
+(147, 'ANANÁ Y JAMÓN', '', '490.00', 100, 'pizzas'),
+(148, 'CALABRESA', '', '420.00', 100, 'pizzas'),
+(149, 'CHOCLO Y JAMÓN', '', '490.00', 100, 'pizzas'),
+(150, 'CUATRO QUESOS', '', '490.00', 100, 'pizzas'),
+(151, 'HUEVO DURO', '', '420.00', 100, 'pizzas'),
+(152, 'JAMÓN', '', '420.00', 100, 'pizzas'),
+(153, 'LOMITO', '', '490.00', 100, 'pizzas'),
+(154, 'MOZZARELLA', '', '390.00', 100, 'pizzas'),
+(155, 'NAPOLITANA', '(tomate, orégano, mozzarella)', '490.00', 100, 'pizzas'),
+(156, 'PALMITOS Y GOLF', '', '490.00', 100, 'pizzas'),
+(157, 'PANCETA', '', '420.00', 100, 'pizzas'),
+(158, 'PIZZA CON MOZZARELLA SIN GLUTEN', '', '425.00', 100, 'pizzas'),
+(159, 'HAMBURGUESA CASERA AL PAN CON QUESO', '+ FRITAS + JUGO', '490.00', 100, 'menu-infantil'),
+(160, '4 NUGGUETS', '+ FRITAS + JUGO', '450.00', 100, 'menu-infantil'),
+(161, 'MILANESA TERNERA O POLLO AL PAN', '+ FRITAS + JUGO', '490.00', 100, 'menu-infantil'),
+(162, 'PANCHO AL PAN', '+ FRITAS + JUGO', '350.00', 100, 'menu-infantil'),
+(163, 'TALLARINES CON FILLETTO', '', '350.00', 100, 'menu-infantil'),
+(164, 'PAN DE HAMBURGUESA O MILANESA SIN GLUTEN', '', '55.00', 100, 'menu-infantil'),
+(165, 'AGUA SABORIZADA VITALE 1lt', '', '149.00', 100, 'bebidas'),
+(166, 'AGUA SABORIZADA VITALE 625ml', '', '69.00', 100, 'bebidas'),
+(167, 'AGUA SIN/CON GAS 500ml', '', '60.00', 100, 'bebidas'),
+(168, 'CEPITA 995ml', '', '89.00', 100, 'bebidas'),
+(169, 'JUGO DE NARANJA', '', '100.00', 100, 'bebidas'),
+(170, 'JUGO DE NARANJA/ZANAHORIA', '', '110.00', 100, 'bebidas'),
+(171, 'JUGO EXPRIMIDO DE NARANJA (VASO)', '', '160.00', 100, 'bebidas'),
+(172, 'JUGUITO 200ml', '', '25.00', 100, 'bebidas'),
+(173, 'JUGO ADES 200ml', '', '40.00', 100, 'bebidas'),
+(174, 'LIMONADA 2 REINAS MENTA Y JENGIBRE', '', '220.00', 100, 'bebidas'),
+(175, 'LINEA COCA COLA 1lt', '', '150.00', 100, 'bebidas'),
+(176, 'LINEA COCA COLA 600ml', '', '95.00', 100, 'bebidas'),
+(177, 'SMOOTHIES', '', '250.00', 100, 'bebidas'),
+(178, 'MONSTER ENERGY', '', '130.00', 100, 'bebidas'),
+(179, 'CORONA 330ml 0% ALCOHOL', '', '149.00', 100, 'bebidas'),
+(180, 'CORONA 710ml', '', '230.00', 100, 'bebidas'),
+(181, 'PATAGONIA 730ml', '', '260.00', 100, 'bebidas'),
+(182, 'PATAGONIA IPA 24.7 730ml', '', '260.00', 100, 'bebidas'),
+(183, 'PATRICIA LAGER 340ml', '', '95.00', 100, 'bebidas'),
+(184, 'PATRICIA LAGER 960ml', '', '240.00', 100, 'bebidas'),
+(185, 'PILSEN 960ml', '', '190.00', 100, 'bebidas'),
+(186, 'PILSEN 340ml', '', '90.00', 100, 'bebidas'),
+(187, 'PILSEN 960ml 0% ALCOHOL', '', '190.00', 100, 'bebidas'),
+(188, 'STELLA ARTOIS 330ml', '(con o sin alcohol)', '190.00', 100, 'bebidas'),
+(189, 'STELLA ARTOIS 975ml', '', '350.00', 100, 'bebidas'),
+(190, 'SMIRNOFF ICE 275ml', '', '140.00', 100, 'bebidas'),
+(191, 'VINO DE LA CASA (tinto)', '', '230.00', 100, 'bebidas'),
+(192, 'VINO NOVECENTO MALBEC', '', '280.00', 100, 'bebidas'),
+(193, 'VINO DON PASCUAL BRUT 750 ML', '', '390.00', 100, 'bebidas'),
+(194, 'VINO DON PASCUAL COASTAL 750 ML', '', '590.00', 100, 'bebidas'),
+(195, 'VINO DON PASCUAL RESERVA 750ML', '', '650.00', 100, 'bebidas'),
+(200, 'Bondiola a la pizza con puré', NULL, '195.00', NULL, 'platos-del-dia'),
+(201, 'Arroz amarillo con pollo y vegetales', NULL, '195.00', NULL, 'platos-del-dia'),
+(202, 'Creps de jamón y queso con papas rústicas', NULL, '195.00', NULL, 'platos-del-dia'),
+(203, 'Ravioles con tuco', NULL, '195.00', NULL, 'platos-del-dia'),
+(204, 'Muslo de pollo con arroz, choclo y arvejas', NULL, '195.00', NULL, 'platos-del-dia');
 
--- Ensure producto table will auto-increment from next id (202)
-ALTER TABLE `producto`
-  MODIFY `id_Producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=202;
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `temp_preference`
+--
+
+CREATE TABLE `temp_preference` (
+  `preference_id` varchar(255) NOT NULL,
+  `customer_json` text DEFAULT NULL,
+  `items_json` text DEFAULT NULL,
+  `total` decimal(10,2) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `temp_preference`
+--
+
+INSERT INTO `temp_preference` (`preference_id`, `customer_json`, `items_json`, `total`, `created_at`) VALUES
+('2925612020-22c3c1c5-25ec-4246-9c0c-7657ed13ae98', '{\"name\":\"fran\",\"lastname\":\"Berois\",\"email\":\"Franberois@gmail.com\",\"phone\":\"092816737\"}', '[{\"id\":\"59\",\"name\":\"CHIVITO PARA 1\",\"price\":520,\"quantity\":1}]', '520.00', '2025-10-21 18:38:29'),
+('2925612020-5e73d3a3-0818-40e7-ac6c-1604821c2167', '{\"name\":\"francisco\",\"lastname\":\"Berois\",\"email\":\"Franberois24@gmail.com\",\"phone\":\"092816737\"}', '[{\"id\":\"163\",\"name\":\"TALLARINES CON FILLETTO\",\"price\":350,\"quantity\":1}]', '350.00', '2025-10-20 23:33:24'),
+('2925612020-e759b605-eaea-400a-99cd-ac3260b40511', '{\"name\":\"Fran\",\"lastname\":\"Ber\",\"email\":\"Fran@gmail.com\",\"phone\":\"092816737\"}', '[{\"id\":\"59\",\"name\":\"CHIVITO PARA 1\",\"price\":520,\"quantity\":1}]', '520.00', '2025-10-21 18:41:59');
 
 --
 -- Índices para tablas volcadas
@@ -345,14 +435,32 @@ ALTER TABLE `producto`
   ADD PRIMARY KEY (`id_Producto`);
 
 --
+-- Indices de la tabla `temp_preference`
+--
+ALTER TABLE `temp_preference`
+  ADD PRIMARY KEY (`preference_id`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `administrador`
+--
+ALTER TABLE `administrador`
+  MODIFY `id_Empleado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `contiene`
 --
 ALTER TABLE `contiene`
-  MODIFY `id_contiene` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_contiene` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+
+--
+-- AUTO_INCREMENT de la tabla `pedido`
+--
+ALTER TABLE `pedido`
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- Restricciones para tablas volcadas

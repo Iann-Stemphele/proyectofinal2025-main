@@ -94,7 +94,7 @@
                 <div class="menu-1">
                     <ul>
                         <li><a href="#mas informacion" onclick="scrollToSection(event, 'mas informacion', 2000)">Informacion</a></li>
-                        <li><a href="#productos" onclick="scrollToSection(event, 'productos', 2000)">Productos</a></li>
+                        <li><a href="#productos" id="productos-nav-btn">Productos</a></li>
                         <li><a href="#horario" onclick="scrollToSection(event, 'horario', 2000)">Horario</a></li>
                     </ul>
                 </div>
@@ -134,7 +134,7 @@
                                     
                                 </p>
                                 <div class="botones">
-                                    <a href="#" class="btn-1" id="abrirModalcomprar">Comprar</a>
+                                    <a href="#" class="btn-1" id="abrirModalcomprar">Plato del dia </a>
                                     <a href="#" class="btn-2" id="abrirModalBtn">Menu</a>
                                 </div>
                             </div>
@@ -586,14 +586,12 @@
 <!-- Mini-menus para cada sección del menú principal -->
 <div class="mini-menu" id="mini-menu-desayuno-merienda" style="display:none;">
   <div class="mini-menu-content">
-    <span class="mini-menu-close" data-mini="desayuno-merienda">&times;</span>
     <h3>Desayuno y Merienda</h3>
     <div class="mini-menu-cards"></div>
   </div>
 </div>
 <div class="mini-menu" id="mini-menu-menu-infantil" style="display:none;">
   <div class="mini-menu-content">
-    <span class="mini-menu-close" data-mini="menu-infantil">&times;</span>
     <h3>Menú Infantil</h3>
     <ul>
       <li>Hamburguesa Kids</li>
@@ -604,7 +602,6 @@
 </div>
 <div class="mini-menu" id="mini-menu-milanesas-hamburgesas-chivitos-chorizo" style="display:none;">
   <div class="mini-menu-content">
-    <span class="mini-menu-close" data-mini="milanesas-hamburgesas-chivitos-chorizo">&times;</span>
     <h3>Milanesas, Hamburguesas, Chivitos, Chorizo</h3>
     <ul>
       <li>Milanesa napolitana</li>
@@ -616,7 +613,6 @@
 </div>
 <div class="mini-menu" id="mini-menu-guarniciones-ensaladas" style="display:none;">
   <div class="mini-menu-content">
-    <span class="mini-menu-close" data-mini="guarniciones-ensaladas">&times;</span>
     <h3>Guarniciones y Ensaladas</h3>
     <ul>
       <li>Papas fritas</li>
@@ -627,7 +623,6 @@
 </div>
 <div class="mini-menu" id="mini-menu-pizzas" style="display:none;">
   <div class="mini-menu-content">
-    <span class="mini-menu-close" data-mini="pizzas">&times;</span>
     <h3>Pizzas</h3>
     <ul>
       <li>Muzzarella</li>
@@ -638,7 +633,6 @@
 </div>
 <div class="mini-menu" id="mini-menu-combos-especiales" style="display:none;">
   <div class="mini-menu-content">
-    <span class="mini-menu-close" data-mini="combos-especiales">&times;</span>
     <h3>Combos y Especiales</h3>
     <ul>
       <li>Combo familiar</li>
@@ -648,7 +642,6 @@
 </div>
 <div class="mini-menu" id="mini-menu-postres" style="display:none;">
   <div class="mini-menu-content">
-    <span class="mini-menu-close" data-mini="postres">&times;</span>
     <h3>Postres</h3>
     <ul>
       <li>Flan casero</li>
@@ -659,7 +652,6 @@
 </div>
 <div class="mini-menu" id="mini-menu-bebidas" style="display:none;">
   <div class="mini-menu-content">
-    <span class="mini-menu-close" data-mini="bebidas">&times;</span>
     <h3>Bebidas</h3>
     <ul>
       <li>Gaseosas</li>
@@ -670,7 +662,6 @@
 </div>
 <div class="mini-menu" id="mini-menu-tragos" style="display:none;">
   <div class="mini-menu-content">
-    <span class="mini-menu-close" data-mini="tragos">&times;</span>
     <h3>Tragos</h3>
     <ul>
       <li>Fernet con coca</li>
@@ -701,6 +692,263 @@
     <script src="Frontend/Comprar/comprar_simple.js"></script>
     <!-- contenedor para MercadoPago Bricks (kept in place) -->
   <div id="wallet_container" style="max-width:420px;margin:20px auto;"></div>
+
+  <!-- NUEVO: lógica cliente para Platos del Día, categorías y carrito -->
+  <script>
+  (function () {
+    // Mapeo fijo de platos del día (Lun-Vie) -> ids ya cargados en la BD (ver LasDosReinas.sql)
+    const PLATOS_DIA = {
+      1: { id: 200, nombre: 'Bondiola a la pizza con puré' },           // Lunes
+      2: { id: 201, nombre: 'Arroz amarillo con pollo y vegetales' },  // Martes
+      3: { id: 202, nombre: 'Creps de jamón y queso con papas rústicas' }, // Miércoles
+      4: { id: 203, nombre: 'Ravioles con tuco' },                     // Jueves
+      5: { id: 204, nombre: 'Muslo de pollo con arroz, choclo y arvejas' } // Viernes
+    };
+
+    function getPlatoDelDia() {
+      const hoy = new Date().getDay(); // 0=Dom,1=Lun,...6=Sab
+      return (hoy >= 1 && hoy <= 5) ? PLATOS_DIA[hoy] : null;
+    }
+
+    async function mostrarPlatoDelDia() {
+      const lista = document.getElementById('platos-dia-lista');
+      if (!lista) return;
+      const platoHoy = getPlatoDelDia();
+      if (!platoHoy) {
+        lista.innerHTML = '<div style="text-align:center;padding:28px;color:#777">Los platos del día están disponibles de lunes a viernes.</div>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`Backend/routes/categorias.php?categoria=platos-del-dia`);
+        if (!res.ok) throw new Error('No se pudo obtener platos del día');
+        const productos = await res.json();
+        const plato = productos.find(p => (p.id_Producto == platoHoy.id) || (p.id == platoHoy.id) );
+        if (!plato) {
+          lista.innerHTML = '<div style="text-align:center;padding:28px;color:#999">No hay plato registrado para hoy.</div>';
+          return;
+        }
+
+        // Usar el contenedor existente como grid y pintar SOLO las cards
+        lista.classList.add('productos-grid', 'productos-grid--centered');
+        lista.innerHTML = `
+            <div class="product-card">
+              <div class="product-card-content">
+                <h3 class="product-name">${plato.nombre}</h3>
+                <p class="product-description">${plato.descripcion || 'Plato especial del día.'}</p>
+                <div class="product-card-footer">
+                  <p class="product-price">$${(plato.precio ?? plato.precio_unitario ?? '0')}</p>
+                  <button class="add-to-cart-btn" data-product='${JSON.stringify({
+                    id: plato.id_Producto ?? plato.id,
+                    name: plato.nombre,
+                    price: plato.precio ?? plato.precio_unitario ?? 0,
+                    description: plato.descripcion || ''
+                  })}'>
+                    <i class='bx bx-cart-add'></i> Añadir
+                  </button>
+                </div>
+              </div>
+            </div>
+        `;
+         lista.innerHTML = html;
+ 
+         const btn = lista.querySelector('.add-to-cart-btn');
+         if (btn) btn.addEventListener('click', onAddToCartClicked);
+      } catch (err) {
+         console.error(err);
+         lista.innerHTML = '<div style="text-align:center;padding:28px;color:#ff6a00">Error al cargar el plato del día.</div>';
+      }
+    }
+
+    // Añadir al carrito (cliente -> backend). Ajusta la URL si tu backend espera otro payload.
+    async function addToCartRequest(product) {
+      try {
+        const res = await fetch('Backend/routes/add_to_cart.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ producto: product, cantidad: 1 })
+        });
+        return await res.json();
+      } catch (e) {
+        console.error('addToCartRequest error', e);
+        return { ok: false, error: e.message || 'network' };
+      }
+    }
+
+    async function onAddToCartClicked(e) {
+      const btn = e.currentTarget;
+      const product = JSON.parse(btn.getAttribute('data-product') || '{}');
+      // UI feedback rápido
+      btn.disabled = true;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = 'Añadiendo...';
+
+      const result = await addToCartRequest(product);
+      if (result && result.ok !== false) {
+        updateCartCounter(1);
+        showTemporaryNotification('Producto agregado al carrito');
+      } else {
+        showTemporaryNotification('Error al agregar al carrito', true);
+        console.error('addToCart failed', result);
+      }
+
+      // restore
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+
+    // Incrementa el contador visual del carrito
+    function updateCartCounter(delta) {
+      const counter = document.getElementById('cart-counter') || document.querySelector('.cart-counter');
+      if (!counter) return;
+      const current = parseInt(counter.textContent || '0', 10) || 0;
+      counter.textContent = Math.max(0, current + (delta || 0));
+    }
+
+    // Notificación simple (crea y destruye)
+    function showTemporaryNotification(text, isError = false) {
+      let n = document.getElementById('custom-notification');
+      if (!n) {
+        n = document.createElement('div');
+        n.id = 'custom-notification';
+        n.style.zIndex = 12000;
+        document.body.appendChild(n);
+      }
+      n.textContent = text;
+      n.classList.add('show');
+      n.style.backgroundColor = isError ? 'rgba(220,20,60,0.95)' : 'rgba(30,30,30,0.92)';
+      setTimeout(()=> n.classList.remove('show'), 1800);
+    }
+
+    // Cargar productos de una categoría y mostrarlos en modal-mas-info (usa la grid y estilos existentes)
+    async function cargarProductosPorCategoria(categoria) {
+      const lista = document.getElementById('mas-info-lista');
+      const titulo = document.getElementById('mas-info-titulo');
+      if (titulo) titulo.textContent = (categoria || '').replace(/-/g,' ').toUpperCase();
+      if (!lista) return;
+      lista.innerHTML = '<div style="text-align:center;padding:30px;color:#666">Cargando...</div>';
+
+      try {
+        const res = await fetch(`Backend/routes/categorias.php?categoria=${encodeURIComponent(categoria)}`);
+        if (!res.ok) throw new Error('Error al obtener categoría');
+        const productos = await res.json();
+        if (!productos || productos.length === 0) {
+          lista.innerHTML = '<div style="text-align:center;padding:30px;color:#999">No hay productos disponibles.</div>';
+          return;
+        }
+
+        // convertir el propio contenedor en grid y pintar SOLO las tarjetas (evita anidar otra grilla)
+        lista.classList.add('productos-grid');
+        lista.innerHTML = productos.map(p=>{
+          const id = p.id_Producto ?? p.id;
+          const precio = p.precio ?? p.precio_unitario ?? 0;
+          const desc = (p.descripcion || '').replace(/</g,'&lt;').substring(0,240);
+          return `
+            <div class="product-card">
+              <div class="product-card-content">
+                <h3 class="product-name">${(p.nombre || p.name)}</h3>
+                <p class="product-description">${desc}</p>
+                <div class="product-card-footer">
+                  <p class="product-price">$${precio}</p>
+                  <button class="add-to-cart-btn" data-product='${JSON.stringify({
+                    id: id, name: p.nombre || p.name, price: precio, description: p.descripcion || ''
+                  })}'> <i class='bx bx-cart-add'></i> Añadir</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // attach add-to-cart handlers (seguro, delegación ligera)
+        lista.querySelectorAll('.add-to-cart-btn').forEach(b=>{
+          b.removeEventListener('click', onAddToCartClicked);
+          b.addEventListener('click', onAddToCartClicked);
+        });
+
+      } catch (err) {
+        console.error(err);
+        lista.innerHTML = '<div style="text-align:center;padding:30px;color:#ff6a00">Error cargando productos.</div>';
+      }
+    }
+
+    // Inicializa botones "Clickear aqui..." dentro del modal de categorías (miModal)
+    function initBtnsMasInfo() {
+      document.querySelectorAll('.btn-mas-info').forEach(btn=>{
+        btn.removeEventListener('click', btn._handler);
+        btn._handler = async function (ev) {
+          const categoria = btn.getAttribute('data-categoria');
+          const masInfoModal = document.getElementById('modal-mas-info');
+          if (masInfoModal) masInfoModal.style.display = 'block';
+          await cargarProductosPorCategoria(categoria);
+        };
+        btn.addEventListener('click', btn._handler);
+      });
+    }
+
+    // Abrir modal de categorías desde nav y hero
+    document.getElementById('productos-nav-btn')?.addEventListener('click', function(e){
+      e.preventDefault();
+      const modal = document.getElementById('miModal');
+      if (modal) modal.style.display = 'block';
+      // asegurar handlers
+      initBtnsMasInfo();
+    });
+    document.getElementById('abrirModalBtn')?.addEventListener('click', function(e){
+      e.preventDefault();
+      const modal = document.getElementById('miModal');
+      if (modal) modal.style.display = 'block';
+      initBtnsMasInfo();
+    });
+
+    // Abrir modal "Platos del Día" y cargar contenido
+    document.getElementById('abrirModalcomprar')?.addEventListener('click', function(e){
+      e.preventDefault();
+      const modal = document.getElementById('modal-platos-dia');
+      if (modal) {
+        modal.style.display = 'block';
+        mostrarPlatoDelDia();
+      }
+    });
+
+    // Cierres de modales (delegación simple)
+    document.addEventListener('click', function(ev){
+      const t = ev.target;
+      if (t.matches('.alt-close-button') || t.matches('.close-button') || t.matches('.mini-menu-close')) {
+        const parent = t.closest('.alt-modal-container, .modal, .mini-menu');
+        if (parent) parent.style.display = 'none';
+      }
+      // cerrar modal-mas-info se maneja con alt-close-button id close-mas-info también si existe
+    });
+
+    // Sincronizar contador del carrito con el servidor
+    async function syncCartCounter() {
+      try {
+        const res = await fetch('Backend/routes/get_cart.php');
+        if (!res.ok) return;
+        const data = await res.json();
+        const items = data.items || [];
+        const count = items.reduce((sum, it) => {
+          const qty = (it.quantity ?? it.cantidad ?? it.cant ?? 1);
+          return sum + Number(qty);
+        }, 0);
+        const counterEl = document.getElementById('cart-counter') || document.querySelector('.cart-counter');
+        if (counterEl) counterEl.textContent = count;
+      } catch (err) {
+        console.warn('syncCartCounter error', err);
+      }
+    }
+
+    // Inicialización al cargar DOM
+    document.addEventListener('DOMContentLoaded', function(){
+      initBtnsMasInfo();
+      // sincronizar el contador del carrito desde servidor
+      syncCartCounter();
+      // si desea precargar el contador desde backend de forma periódica:
+      // setInterval(syncCartCounter, 15000);
+    });
+  })();
+  </script>
+  <!-- FIN NUEVO SCRIPT -->
 
   <script>
     (function () {

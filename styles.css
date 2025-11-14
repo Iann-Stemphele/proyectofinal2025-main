@@ -1,16 +1,245 @@
+/* Prevenir scroll horizontal en toda la página */
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+    touch-action: pan-y;
+    overscroll-behavior-x: none;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Normalizar botón cerrar: naranja, circular y con animación */
+.alt-close-button, .close-button, .mini-menu-close {
+    position: absolute;
+    top: 18px; /* por defecto un poco abajo */
+    right: 14px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#ff6a00,#ff9933);
+    color: #fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 22px;
+    border: 2px solid #ff6a00;
+    box-shadow: 0 8px 20px rgba(255,106,0,0.15);
+    cursor: pointer;
+    z-index: 1200;
+    transition: transform .22s ease, box-shadow .22s ease, background .22s ease;
+    transform-origin: center;
+}
+
+/* Hover / focus */
+.alt-close-button:hover, .close-button:hover, .mini-menu-close:hover {
+    transform: rotate(90deg) scale(1.05);
+    box-shadow: 0 12px 30px rgba(255,106,0,0.25);
+}
+
+/* Animación de entrada para el botón X */
+@keyframes close-pop {
+  0% { transform: translateY(-10px) scale(0.95); opacity: 0; }
+  60% { transform: translateY(4px) scale(1.03); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.alt-close-button { animation: close-pop 360ms cubic-bezier(.2,.9,.3,1) both; }
+
+/* Responsive para móviles - botón X más accesible (bajado aún más) */
+@media (max-width: 768px) {
+    .alt-close-button, .close-button, .mini-menu-close {
+        top: 84px; /* BAJADO para que sea fácil de tocar en dispositivos con notch/gestures */
+        right: 12px;
+        width: 52px;
+        height: 52px;
+        font-size: 28px;
+    }
+}
+
+/* Evitar scroll horizontal por gestos en todos los modales y overlays */
+.alt-modal-container, .modal, .mini-menu {
+    touch-action: pan-y;
+    overscroll-behavior-x: none;
+}
+
 #shop.shop {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    /* Opcional: centra la imagen y ajusta el tamaño */
     display: flex;
     justify-content: center;
     align-items: center;
-    background: transparent; /* o color si lo prefieres */
-    z-index: 999; /* para que esté por encima de otros elementos */
+    background: transparent;
+    z-index: 999;
+    max-width: 100vw;
 }
-/* Si quieres que la imagen tenga un tamaño específico */
+
 #shop.shop img {
-    max-height: 80px; /* ajusta según lo que necesites */
+    max-height: 80px;
+    max-width: 100%;
+}
+
+/* Asegurar imágenes no provoquen overflow */
+img, .product-card img, .main-hero-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Modales: en pantallas pequeñas alinear al inicio y permitir scroll del contenido */
+@media (max-width: 768px) {
+    .alt-modal-container {
+        align-items: flex-start; /* modal aparece desde el top, evita recorte vertical */
+        padding-top: 18px;
+    }
+    .alt-modal-content {
+        margin: 12px;
+        max-height: calc(100vh - 36px);
+        overflow-y: auto;
+    }
+}
+
+/* Ajustes globales móviles para la página principal: centrar hero, reducir tipografías e imágenes, compactar botones y contenedores */
+@media (max-width: 768px) {
+  /* Hero / slider */
+  .headre-content .slider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+  }
+  .headre-content .slider-txt {
+    text-align: center;
+    padding: 8px 6px;
+  }
+  .headre-content .slider-txt h1 {
+    font-size: 1.5rem;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  .headre-content .slider-txt p {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+  .main-hero-img {
+    max-height: 180px;
+    width: auto;
+    margin: 0 auto;
+    display: block;
+  }
+  .botones {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+  }
+  .btn-1, .btn-2 {
+    width: 90%;
+    max-width: 320px;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  /* Compactar secciones informativas */
+  .info-text h2, .horarios-info h2 {
+    font-size: 1.1rem;
+  }
+  .info-text p, .horarios-txt p {
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+
+  /* Formularios / modal inputs */
+  .alt-modal-content input[type="text"],
+  .alt-modal-content input[type="tel"],
+  .alt-modal-content input[type="email"] {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  /* Ajuste general: reducir márgenes y paddings en móviles para más compactación */
+  .container, .conteinER, .wrapper {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Centrar imagen de la sección "Informacion" en móviles */
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .info-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .info-img img {
+    max-width: 92%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px; /* opcional: suaviza visualmente */
+  }
+
+  /* Ajuste del texto para quedar centrado y más compacto */
+  .info-text {
+    width: 100%;
+    padding: 0 10px;
+  }
+}
+
+/* Centrar redes sociales en la sección de horarios (desktop y móvil) */
+.horarios-txt .socials,
+.footer .links .socials {
+    display: flex;
+    justify-content: center; /* centra horizontalmente */
+    align-items: center;     /* centra verticalmente */
+    gap: 14px;
+}
+
+/* Asegurar que cada "botón" social sea un círculo y su contenido esté centrado */
+.horarios-txt .social,
+.footer .links .social {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 0; /* quitar márgenes laterales inesperados */
+    background: transparent;
+}
+
+/* Imagen dentro del botón: contener y centrar */
+.horarios-txt .social img,
+.footer .links .social img {
+    width: 58%;
+    height: 58%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Pequeño ajuste en móvil para accesibilidad (íconos un poco más grandes) */
+@media (max-width: 768px) {
+    .horarios-txt .social,
+    .footer .links .social {
+        width: 52px;
+        height: 52px;
+    }
+    .horarios-txt .social img,
+    .footer .links .social img {
+        width: 64%;
+        height: 64%;
+    }
 }

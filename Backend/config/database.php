@@ -1,11 +1,10 @@
 <?php
-// Configuración de base de datos para InfinityFree
-$host = 'sql306.infinityfree.com';
+// Configuración de base de datos para entorno local XAMPP
+$host = 'localhost';
 $db   = 'if0_40194248_lasdosreinas';
-$user = 'if0_40194248';
-$pass = 'LasDosReinas';
+$user = 'root';
+$pass = '';
 $charset = 'utf8mb4';
-
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
@@ -17,6 +16,7 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
+    // En desarrollo muestra error; en producción maneja/loguea apropiadamente
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 ?>

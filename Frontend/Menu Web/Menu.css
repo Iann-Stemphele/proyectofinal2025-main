@@ -31,33 +31,32 @@ h2{
 .wrapper{
   width: 90%;
   margin: 0 auto;
-  max-width: 80rem;
+  max-width: 1400px; /* aumentado para permitir cards más anchas en PC */
 }
 
+/* Reemplazo: usar grid en lugar de flex para .cols (anchura/alto invertidos: 180 x 285) */
 .cols{
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, 180px); /* 3 columnas en desktop con ancho fijo 180px */
+    gap: 1.25rem; /* espacio entre celdas */
+    justify-items: center; /* centrar contenido de cada celda */
+    align-items: start;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
+/* Cada columna ahora es una celda; .col ocupa todo el ancho de la celda */
 .col{
-  width: calc(25% - 2rem);
-  margin: 1rem;
-  cursor: pointer;
+    width: 180px;        /* ancho fijo solicitado */
+    max-width: 180px;
+    margin: 0;           /* el gap ya gestiona separación */
+    /* altura visual fijada por las caras (front/back) */
+    cursor: pointer;
+    box-sizing: border-box;
 }
 
-#container{
-  -webkit-transform-style: preserve-3d;
-          transform-style: preserve-3d;
-	-webkit-perspective: 1000px;
-	        perspective: 1000px;
-}
-
+/* Ajustar altura de las caras (flip cards) para que sean más altas que anchas (180 x 285) */
 .front,
 .back{
   background-size: cover;
@@ -72,7 +71,7 @@ h2{
 	-webkit-backface-visibility: hidden;
 	        backface-visibility: hidden;
 	text-align: center;
-	min-height: 280px;
+	min-height: 285px; /* alto fijo solicitado */
 	height: auto;
 	border-radius: 10px;
 	color: #ffffff;
@@ -184,34 +183,116 @@ h2{
   font-weight: 300;
 }
 
-@media screen and (max-width: 64rem){
-  .col{
-    width: calc(33.333333% - 2rem);
-  }
+/* Productos: 3 por fila en escritorio, 1 por fila en móviles */
+.productos-grid {
+    max-width: 1400px;       /* aumentar para permitir cards más anchas */
+    margin: 0 auto;          /* centrar la grid en la página */
+    display: grid;
+    grid-template-columns: repeat(3, minmax(300px, 1fr)); /* evita cards muy estrechas */
+    gap: 24px;
+    padding: 20px;
+    align-items: stretch;
+    justify-items: stretch;   /* cards ocupan todo el ancho de la columna */
+    box-sizing: border-box;
 }
 
-@media screen and (max-width: 48rem){
-  .col{
-    width: calc(50% - 2rem);
-  }
+/* --- NUEVO: Card horizontal (desktop) --- */
+.product-card {
+    width: 100%;             /* ocupa toda la columna */
+    max-width: none;
+    display: flex;
+    flex-direction: row;       /* horizontal: imagen IZQ, contenido DER */
+    align-items: stretch;
+    height: 220px;             /* altura fija uniforme (ajustable) */
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    box-sizing: border-box;
 }
 
-@media screen and (max-width: 32rem){
-  .col{
+/* Imagen: ocupa ~40% a la izquierda y cubre toda la altura */
+.product-card img {
+    width: 40%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 0; /* corners handled by parent */
+}
+
+/* Contenido a la derecha ocupa el resto */
+.product-card-content {
+  height: 100%;
     width: 100%;
-    margin: 0 0 2rem 0;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* Nombre / descripción / footer normalizados */
+.product-name { font-size: 1.05rem; font-weight:700; margin:0 0 8px 0; }
+.product-description { color:#666; font-size:0.95rem; line-height:1.3; margin:0 0 8px 0; overflow:hidden; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; }
+.product-card-footer { margin-top:auto; display:flex; justify-content:space-between; align-items:center; gap:20px; padding-top:8px; border-top:1px solid #f1f1f1; }
+
+/* Botón y precio */
+.product-price { font-weight:800; color:#ff6a00; }
+.add-to-cart-btn { background: linear-gradient(135deg,#ff6a00,#ff9933); color:#fff; border:none; padding:8px 12px; border-radius:8px; font-weight:700; cursor:pointer; }
+
+/* Si hay menos columnas (ej. ventana estrecha) la grid se adapta y sigue centrada */
+@media (max-width: 1200px) {
+    .productos-grid { max-width: 1000px; grid-template-columns: repeat(2, 1fr); }
+    .cols {
+        grid-template-columns: repeat(2, 180px);
+        justify-content: center;
+    }
+}
+@media (max-width: 768px) {
+    .productos-grid { grid-template-columns: 1fr !important; max-width: 720px; padding: 12px; }
+    .product-card { flex-direction: column !important; height: auto !important; }
+    .product-card img {
+        width: 100%;
+        height: 160px;
+        margin-bottom: 10px;
+    }
+    .product-card-content { width: 100%; padding: 10px; }
+    .product-description { -webkit-line-clamp: 3; }
+    .cols {
+        grid-template-columns: 1fr; /* una columna: fila larga vertical */
+        gap: 0.9rem;
+        padding: 0 12px;
+    }
+    .col {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+@media (min-width: 769px) {
+  /* Ocultar la columna de imagen en desktop y permitir que el contenido ocupe toda la tarjeta */
+  .product-card img {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: hidden !important;
+  }
+
+  .product-card {
+    /* Mantener altura si quieres; pero el contenido ahora llenará todo el ancho */
+    display: block; /* pasar a block para que el contenido ocupe todo el ancho */
+    height: auto;
+    padding: 16px;
+  }
+
+  .product-card-content {
+    width: 100% !important;
+    padding: 18px !important;
+    box-sizing: border-box;
   }
 }
 
-
-
-
-
-
-
-
-
-
+/* Modal styles */
 .modal {
             display: none; /* Oculto por defecto */
             position: fixed; /* Posición fija para cubrir toda la pantalla */
@@ -260,4 +341,3 @@ h2{
 
 
 
-        

@@ -1,4 +1,4 @@
- #modal-platos-dia.alt-modal-container {
+#modal-platos-dia.alt-modal-container {
         position: fixed;
         z-index: 9999;
         left: 0; top: 0; width: 100vw; height: 100vh;
@@ -17,10 +17,18 @@
     }
     #modal-platos-dia .alt-close-button {
         position: absolute;
-        top: 16px; right: 20px;
+        top: 56px; /* más abajo para ser accesible en teléfonos */
+        right: 12px;
         font-size: 2rem;
-        color: #aaa;
+        color: #ffffff;
+        background: linear-gradient(135deg,#ff6a00,#ff9933);
+        border: 2px solid #ff6a00;
+        width: 48px;
+        height: 48px;
+        box-shadow: 0 8px 28px rgba(255,106,0,0.18);
         cursor: pointer;
+        transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms;
+        z-index: 1200;
     }
     #modal-platos-dia .alt-close-button:hover {
         color: #050100;
@@ -44,10 +52,12 @@
         margin-bottom: 12px;
         padding: 12px 16px;
         border-radius: 8px;
-        font-size: 1,5rem;
+        font-size: 1.5rem; /* CORRECCIÓN: usar punto en lugar de coma */
         box-shadow: 0 2px 8px rgba(230,126,34,0.07);
         display: flex;
         flex-direction: column;
+        word-wrap: break-word; /* evitar overflow por texto largo */
+        overflow-wrap: break-word;
     }
     #platos-dia-lista .plato-nombre {
         font-weight: bold;
@@ -92,4 +102,584 @@
 #custom-notification.show {
     opacity: 1;
     visibility: visible;
+}
+
+/* Botón cerrar más accesible y animado en modales específicos */
+#modal-platos-dia .alt-close-button,
+.alt-modal-container .alt-close-button,
+.modal .close-button,
+.mini-menu .mini-menu-close {
+    top: 56px; /* más abajo para ser accesible en teléfonos */
+    right: 12px;
+    color: #ffffff;
+    background: linear-gradient(135deg,#ff6a00,#ff9933);
+    border: 2px solid #ff6a00;
+    width: 48px;
+    height: 48px;
+    font-size: 26px;
+    box-shadow: 0 8px 28px rgba(255,106,0,0.18);
+    transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms;
+}
+
+/* efecto al tocar */
+#modal-platos-dia .alt-close-button:active,
+.alt-modal-container .alt-close-button:active {
+    transform: translateY(3px) scale(.98);
+}
+
+/* animación de entrada para el botón X */
+@keyframes btn-pop {
+  0% { transform: translateY(-8px) scale(.95); opacity: 0; }
+  60% { transform: translateY(4px) scale(1.03); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+#modal-platos-dia .alt-close-button {
+  animation: btn-pop 360ms ease both;
+}
+
+/* Seguridad: prevenir overflow horizontal en modales y asegurar botón X visible */
+.alt-modal-container,
+.alt-modal-content,
+.modal,
+.modal-content {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+/* Si quieres que el X del modal de platos esté un poco más abajo específicamente */
+#modal-platos-dia .alt-close-button {
+    top: 56px; /* más abajo para ser accesible en teléfonos */
+    right: 12px;
+}
+
+/* Responsive mejorado para modales */
+@media (max-width: 768px) {
+    .alt-modal-content,
+    .modal-content {
+        width: 95%;
+        margin: 10px auto;
+        padding: 20px 15px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .alt-modal-content h2,
+    .modal-content h2 {
+        font-size: 1.3em;
+        margin-top: 40px;
+    }
+}
+
+/* Modal platos del día: usar mismas reglas de .product-card para consistencia */
+#modal-platos-dia .product-card,
+#modal-platos-dia .producto-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+    padding: 0;
+}
+
+/* Imagen dentro del modal card (si se usa) */
+#modal-platos-dia .product-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+/* Contenido del modal card */
+#modal-platos-dia .product-card-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+/* Nombre, descripción y footer iguales a main menu */
+#modal-platos-dia .product-name { margin: 0 0 8px 0; font-weight:700; color:#222; }
+#modal-platos-dia .product-description { color:#666; margin:0 0 12px 0; flex-grow:1; }
+#modal-platos-dia .product-card-footer {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-top:auto;
+    padding-top:12px;
+    border-top:1px solid #f1f1f1;
+}
+
+/* Botón añadir en modal */
+#modal-platos-dia .add-to-cart-btn {
+    background: linear-gradient(135deg,#ff6a00,#ff9933);
+    color:#fff;
+    padding:8px 12px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+}
+
+/* Reutilizar diseño de .product-card dentro del modal de comprar */
+#modal-platos-dia .productos-grid { padding: 0; }
+#modal-platos-dia .product-card,
+#modal-platos-dia .producto-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+/* Header dentro del modal */
+#modal-platos-dia .product-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Nombre / precio / descripción / footer igual que en Menu.css */
+#modal-platos-dia .product-name { margin:0; font-weight:700; color:#222; }
+#modal-platos-dia .product-price { margin:0; font-weight:800; color:#ff6a00; }
+#modal-platos-dia .product-description { margin-top:10px; color:#666; flex:1 1 auto; -webkit-line-clamp:5; display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden; text-align:left; }
+
+/* Footer botón */
+#modal-platos-dia .product-card-footer { margin-top:12px; display:flex; justify-content:flex-end; border-top:1px solid #f1f1f1; padding-top:8px; }
+
+/* Unificar máximo ancho de modales para que no difieran */
+.alt-modal-content,
+.modal .modal-content {
+    max-width: 1400px; /* aumentado para dar más espacio a la grilla en escritorio */
+    width: 92vw;
+    box-sizing: border-box;
+    padding: 18px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Modals: grid centrada y más ancha en desktop */
+#modal-mas-info .productos-grid,
+#modal-platos-dia .productos-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+    justify-items: center;
+    padding: 8px 0;
+    box-sizing: border-box;
+}
+
+/* Card horizontal dentro de modales */
+#modal-mas-info .product-card,
+#modal-platos-dia .product-card {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    height: 220px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    box-sizing: border-box;
+}
+
+#modal-mas-info .product-card img,
+#modal-platos-dia .product-card img {
+    width: 40%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#modal-mas-info .product-card-content,
+#modal-platos-dia .product-card-content {
+    width: 60%;
+    padding: 14px;
+    display:flex;
+    flex-direction:column;
+    box-sizing: border-box;
+}
+
+/* Responsive: 1 por fila en móvil */
+@media (max-width: 768px) {
+    #modal-mas-info .productos-grid,
+    #modal-platos-dia .productos-grid { grid-template-columns: 1fr !important; gap: 12px; padding: 6px; }
+
+    #modal-mas-info .product-card,
+    #modal-platos-dia .product-card {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+    #modal_mas_info .product-card img,
+    #modal-platos-dia .product-card img {
+        width: 100%;
+        height: 160px;
+        margin-bottom: 10px;
+    }
+    #modal_mas_info .product-card-content,
+    #modal-platos-dia .product-card-content { width: 100%; padding: 10px; }
+}
+
+/* Forzar 1 columna en modales en pantallas pequeñas (más amplio breakpoint para algunos teléfonos) */
+@media (max-width: 900px) {
+    #modal_platos-dia .productos-grid,
+    #modal-mas-info .productos-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    #modal_platos-dia .product-card,
+    #modal-mas_info .product-card {
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: auto !important;
+        padding: 12px;
+    }
+
+    #modal_platos-dia .product-card img,
+    #modal-mas_info .product-card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+
+    #modal_platos-dia .product-card-content,
+    #modal-mas_info .product-card-content {
+        padding: 8px 0;
+    }
+
+    #modal_platos-dia .product-description,
+    #modal-mas_info .product-description {
+        -webkit-line-clamp: 4;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    #modal_platos-dia .product-card-footer,
+    #modal-mas_info .product-card-footer {
+        border-top: 1px solid #f1f1f1;
+        padding-top: 10px;
+        justify-content: flex-end;
+    }
+}
+
+/* -- Ajustes específicos para el modal de "Más información" (productos) -- */
+
+/* Asegurar que el modal de mas-info aproveche todo el ancho disponible en desktop */
+#modal-mas-info .alt-modal-content,
+#modal-mas-info .modal-content {
+    width: 95vw;
+    max-width: 1100px;
+    box-sizing: border-box;
+    padding: 18px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* La grid de productos debe ocupar TODO el contenedor blanco y distribuirse en 3 columnas en desktop */
+#modal-mas-info .productos-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 por fila en PC */
+    gap: 18px;
+    align-items: start;
+}
+
+/* Cada card ocupa el 100% de su celda y se adapta al alto del contenedor */
+#modal-mas-info .product-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+    height: auto;
+    box-sizing: border-box;
+}
+
+/* Contenido de la card se expande para empujar el footer abajo */
+#modal-mas-info .product-card-content {
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    flex: 1 1 auto;
+}
+
+/* Footer con separación mayor entre precio y botón (desktop) */
+#modal-mas-info .product-card-footer {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f1f1;
+}
+
+/* En móvil mantener 1 por fila y layout compacto (sin cambios en comportamiento móvil) */
+@media (max-width: 768px) {
+    #modal-mas-info .productos-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+        padding: 12px 6px;
+    }
+    #modal_mas_info .product-card {
+        flex-direction: row !important;
+        height: 120px !important;
+        min-height: 120px !important;
+    }
+    #modal_mas_info .product-card img {
+        width: 34%;
+        height: 100%;
+        object-fit: cover;
+        margin-right: 12px;
+    }
+    #modal_mas_info .product-card-content {
+        padding: 8px 6px;
+        justify-content: space-between;
+    }
+    #modal-mas_info .product-description { -webkit-line-clamp: 2; overflow: hidden; }
+    #modal-mas_info .product-card-footer { border-top: none; padding-top: 0; justify-content: flex-end; }
+}
+
+/* Quitar/ocultar la X extra si existe */
+.alt-close-button--top {
+    display: none !important;
+}
+
+/* Asegurar que la grid dentro del modal use todo el ancho disponible y esté centrada */
+#modal-mas-info .alt-modal-content,
+#modal-platos-dia .alt-modal-content,
+.alt-modal-content,
+.modal .modal-content {
+    box-sizing: border-box;
+    width: 94vw;
+    max-width: 1400px; /* espacio amplio para columnas anchas */
+    padding: 18px;
+}
+
+/* Grid centrada y columnas con min-width para evitar cards demasiado estrechas */
+#modal-mas-info .productos-grid,
+#modal-platos-dia .productos-grid {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(300px, 1fr)); /* columnas más anchas */
+    gap: 28px;
+    align-items: stretch;
+    justify-items: stretch; /* que las celdas ocupen todo el ancho de la columna */
+    padding: 8px 0;
+    box-sizing: border-box;
+}
+
+/* Cada card ocupa todo el ancho de su celda */
+#modal-mas-info .product-card,
+#modal-platos-dia .product-card {
+    width: 100%;
+    max-width: none;
+    display: flex;
+    flex-direction: row;
+    height: 240px; /* altura uniforme, ajustable */
+    box-sizing: border-box;
+}
+
+/* Imagen izquierda ocupa 40% y contenido el resto */
+#modal-mas-info .product-card img,
+#modal-platos-dia .product-card img {
+    width: 40%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Contenido ocupa el 60% y se expande */
+#modal-mas-info .product-card-content,
+#modal-platos-dia .product-card-content {
+    width: 60%;
+    padding: 16px;
+    display:flex;
+    flex-direction:column;
+    box-sizing: border-box;
+}
+
+/* Responsive: 1 por fila en móvil */
+@media (max-width: 768px) {
+    #modal-mas-info .productos-grid,
+    #modal-platos-dia .productos-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+        padding: 8px;
+    }
+    #modal-mas-info .product-card,
+    #modal-platos-dia .product-card {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+    #modal-mas-info .product-card img,
+    #modal-platos-dia .product-card img {
+        width: 100%;
+        height: 160px;
+        margin-bottom: 10px;
+    }
+    #modal_mas_info .product-card-content,
+    #modal-platos-dia .product-card-content { width: 100%; padding: 10px; }
+}
+
+/* Forzar 1 columna en modales en pantallas pequeñas (más amplio breakpoint para algunos teléfonos) */
+@media (max-width: 900px) {
+    #modal_platos-dia .productos-grid,
+    #modal-mas-info .productos-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    #modal_platos-dia .product-card,
+    #modal-mas_info .product-card {
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: auto !important;
+        padding: 12px;
+    }
+
+    #modal_platos-dia .product-card img,
+    #modal-mas_info .product-card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+
+    #modal_platos-dia .product-card-content,
+    #modal-mas_info .product-card-content {
+        padding: 8px 0;
+    }
+
+    #modal_platos-dia .product-description,
+    #modal-mas_info .product-description {
+        -webkit-line-clamp: 4;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    #modal_platos-dia .product-card-footer,
+    #modal-mas_info .product-card-footer {
+        border-top: 1px solid #f1f1f1;
+        padding-top: 10px;
+        justify-content: flex-end;
+    }
+}
+
+/* -- Ajustes específicos para el modal de "Más información" (productos) -- */
+
+/* Asegurar que el modal de mas-info aproveche todo el ancho disponible en desktop */
+#modal-mas-info .alt-modal-content,
+#modal-mas-info .modal-content {
+    width: 95vw;
+    max-width: 1100px;
+    box-sizing: border-box;
+    padding: 18px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* La grid de productos debe ocupar TODO el contenedor blanco y distribuirse en 3 columnas en desktop */
+#modal-mas-info .productos-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 por fila en PC */
+    gap: 18px;
+    align-items: start;
+}
+
+/* Cada card ocupa el 100% de su celda y se adapta al alto del contenedor */
+#modal-mas-info .product-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+    height: auto;
+    box-sizing: border-box;
+}
+
+/* Contenido de la card se expande para empujar el footer abajo */
+#modal-mas-info .product-card-content {
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    flex: 1 1 auto;
+}
+
+/* Footer con separación mayor entre precio y botón (desktop) */
+#modal-mas-info .product-card-footer {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f1f1;
+}
+
+/* En móvil mantener 1 por fila y layout compacto (sin cambios en comportamiento móvil) */
+@media (max-width: 768px) {
+    #modal-mas-info .productos-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+        padding: 12px 6px;
+    }
+    #modal_mas_info .product-card {
+        flex-direction: row !important;
+        height: 120px !important;
+        min-height: 120px !important;
+    }
+    #modal_mas_info .product-card img {
+        width: 34%;
+        height: 100%;
+        object-fit: cover;
+        margin-right: 12px;
+    }
+    #modal_mas_info .product-card-content {
+        padding: 8px 6px;
+        justify-content: space-between;
+    }
+    #modal-mas_info .product-description { -webkit-line-clamp: 2; overflow: hidden; }
+    #modal-mas_info .product-card-footer { border-top: none; padding-top: 0; justify-content: flex-end; }
+}
+
+/* Ocultar imagen en modales y hacer que el contenido ocupe toda la card en desktop */
+@media (min-width: 769px) {
+  /* En los modales también ocultar la imagen y hacer que el contenido ocupe toda la card */
+  #modal-mas-info .product-card img,
+  #modal-platos-dia .product-card img {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    visibility: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #modal-mas-info .product-card,
+  #modal-platos-dia .product-card {
+    display: block;
+    height: auto;
+    padding: 16px;
+  }
+
+  #modal-mas-info .product-card-content,
+  #modal-platos-dia .product-card-content {
+    width: 100% !important;
+    padding: 18px !important;
+    box-sizing: border-box;
+  }
 }
