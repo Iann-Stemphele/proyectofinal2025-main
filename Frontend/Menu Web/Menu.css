@@ -38,22 +38,176 @@ h2{
 .cols{
     display: grid;
     grid-template-columns: repeat(3, 180px); /* 3 columnas en desktop con ancho fijo 180px */
-    gap: 1.25rem; /* espacio entre celdas */
+    gap: 1.6rem 1.25rem; /* row-gap column-gap: más separación entre filas y columnas */
     justify-items: center; /* centrar contenido de cada celda */
     align-items: start;
-    width: 100%;
+    /* Centrar la grid en el contenedor: ajustar ancho al contenido y usar margin auto */
+    width: auto; /* dejar que la grid mida según columnas */
+    /* aumentar el max-width para permitir los desplazamientos visuales sin recortar */
+    max-width: calc(3 * 180px + 2 * 1.25rem + 80px); /* 3 columnas + 2 gaps + espacio extra para offsets */
     margin: 0 auto;
     box-sizing: border-box;
 }
 
-/* Cada columna ahora es una celda; .col ocupa todo el ancho de la celda */
+/* Transición y base para desplazar columnas sin afectar layout de grid */
 .col{
     width: 180px;        /* ancho fijo solicitado */
     max-width: 180px;
     margin: 0;           /* el gap ya gestiona separación */
-    /* altura visual fijada por las caras (front/back) */
     cursor: pointer;
     box-sizing: border-box;
+    -webkit-transition: -webkit-transform .28s ease;
+    transition: transform .28s ease;
+}
+
+/* Desplazar la 1ª columna a la izquierda y la 3ª a la derecha (cada fila) en escritorio */
+@media (min-width: 769px) {
+  .cols .col:nth-child(3n+1) { /* items 1,4,7 ... */
+      -webkit-transform: translateX(-30px);
+              transform: translateX(-30px);
+  }
+  .cols .col:nth-child(3n) { /* items 3,6,9 ... */
+      -webkit-transform: translateX(30px);
+              transform: translateX(30px);
+  }
+  /* mantener la columna central sin desplazar */
+  .cols .col:nth-child(3n+2) {
+      -webkit-transform: translateX(0);
+              transform: translateX(0);
+  }
+
+  /* --- NUEVO: aumentar gap entre la fila 2 y la fila 3 (índices 7,8,9 ) --- */
+  .cols .col:nth-child(n+7) {
+      margin-top: 32px; /* valor ajustable: aumenta la separación entre fila2 y fila3 */
+  }
+}
+
+/* Para ventanas con 2 columnas, desplazar izquierdas y derechas alternando */
+@media (max-width: 1200px) {
+    .productos-grid { max-width: 1000px; grid-template-columns: repeat(2, 1fr); }
+    .cols {
+        grid-template-columns: repeat(2, 180px);
+        /* ajustar max-width para 2 columnas y centrar */
+        width: auto;
+        max-width: calc(2 * 180px + 1 * 1.25rem + 60px); /* 2 columnas + 1 gap + extra */
+        margin: 0 auto;
+        justify-content: center;
+    }
+
+    /* items en posiciones impares a la izquierda, pares a la derecha */
+    .cols .col:nth-child(2n+1) { transform: translateX(-20px); }
+    .cols .col:nth-child(2n)   { transform: translateX(20px); }
+
+    /* --- NUEVO: en layout de 2 columnas, la fila 3 empieza en el índice 5 (items 5 y 6) --- */
+    .cols .col:nth-child(n+5) {
+        margin-top: 28px; /* valor ajustable para 2-column layout */
+    }
+}
+
+/* En móvil (1 columna) quitar offsets para que queden centrados y sin solaparse */
+@media (max-width: 768px) {
+    .productos-grid { grid-template-columns: 1fr !important; max-width: 720px; padding: 12px; }
+
+    /* Forzar que la card ocupe todo el ancho y sea columna */
+    .product-card {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch;
+        width: 100% !important;
+        padding: 8px !important; /* reducir padding para tarjeta más fina */
+        box-sizing: border-box;
+        height: auto !important;
+        min-height: 0; /* permitir colapsar si no hay contenido */
+        gap: 0; /* quitar gaps internos que puedan crear huecos */
+    }
+
+    /* Ocultar la imagen por completo en móvil para evitar espacios vacíos */
+    .product-card img {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        visibility: hidden !important;
+    }
+
+    /* El contenido debe ocupar toda la tarjeta sin dejar huecos */
+    .product-card-content {
+        width: 100%;
+        padding: 10px 8px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;      /* crecer si es necesario, colapsar si no */
+        min-height: 0;       /* esencial para evitar overflow en flex children */
+        justify-content: flex-start;
+    }
+
+    /* Ajustes visuales para evitar que el contenido sea demasiado alto */
+    .product-name { font-size: 1rem; margin-bottom: 6px; }
+    .product-description { -webkit-line-clamp: 3; margin: 0 0 8px 0; }
+    .product-card-footer { margin-top: auto; padding-top: 6px; }
+
+    .cols {
+        grid-template-columns: 1fr; /* una columna: fila larga vertical */
+        gap: 0.9rem;
+        padding: 0 12px;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+    .col {
+        width: 100%;
+        max-width: 100%;
+        -webkit-transform: translateX(0) !important;
+                transform: translateX(0) !important;
+        margin-top: 0 !important;
+    }
+}
+
+/* Asegurar que en móviles las grids sean 1 columna y las cards sean lista (no cuadrados) */
+@media (max-width: 768px) {
+    /* forzar una sola columna en ambas estructuras */
+    .productos-grid,
+    .cols {
+        grid-template-columns: 1fr !important;
+        max-width: 100% !important;
+        padding: 0 12px !important;
+        gap: 0.9rem !important;
+    }
+
+    /* tarjeta como fila única (lista): contenido ocupa todo el ancho, altura automática */
+    .product-card {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        height: auto !important;
+        padding: 8px !important;
+        border-radius: 10px;
+    }
+
+    /* si la imagen existiera, ocultarla en móvil para evitar huecos */
+    .product-card img {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        visibility: hidden !important;
+    }
+
+    /* contenido ocupa toda la tarjeta */
+    .product-card-content {
+        flex: 1 1 auto !important;
+        padding: 8px !important;
+        min-height: 0 !important;
+    }
+
+    /* reset offsets aplicados en desktop para evitar desplazamientos en móvil */
+    .cols .col {
+        transform: none !important;
+        -webkit-transform: none !important;
+        margin-top: 0 !important;
+    }
 }
 
 /* Ajustar altura de las caras (flip cards) para que sean más altas que anchas (180 x 285) */
@@ -203,7 +357,7 @@ h2{
     display: flex;
     flex-direction: row;       /* horizontal: imagen IZQ, contenido DER */
     align-items: stretch;
-    height: 220px;             /* altura fija uniforme (ajustable) */
+    height: 120px;             /* altura fija uniforme (ajustable) */
     border-radius: 12px;
     overflow: hidden;
     background: #fff;
@@ -238,59 +392,6 @@ h2{
 /* Botón y precio */
 .product-price { font-weight:800; color:#ff6a00; }
 .add-to-cart-btn { background: linear-gradient(135deg,#ff6a00,#ff9933); color:#fff; border:none; padding:8px 12px; border-radius:8px; font-weight:700; cursor:pointer; }
-
-/* Si hay menos columnas (ej. ventana estrecha) la grid se adapta y sigue centrada */
-@media (max-width: 1200px) {
-    .productos-grid { max-width: 1000px; grid-template-columns: repeat(2, 1fr); }
-    .cols {
-        grid-template-columns: repeat(2, 180px);
-        justify-content: center;
-    }
-}
-@media (max-width: 768px) {
-    .productos-grid { grid-template-columns: 1fr !important; max-width: 720px; padding: 12px; }
-    .product-card { flex-direction: column !important; height: auto !important; }
-    .product-card img {
-        width: 100%;
-        height: 160px;
-        margin-bottom: 10px;
-    }
-    .product-card-content { width: 100%; padding: 10px; }
-    .product-description { -webkit-line-clamp: 3; }
-    .cols {
-        grid-template-columns: 1fr; /* una columna: fila larga vertical */
-        gap: 0.9rem;
-        padding: 0 12px;
-    }
-    .col {
-        width: 100%;
-        max-width: 100%;
-    }
-}
-@media (min-width: 769px) {
-  /* Ocultar la columna de imagen en desktop y permitir que el contenido ocupe toda la tarjeta */
-  .product-card img {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    visibility: hidden !important;
-  }
-
-  .product-card {
-    /* Mantener altura si quieres; pero el contenido ahora llenará todo el ancho */
-    display: block; /* pasar a block para que el contenido ocupe todo el ancho */
-    height: auto;
-    padding: 16px;
-  }
-
-  .product-card-content {
-    width: 100% !important;
-    padding: 18px !important;
-    box-sizing: border-box;
-  }
-}
 
 /* Modal styles */
 .modal {
@@ -338,6 +439,84 @@ h2{
             text-decoration: none;
             cursor: pointer;
         }
+/* --- PLATO DEL DÍA: mostrar solo el plato destacado y evitar que se vean todos --- */
+/* Aplicar esta clase al contenedor cuando se abra el "plato del día" (por ejemplo: <div class="modal plato-del-dia"> ...) */
+/* Marcar la tarjeta destacada con .featured o data-featured="true" */
+
+.plato-del-dia .cols > .col,
+.plato-del-dia .productos-grid > * {
+  display: none !important;        /* ocultar todas las entradas por defecto */
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+.plato-del-dia .cols,
+.plato-del-dia .productos-grid {
+  max-width: 640px !important;      /* limitar ancho del contenedor cuando se muestra 1 plato */
+  width: 100% !important;
+  margin: 0 auto !important;
+  grid-template-columns: 1fr !important; /* forzar 1 columna */
+  gap: 1rem !important;
+  box-sizing: border-box;
+}
+
+/* Mostrar sólo la tarjeta marcada como featured (dos alternativas soportadas) */
+.plato-del-dia .cols > .col.featured,
+.plato-del-dia .cols > .col[data-featured="true"],
+.plato-del-dia .productos-grid > .product-card.featured,
+.plato-del-dia .productos-grid > [data-featured="true"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  padding: unset !important;
+  margin: 0.5rem auto !important;
+  transform: none !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12) !important;
+  z-index: 1200 !important;
+}
+
+/* Centrar el contenido de la tarjeta y asegurar que el contenido llene la card en móvil */
+.plato-del-dia .product-card,
+.plato-del-dia .col.featured {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* En móvil, la tarjeta debe ocupar todo el ancho y no dejar huecos */
+@media (max-width: 768px) {
+  .plato-del-dia .cols,
+  .plato-del-dia .productos-grid {
+    padding: 0 12px !important;
+    max-width: 100% !important;
+  }
+  .plato-del-dia .product-card,
+  .plato-del-dia .col.featured {
+    padding: 10px !important;
+    margin: 0 !important;
+  }
+}
+
+/* Si no hay .featured, mostrar la primera como fallback */
+.plato-del-dia .cols > .col:first-child,
+.plato-del-dia .productos-grid > :first-child {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+}
+
+/* Nota: para que esto funcione, al abrir el "Plato del día" añade la clase .plato-del-dia
+   al contenedor que envuelve las tarjetas (p.e. al modal). Marca la tarjeta a destacar con
+   class="featured" o data-featured="true". */
 
 
 

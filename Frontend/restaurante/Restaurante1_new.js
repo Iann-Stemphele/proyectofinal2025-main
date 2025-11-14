@@ -415,6 +415,82 @@ function initPlatosDia() {
     });
 }
 
+/* FIX: prevenir ReferenceError 'html is not defined' y exponer una función segura
+   mostrarPlatoDelDia(...) que puede ser llamada desde HTML/otros scripts. */
+window.mostrarPlatoDelDia = async function (featureSelector) {
+    try {
+        // Contenedor destino preferido
+        const listaContainer =
+            document.getElementById('platos-dia-lista') ||
+            document.getElementById('plato-del-dia') ||
+            document.querySelector('.plato-del-dia') ||
+            document.querySelector('.modal .content') ||
+            document.querySelector('.productos-grid') ||
+            document.querySelector('.cols');
+
+        if (!listaContainer) {
+            console.warn('mostrarPlatoDelDia: contenedor destino no encontrado.');
+            return;
+        }
+
+        // Buscar elemento "featured" o usar el primer producto como fallback
+        let featured = null;
+        if (featureSelector) {
+            try { featured = document.querySelector(featureSelector); } catch (e) { featured = null; }
+        }
+        featured = featured ||
+                   document.querySelector('.col.featured') ||
+                   document.querySelector('.col[data-featured="true"]') ||
+                   document.querySelector('.product-card.featured') ||
+                   document.querySelector('.productos-grid .product-card') ||
+                   document.querySelector('.cols .col');
+
+        if (!featured) {
+            listaContainer.innerHTML = '<p>No hay platos disponibles</p>';
+            return;
+        }
+
+        // Construir HTML localmente (evita usar variable no declarada)
+        let html = '';
+
+        const name = (featured.querySelector('.product-name')?.textContent || featured.dataset?.nombre || featured.querySelector('h4')?.textContent || '').trim();
+        const desc = (featured.querySelector('.product-description')?.textContent || featured.dataset?.descripcion || featured.querySelector('p')?.textContent || '').trim();
+        const priceRaw = featured.querySelector('.product-price')?.textContent ||
+                         featured.dataset?.precio ||
+                         featured.querySelector('.precio')?.textContent ||
+                         featured.querySelector('span.precio')?.textContent || '';
+        const price = (priceRaw || '').toString().trim();
+
+        // Construcción segura del bloque (mínima estructura)
+        html += '<div class="product-card featured">';
+        html += '  <div class="product-card-content">';
+        html += `    <h3>${name || 'Plato del día'}</h3>`;
+        if (desc) html += `    <p class="product-description">${desc}</p>`;
+        if (price) html += `    <div class="product-price">${price}</div>`;
+        html += '  </div>';
+        html += '</div>';
+
+        // Inyectar
+        listaContainer.innerHTML = html;
+
+        // Mostrar modal si existe
+        const modal =
+            document.getElementById('modal-platos-dia') ||
+            document.getElementById('miModal') ||
+            document.querySelector('.modal.plato-del-dia') ||
+            document.querySelector('.modal');
+
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    } catch (err) {
+        console.error('mostrarPlatoDelDia error:', err);
+    }
+};
+
+/* OPTIONAL HELPER: Si algún HTML llama a mostrarPlatoDelDia() sin parámetros,
+   la función anterior cubrirá el caso. No se modifica la lógica existente de PC. */
+
 // --- FUNCIONES AUXILIARES ---
 function updateCartCounter() {
     const cart = JSON.parse(localStorage.getItem('altCart')) || [];
